@@ -1,14 +1,18 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'my_secret_key'
 db = SQLAlchemy(app)
 
+
 # Modelos de datos
+# param: lazy=True -> SELECT, lazy=False -> JOIN, in relation model
 
 client_services = db.Table('client_services',
                            db.Column('service_id',
@@ -28,7 +32,6 @@ class Ubication(db.Model):
     name = db.Column(db.String(80), nullable=False)
     code_location = db.Column(db.String(5), nullable=False)
     clients = db.relationship('Client', backref="ubication")
-    # param: lazy=True -> SELECT, lazy=False -> JOIN
     pass
 
 
@@ -47,13 +50,13 @@ class Client(db.Model):
 class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Boolean, nullable=False)
+    month = db.Column(db.String(3), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
     service_id = db.Column(db.Integer,
                            db.ForeignKey('service.key_id'), nullable=False)
     client_id = db.Column(db.Integer,
                           db.ForeignKey('client.key_id'), nullable=False)
-    # True is OK, False is NOT OK
-    # TODO: month & year
-    status = db.Column(db.Boolean, nullable=False)
     pass
 
 
