@@ -15,11 +15,13 @@ db = SQLAlchemy(app)
 # param: lazy=True -> SELECT, lazy=False -> JOIN, in relation model
 
 client_services = db.Table('client_services',
-                           db.Column('service_id',
-                                     db.Integer,
-                                     primary_key=True),
                            db.Column('client_id',
                                      db.Integer,
+                                     db.ForeignKey('client.key_id'),
+                                     primary_key=True),
+                           db.Column('service_id',
+                                     db.Integer,
+                                     db.ForeignKey('service.key_id'),
                                      primary_key=True),
                            db.Column('price',
                                      db.Integer,
