@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -96,6 +96,26 @@ def create_village():
 
 
 # TODO: Create an API read-only
+@app.route('/api/v1/client/<id>')
+# Recibe un id con el nombre del cliente
+def get_client_api(id: int):
+    client = Client.query.filter_by(key_id=id).first()
+    if client is None:
+        abort(404)
+    client_ubication = Ubication.query.filter_by(
+        key_id=client.ubication_id).first()
+    res = {
+        'id': client.key_id,
+        'name': client.name,
+        'phone': client.phone,
+        'direction': client.direction,
+        'description': client.description,
+        'ubication': {
+            'id': client_ubication.key_id,
+            'name': client_ubication.name,
+            'code': client_ubication.code}
+    }
+    return jsonify(res)
 
 
 if __name__ == "__main__":
