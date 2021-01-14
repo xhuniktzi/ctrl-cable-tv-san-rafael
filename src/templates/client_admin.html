@@ -1,0 +1,49 @@
+{% extends 'base_layout.html' %} {% block title %} Dashboard {% endblock %} {%
+block content %}
+<h2>Administrador de Clientes</h2>
+
+<form id="client-form" class="container-fluid m-3 p-3">
+  <div class="row">
+    <label for="name" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Nombre</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="phone" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Teléfono</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="tel"
+        name="phone"
+        id="phone"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="direction" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Dirección</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="text"
+        name="direction"
+        id="direction"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-4 mx-auto">
+    <input type="submit" value="Crear Cliente" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock content %}

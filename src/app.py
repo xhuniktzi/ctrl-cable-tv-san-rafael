@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -10,23 +10,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my_secret_key'
 db = SQLAlchemy(app)
 
-
 # Modelos de datos
 # param: lazy=True -> SELECT, lazy=False -> JOIN, in relation model
 
-client_services = db.Table('client_services',
-                           db.Column('client_id',
-                                     db.Integer,
-                                     db.ForeignKey('client.key_id'),
-                                     primary_key=True),
-                           db.Column('service_id',
-                                     db.Integer,
-                                     db.ForeignKey('service.key_id'),
-                                     primary_key=True),
-                           db.Column('price',
-                                     db.Integer,
-                                     nullable=False)
-                           )
+client_services = db.Table(
+    'client_services',
+    db.Column('client_id',
+              db.Integer,
+              db.ForeignKey('client.key_id'),
+              primary_key=True),
+    db.Column('service_id',
+              db.Integer,
+              db.ForeignKey('service.key_id'),
+              primary_key=True),
+    db.Column('price',
+              db.Integer, nullable=False),
+    db.Column('ip_address',
+              db.String(15), nullable=False)
+)
 
 
 class Ubication(db.Model):
@@ -34,19 +35,19 @@ class Ubication(db.Model):
     name = db.Column(db.String(80), nullable=False)
     code_location = db.Column(db.String(5), nullable=False)
     clients = db.relationship('Client', backref="ubication")
-    pass
 
 
 class Client(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
+    phone = db.Column(db.String(12), nullable=True)
+    direction = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(120), nullable=False)
     ubication_id = db.Column(db.Integer,
                              db.ForeignKey('ubication.key_id'), nullable=False)
     payments = db.relationship('Payment', db.backref('client'))
     services = db.relationship('Service', secondary=client_services,
                                backref=db.backref('clients'))
-
-    pass
 
 
 class Payment(db.Model):
@@ -59,16 +60,24 @@ class Payment(db.Model):
                            db.ForeignKey('service.key_id'), nullable=False)
     client_id = db.Column(db.Integer,
                           db.ForeignKey('client.key_id'), nullable=False)
-    pass
 
 
 class Service(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    pass
+
+
+# Rutas
+@app.route('/dashboard/')
+def dashboard():
+    return render_template('dashboard.html')
+
+
+@app.route('/admin/clients/')
+def client_admin():
+    return render_template('client_admin.html')
 
 
 if __name__ == "__main__":
     db.create_all()
     app.run(debug=True)
-    pass
