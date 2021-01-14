@@ -1,11 +1,7 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
-<form
-  action="{{url_for('create_client')}}"
-  method="POST"
-  class="container-fluid m-3 p-3"
->
+<form action="{{url_for('create_client')}}" method="POST" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
     <label for="name" class="col-lg-2 col-form-label fw-bolder fs-5"
@@ -77,5 +73,25 @@ endblock %} {% block content %}
   <div class="d-grid gap-2 col-4 mx-auto m-3">
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
+
+  <form class="m-3 p-3">
+    <h3>Administrar Clientes</h3>
+    <div class="row">
+      <label for="client" class="col-lg-2 col-form-label fw-bolder fs-5"
+        >Cliente</label
+      >
+      <div class="col-lg-6">
+        <input
+          type="text"
+          name="client"
+          id="client"
+          class="form-control form-control-sm"
+        />
+      </div>
+      <div class="col-lg-2">
+        <input type="submit" value="Administrar" class="btn btn-primary" />
+      </div>
+    </div>
+  </form>
 </form>
 {% endblock content %}
