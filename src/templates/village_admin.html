@@ -1,0 +1,40 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Aldeas {%
+endblock %} {% block content %}
+<h2>Administrador de Aldeas</h2>
+<form
+  action="{{url_for('create_village')}}"
+  method="POST"
+  class="container-fluid m-3 p-3"
+>
+  <h3 class="m-3">Crear Nueva Aldea</h3>
+  <div class="row">
+    <label for="name" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Nombre</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="text"
+        name="name"
+        id="name"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="code" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Código de Area</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="tel"
+        name="code"
+        id="code"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-4 mx-auto">
+    <input type="submit" value="Crear Aldea" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock content %}

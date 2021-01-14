@@ -1,8 +1,12 @@
-{% extends 'base_layout.html' %} {% block title %} Dashboard {% endblock %} {%
-block content %}
+{% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
+endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
-
-<form id="client-form" class="container-fluid m-3 p-3">
+<form
+  action="{{url_for('create_client')}}"
+  method="POST"
+  class="container-fluid m-3 p-3"
+>
+  <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
     <label for="name" class="col-lg-2 col-form-label fw-bolder fs-5"
       >Nombre</label
@@ -42,7 +46,35 @@ block content %}
       />
     </div>
   </div>
-  <div class="d-grid gap-2 col-4 mx-auto">
+  <div class="row">
+    <label for="description" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Descripción</label
+    >
+    <div class="col-lg-8">
+      <input
+        type="text"
+        name="description"
+        id="description"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="ubication" class="col-lg-2 col-form-label fw-bolder fs-5"
+      >Aldea</label
+    >
+    <div class="col-lg-8">
+      <select name="ubication" id="ubication" class="form-select">
+        <option selected></option>
+        {% for village in villages %}
+        <option value="{{village.key_id}}">
+          {{village.code}} - {{village.name}}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
 </form>
