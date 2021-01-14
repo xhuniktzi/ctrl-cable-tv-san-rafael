@@ -63,7 +63,8 @@ def dashboard():
 @app.route('/admin/clients/')
 def client_admin():
     villages = Ubication.query.all()
-    return render_template('client_admin.html', villages=villages)
+    clients = Client.query.all()
+    return render_template('client_admin.html', villages=villages, clients=clients)
 
 
 @app.route('/admin/villages/')
@@ -95,7 +96,7 @@ def create_village():
     return redirect(url_for('village_admin'))
 
 
-# TODO: Create an API read-only
+# API
 @app.route('/api/v1/client/<id>')
 # Recibe un id con el nombre del cliente
 def get_client_api(id: int):
