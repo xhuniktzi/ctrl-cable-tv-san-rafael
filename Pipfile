@@ -14,6 +14,7 @@ pylint = "*"
 pylint-flask = "*"
 autopep8 = "*"
 pylint-flask-sqlalchemy = "*"
+pylint-sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"

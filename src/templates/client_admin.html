@@ -4,10 +4,10 @@ endblock %} {% block content %}
 <form action="#" method="POST" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
-    <label for="name" class="col-md-2 col-form-label fw-bolder fs-5"
+    <label for="name" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Nombre</label
     >
-    <div class="col-md-8">
+    <div class="col-lg-7">
       <input
         type="text"
         name="name"
@@ -17,10 +17,10 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="phone" class="col-md-2 col-form-label fw-bolder fs-5"
+    <label for="phone" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Teléfono</label
     >
-    <div class="col-md-8">
+    <div class="col-lg-7">
       <input
         type="tel"
         name="phone"
@@ -30,10 +30,10 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="direction" class="col-md-2 col-form-label fw-bolder fs-5"
+    <label for="direction" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Dirección</label
     >
-    <div class="col-md-8">
+    <div class="col-lg-7">
       <input
         type="text"
         name="direction"
@@ -43,10 +43,10 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="description" class="col-md-2 col-form-label fw-bolder fs-5"
+    <label for="description" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Descripción</label
     >
-    <div class="col-md-8">
+    <div class="col-lg-7">
       <input
         type="text"
         name="description"
@@ -56,10 +56,10 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="ubication" class="col-md-2 col-form-label fw-bolder fs-5"
+    <label for="ubication" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Aldea</label
     >
-    <div class="col-md-8">
+    <div class="col-lg-7">
       <select name="ubication" id="ubication" class="form-select">
         <option selected></option>
       </select>
@@ -69,3 +69,4 @@ endblock %} {% block content %}
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
 </form>
+{% endblock content %}

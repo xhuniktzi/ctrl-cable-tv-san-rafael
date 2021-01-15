@@ -35,7 +35,7 @@ class Client(db.Model):
     direction = db.Column(db.String(120), nullable=False)
     description = db.Column(db.String(120), nullable=False)
     payment_date = db.Column(db.DateTime, nullable=False)
-#	payment_group <- pendiente
+    payment_group = db.Column(db.String(3), nullable=False)
     internet_speed = db.Column(db.Integer, nullable=True)
     ip_address = db.Column(db.String(16), nullable=True)
     router_number = db.Column(db.Integer, nullable=True)
@@ -70,8 +70,7 @@ def dashboard():
 
 @app.route('/admin/clients/')
 def client_admin():
-    villages = Ubication.query.all()
-    return render_template('client_admin.html', villages=villages)
+    return render_template('client_admin.html')
 
 
 @app.route('/admin/villages/')
@@ -79,7 +78,16 @@ def village_admin():
     return render_template('village_admin.html')
 
 
+@app.route('/admin/services/')
+def service_admin():
+    return render_template('service_admin.html')
+
+
 # API
+@app.route('/api/v1/villages', methods=['GET'])
+def get_all_villages():
+
+    pass
 
 
 if __name__ == "__main__":
