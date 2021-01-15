@@ -79,6 +79,9 @@ def village_admin():
     return render_template('village_admin.html')
 
 
+# API
+
+
 if __name__ == "__main__":
     db.create_all()
     app.run(debug=True)
