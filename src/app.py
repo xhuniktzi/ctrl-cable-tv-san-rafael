@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -19,6 +19,7 @@ class ClientServices(db.Model):
     service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
                            primary_key=True)
     price = db.Column(db.Integer, nullable=False)
+    payment_status = db.Column(db.Boolean, nullable=False)
 
 
 class Ubication(db.Model):
@@ -32,7 +33,13 @@ class Client(db.Model):
     name = db.Column(db.String(80), nullable=False)
     phone = db.Column(db.String(12), nullable=True)
     direction = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.String(120), nullable=True)
+    description = db.Column(db.String(120), nullable=False)
+    payment_date = db.Column(db.DateTime, nullable=False)
+#	payment_group <- pendiente
+    internet_speed = db.Column(db.Integer, nullable=True)
+    ip_address = db.Column(db.String(16), nullable=True)
+    router_number = db.Column(db.Integer, nullable=True)
+    line_number = db.Column(db.Integer, nullable=True)
     ubication_id = db.Column(db.Integer, db.ForeignKey('ubication.key_id'),
                              nullable=False)
 
@@ -52,6 +59,7 @@ class Payment(db.Model):
 class Service(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
+    code = db.Column(db.String(5), nullable=False)
 
 
 # Rutas
@@ -69,33 +77,6 @@ def client_admin():
 @app.route('/admin/villages/')
 def village_admin():
     return render_template('village_admin.html')
-
-
-# Endpoints
-@app.route('/admin/clients/create', methods=['POST'])
-def create_client():
-    new_client = Client()
-    new_client.name = request.form['name']
-    new_client.phone = request.form['phone']
-    new_client.direction = request.form['direction']
-    new_client.description = request.form['description']
-    new_client.ubication_id = request.form['ubication']
-    db.session.add(new_client)
-    db.session.commit()
-    return redirect(url_for('client_admin'))
-
-
-@app.route('/admin/villages/create', methods=['POST'])
-def create_village():
-    new_village = Ubication()
-    new_village.name = request.form['name'],
-    new_village.code = request.form['code']
-    db.session.add(new_village)
-    db.session.commit()
-    return redirect(url_for('village_admin'))
-
-
-# TODO: Create an API read-only
 
 
 if __name__ == "__main__":
