@@ -1,7 +1,7 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
-<form action="{{url_for('create_client')}}" method="POST" class="m-3 p-3">
+<form action="#" method="POST" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
     <label for="name" class="col-md-2 col-form-label fw-bolder fs-5"
@@ -62,11 +62,6 @@ endblock %} {% block content %}
     <div class="col-md-8">
       <select name="ubication" id="ubication" class="form-select">
         <option selected></option>
-        {% for village in villages %}
-        <option value="{{village.key_id}}">
-          {{village.code}} - {{village.name}}
-        </option>
-        {% endfor %}
       </select>
     </div>
   </div>
@@ -74,27 +69,6 @@ endblock %} {% block content %}
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
 </form>
-<div id="admin-client">
-  <form id="form-admin-client" class="m-3 p-3">
-    <h3>Administrar Clientes</h3>
-    <div class="row">
-      <label for="client" class="col-md-2 col-form-label fw-bolder fs-5"
-        >Cliente</label
-      >
-      <div class="col-md-6">
-        <select name="client" id="client" class="form-select">
-          <option selected></option>
-          {% for client in clients %}
-          <option value="{{client.key_id}}">{{client.name}}</option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="col-md-2">
-        <input type="submit" value="Administrar" class="btn btn-primary" />
-      </div>
-    </div>
-  </form>
-</div>
 {% endblock content %} {% block script %} {{ super() }}
-<script async src="{{url_for('static',filename='client_admin.js')}}"></script>
+<script async src="#"></script>
 {% endblock script %}
