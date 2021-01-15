@@ -1,7 +1,7 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
-<form action="#" method="POST" class="m-3 p-3">
+<form id="create-client-form" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
     <label for="name" class="col-lg-3 col-form-label fw-bolder fs-5"
@@ -69,4 +69,6 @@ endblock %} {% block content %}
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
 </form>
-{% endblock content %}
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='client_admin.js')}}"></script>
+{% endblock script %}

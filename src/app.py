@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from helpers import serialize_village
 import os
 
 load_dotenv()
@@ -86,8 +87,29 @@ def service_admin():
 # API
 @app.route('/api/v1/villages', methods=['GET'])
 def get_all_villages():
+    villages = Ubication.query.all()
+    village_list = []
+    for village in villages:
+        village_element = serialize_village(village)
+        village_list.append(village_element)
+    return jsonify(village_list)
 
-    pass
+
+@app.route('/api/v1/villages/<int:id>', methods=['GET'])
+def get_village(id: int):
+    village = Ubication.query.filter_by(key_id=id).first()
+    return jsonify(serialize_village(village))
+
+
+@app.route('/api/v1/villages', methods=['POST'])
+def post_village():
+    new_village = Ubication()
+    new_village.name = request.json['name']
+    new_village.code = request.json['code']
+
+    db.session.add(new_village)
+    db.session.commit()
+    return serialize_village(new_village)
 
 
 if __name__ == "__main__":
