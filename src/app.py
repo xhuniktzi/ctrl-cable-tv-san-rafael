@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from helpers import serialize_village, serialize_service
 import os
 
 load_dotenv()
@@ -19,6 +20,7 @@ class ClientServices(db.Model):
     service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
                            primary_key=True)
     price = db.Column(db.Integer, nullable=False)
+    payment_status = db.Column(db.Boolean, nullable=False)
 
 
 class Ubication(db.Model):
@@ -33,6 +35,12 @@ class Client(db.Model):
     phone = db.Column(db.String(12), nullable=True)
     direction = db.Column(db.String(120), nullable=False)
     description = db.Column(db.String(120), nullable=True)
+    payment_date = db.Column(db.DateTime, nullable=False)
+    payment_group = db.Column(db.String(3), nullable=False)
+    internet_speed = db.Column(db.Integer, nullable=True)
+    ip_address = db.Column(db.String(16), nullable=True)
+    router_number = db.Column(db.Integer, nullable=True)
+    line_number = db.Column(db.Integer, nullable=True)
     ubication_id = db.Column(db.Integer, db.ForeignKey('ubication.key_id'),
                              nullable=False)
 
@@ -52,6 +60,7 @@ class Payment(db.Model):
 class Service(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
+    code = db.Column(db.String(5), nullable=False)
 
 
 # Rutas
@@ -62,8 +71,7 @@ def dashboard():
 
 @app.route('/admin/clients/')
 def client_admin():
-    villages = Ubication.query.all()
-    return render_template('client_admin.html', villages=villages)
+    return render_template('client_admin.html')
 
 
 @app.route('/admin/villages/')
@@ -71,31 +79,58 @@ def village_admin():
     return render_template('village_admin.html')
 
 
-# Endpoints
-@app.route('/admin/clients/create', methods=['POST'])
-def create_client():
-    new_client = Client()
-    new_client.name = request.form['name']
-    new_client.phone = request.form['phone']
-    new_client.direction = request.form['direction']
-    new_client.description = request.form['description']
-    new_client.ubication_id = request.form['ubication']
-    db.session.add(new_client)
-    db.session.commit()
-    return redirect(url_for('client_admin'))
+@app.route('/admin/services/')
+def service_admin():
+    return render_template('service_admin.html')
 
 
-@app.route('/admin/villages/create', methods=['POST'])
-def create_village():
+# API
+@app.route('/api/v1/villages', methods=['GET'])
+def get_all_villages():
+    villages = Ubication.query.all()
+    village_list = []
+    for village in villages:
+        village_element = serialize_village(village)
+        village_list.append(village_element)
+    return jsonify(village_list)
+
+
+@app.route('/api/v1/villages/<int:id>', methods=['GET'])
+def get_village(id: int):
+    village = Ubication.query.filter_by(key_id=id).first()
+    return jsonify(serialize_village(village))
+
+
+@app.route('/api/v1/villages', methods=['POST'])
+def post_village():
     new_village = Ubication()
-    new_village.name = request.form['name'],
-    new_village.code = request.form['code']
+    new_village.name = request.json['name']
+    new_village.code = request.json['code']
+
     db.session.add(new_village)
     db.session.commit()
-    return redirect(url_for('village_admin'))
+    return serialize_village(new_village)
 
 
-# TODO: Create an API read-only
+@app.route('/api/v1/services', methods=['GET'])
+def get_all_services():
+    services = Service.query.all()
+    service_list = []
+    for service in services:
+        service_element = serialize_service(service)
+        service_list.append(service_element)
+    return jsonify(service_list)
+
+
+@app.route('/api/v1/services', methods=['POST'])
+def post_service():
+    new_service = Service()
+    new_service.name = request.json['name']
+    new_service.code = request.json['code']
+
+    db.session.add(new_service)
+    db.session.commit()
+    return serialize_service(new_service)
 
 
 if __name__ == "__main__":

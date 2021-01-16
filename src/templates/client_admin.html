@@ -1,30 +1,27 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
-<form
-  action="{{url_for('create_client')}}"
-  method="POST"
-  class="container-fluid m-3 p-3"
->
+<form id="create-client-form" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Cliente</h3>
   <div class="row">
-    <label for="name" class="col-lg-2 col-form-label fw-bolder fs-5"
+    <label for="name" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Nombre</label
     >
-    <div class="col-lg-8">
+    <div class="col-lg-6">
       <input
         type="text"
         name="name"
         id="name"
         class="form-control form-control-sm"
+        required
       />
     </div>
   </div>
   <div class="row">
-    <label for="phone" class="col-lg-2 col-form-label fw-bolder fs-5"
+    <label for="phone" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Teléfono</label
     >
-    <div class="col-lg-8">
+    <div class="col-lg-6">
       <input
         type="tel"
         name="phone"
@@ -34,23 +31,24 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="direction" class="col-lg-2 col-form-label fw-bolder fs-5"
+    <label for="direction" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Dirección</label
     >
-    <div class="col-lg-8">
+    <div class="col-lg-6">
       <input
         type="text"
         name="direction"
         id="direction"
         class="form-control form-control-sm"
+        required
       />
     </div>
   </div>
   <div class="row">
-    <label for="description" class="col-lg-2 col-form-label fw-bolder fs-5"
+    <label for="description" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Descripción</label
     >
-    <div class="col-lg-8">
+    <div class="col-lg-6">
       <input
         type="text"
         name="description"
@@ -59,18 +57,114 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
-    <label for="ubication" class="col-lg-2 col-form-label fw-bolder fs-5"
+    <label for="payment-date" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Fecha de Inicio</label
+    >
+    <div class="col-lg-6">
+      <input
+        type="date"
+        name="payment-date"
+        id="payment-date"
+        class="form-control form-control-sm"
+        required
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="payment-group" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Fecha de Pago</label
+    >
+    <div class="col-lg-4 form-check form-check-inline">
+      <input
+        type="radio"
+        name="payment-group"
+        id="mid-month"
+        class="form-check-input"
+        value="MID"
+        checked
+      />
+      <label for="mid-month" class="form-check-label">Mediados de mes</label>
+    </div>
+    <div class="col-lg-3 form-check form-check-inline">
+      <input
+        type="radio"
+        name="payment-group"
+        id="end-month"
+        class="form-check-input"
+        value="END"
+      />
+      <label for="end-month" class="form-check-label">Finales de mes</label>
+    </div>
+  </div>
+  <div class="row">
+    <label for="internet-speed" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Velocidad del Internet</label
+    >
+    <div class="col-lg-6">
+      <input
+        type="number"
+        name="internet-speed"
+        id="internet-speed"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="ip-address" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Dirección IP</label
+    >
+    <div class="col-lg-6">
+      <input
+        type="text"
+        name="ip-address"
+        id="ip-address"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="internet-router" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Numero de Router</label
+    >
+    <div class="col-lg-2">
+      <input
+        type="number"
+        name="internet-router"
+        id="internet-router"
+        class="form-control form-control-sm"
+      />
+    </div>
+    <label for="internet-line" class="col-lg-3 col-form-label fw-bolder fs-5"
+      >Numero de Linea</label
+    >
+    <div class="col-lg-1">
+      <input
+        type="number"
+        name="internet-line"
+        id="internet-line"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label for="ubication" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Aldea</label
     >
-    <div class="col-lg-8">
-      <select name="ubication" id="ubication" class="form-select">
+    <div class="col-lg-6">
+      <select name="ubication" id="ubication" class="form-select" required>
         <option selected></option>
-        {% for village in villages %}
-        <option value="{{village.key_id}}">
-          {{village.code}} - {{village.name}}
-        </option>
-        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <label for="service" class="col-lg-4 col-form-label fw-bolder fs-5"
+      >Servicio</label
+    >
+    <div class="col-lg-6">
+      <select name="service" id="service" class="form-select" required>
+        <option selected></option>
       </select>
     </div>
   </div>
@@ -78,4 +172,6 @@ endblock %} {% block content %}
     <input type="submit" value="Crear Cliente" class="btn btn-primary" />
   </div>
 </form>
-{% endblock content %}
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='client_admin.js')}}"></script>
+{% endblock script %}
