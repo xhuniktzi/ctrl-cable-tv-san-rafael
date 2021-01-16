@@ -1,9 +1,11 @@
 {
-  "python.pythonPath": "/home/xhunik/.local/share/virtualenvs/ctrl-cable-tv-san-rafael-PGYr3Vnp/bin/python",
+  "python.pythonPath": "C:\\Users\\DELL\\.virtualenvs\\ctrl-cable-tv-san-rafael-2adEt4eV\\Scripts\\python.exe",
   "python.linting.pylintArgs": [
     "--load-plugins",
     "pylint_flask_sqlalchemy",
     "pylint_flask",
     "pylint_sqlalchemy"
-  ]
+  ],
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true
 }
