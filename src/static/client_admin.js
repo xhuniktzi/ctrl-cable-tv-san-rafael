@@ -4,7 +4,6 @@ let create_client_form_opt = document.querySelector('#create-client-form #ubicat
 let url = '/api/v1/villages';
 fetch(url, {
   method :'GET',
-  cache : 'no-cache',
   headers : {
     'Content-Type' : 'application/json'
   }
