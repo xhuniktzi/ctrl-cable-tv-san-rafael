@@ -1,7 +1,7 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Servicios {%
 endblock %} {% block content %}
 <h2>Administrador de Servicios</h2>
-<form action="#" method="POST" class="m-3 p-3">
+<form id="create-service-form" class="m-3 p-3">
   <h3 class="m-3">Crear Nuevo Servicio</h3>
   <div class="row">
     <label for="name" class="col-lg-3 col-form-label fw-bolder fs-5"
@@ -13,6 +13,7 @@ endblock %} {% block content %}
         name="name"
         id="name"
         class="form-control form-control-sm"
+        required
       />
     </div>
   </div>
@@ -26,11 +27,14 @@ endblock %} {% block content %}
         name="code"
         id="code"
         class="form-control form-control-sm"
+        required
       />
     </div>
   </div>
   <div class="d-grid gap-2 col-4 mx-auto m-3">
-    <input type="submit" value="Crear Aldea" class="btn btn-primary" />
+    <input type="submit" value="Crear Servicio" class="btn btn-primary" />
   </div>
 </form>
-{% endblock content %}
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='service_admin.js')}}"></script>
+{% endblock script %}

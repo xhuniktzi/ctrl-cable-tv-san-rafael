@@ -17,6 +17,7 @@ create_village_form.addEventListener('submit', (e) => {
     if (res.ok){
       console.log('OK');
       console.log(res);
+      create_village_form.reset();
     }
   })
   .catch((err)=>{
