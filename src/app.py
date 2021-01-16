@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from helpers import serialize_village
+from helpers import serialize_village, serialize_service
 import os
 
 load_dotenv()
@@ -34,7 +34,7 @@ class Client(db.Model):
     name = db.Column(db.String(80), nullable=False)
     phone = db.Column(db.String(12), nullable=True)
     direction = db.Column(db.String(120), nullable=False)
-    description = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.String(120), nullable=True)
     payment_date = db.Column(db.DateTime, nullable=False)
     payment_group = db.Column(db.String(3), nullable=False)
     internet_speed = db.Column(db.Integer, nullable=True)
@@ -110,6 +110,27 @@ def post_village():
     db.session.add(new_village)
     db.session.commit()
     return serialize_village(new_village)
+
+
+@app.route('/api/v1/services', methods=['GET'])
+def get_all_services():
+    services = Service.query.all()
+    service_list = []
+    for service in services:
+        service_element = serialize_service(service)
+        service_list.append(service_element)
+    return jsonify(service_list)
+
+
+@app.route('/api/v1/services', methods=['POST'])
+def post_service():
+    new_service = Service()
+    new_service.name = request.json['name']
+    new_service.code = request.json['code']
+
+    db.session.add(new_service)
+    db.session.commit()
+    return serialize_service(new_service)
 
 
 if __name__ == "__main__":
