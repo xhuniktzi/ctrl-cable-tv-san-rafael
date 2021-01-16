@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from helpers import serialize_village, serialize_service
+from helpers import serialize_client, serialize_village, serialize_service, unserialize_date
 import os
 
 load_dotenv()
@@ -109,7 +109,7 @@ def post_village():
 
     db.session.add(new_village)
     db.session.commit()
-    return serialize_village(new_village)
+    return jsonify(serialize_village(new_village))
 
 
 @app.route('/api/v1/services', methods=['GET'])
@@ -130,7 +130,26 @@ def post_service():
 
     db.session.add(new_service)
     db.session.commit()
-    return serialize_service(new_service)
+    return jsonify(serialize_service(new_service))
+
+
+@app.route('/api/v1/clients', methods=['POST'])
+def post_client():
+    new_client = Client()
+    new_client.name = request.json['name']
+    new_client.phone = request.json['phone']
+    new_client.direction = request.json['direction']
+    new_client.description = request.json['description']
+    new_client.payment_date = unserialize_date(request.json['payment_date'])
+    new_client.payment_group = request.json['payment_group']
+    new_client.internet_speed = request.json['internet_speed']
+    new_client.ip_address = request.json['ip_address']
+    new_client.router_number = request.json['router_number']
+    new_client.line_number = request.json['line_number']
+    new_client.ubication_id = request.json['ubication_id']
+    db.session.add(new_client)
+    db.session.commit()
+    return jsonify(serialize_client(new_client))
 
 
 if __name__ == "__main__":
