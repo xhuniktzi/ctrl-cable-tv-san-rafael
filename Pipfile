@@ -10,11 +10,7 @@ pymysql = "*"
 python-dotenv = "*"
 
 [dev-packages]
-pylint = "*"
-pylint-flask = "*"
 autopep8 = "*"
-pylint-flask-sqlalchemy = "*"
-pylint-sqlalchemy = "*"
 
 [requires]
 python_version = "3"
