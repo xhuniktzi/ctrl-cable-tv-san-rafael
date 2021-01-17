@@ -14,13 +14,12 @@ db = SQLAlchemy(app)
 
 # Modelos de datos
 # param: lazy=True -> SELECT, lazy=False -> JOIN, in relation model
-class ClientServices(db.Model):
+class ClientService(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
                           primary_key=True)
     service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
                            primary_key=True)
     price = db.Column(db.Integer, nullable=False)
-    payment_status = db.Column(db.Boolean, nullable=False)
 
 
 class Ubication(db.Model):
@@ -51,6 +50,7 @@ class Payment(db.Model):
     status = db.Column(db.Boolean, nullable=False)
     month = db.Column(db.String(3), nullable=False)
     year = db.Column(db.Integer, nullable=False)
+    payment_status = db.Column(db.Boolean, nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
                            nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
@@ -148,6 +148,12 @@ def post_client():
     new_client.line_number = request.json['line_number']
     new_client.ubication_id = request.json['ubication_id']
     db.session.add(new_client)
+    db.session.commit()
+    new_client_service = ClientService()
+    new_client_service.client_id = new_client.key_id
+    new_client_service.service_id = request.json['service']['id']
+    new_client_service.price = request.json['service']['price']
+    db.session.add(new_client_service)
     db.session.commit()
     return jsonify(serialize_client(new_client))
 
