@@ -21,7 +21,7 @@ create_village_form.addEventListener('submit', (e) => {
     }
   })
   .catch((err)=>{
-    console.log('ERROR');
-    console.log(err);
+    console.error('ERROR');
+    console.error(err);
   })
 })

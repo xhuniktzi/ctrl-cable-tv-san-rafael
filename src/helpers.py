@@ -25,6 +25,7 @@ def serialize_service(service):
 
 
 def unserialize_date(date):
+    print(date)
     return datetime(int(date['year']), int(date['month']), int(date['day']))
 
 

@@ -1,6 +1,6 @@
 let create_client_form = document.querySelector('#create-client-form');
 let client_form_ubication = document.querySelector('#create-client-form #ubication');
-let client_form_service = document.querySelector('#create-client-form #service');
+let client_form_service = document.querySelector('#create-client-form #service-id');
 
 async function render_village_menu(){
   let url = '/api/v1/villages';
@@ -56,10 +56,60 @@ async function render_service_menu(){
   })
 }
 
+render_service_menu();
+render_village_menu();
+
 create_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  let url = '/api/v1/clients';
+  fetch(url , {
+    method : 'POST',
+    headers : {
+      'Content-Type' : 'application/json'
+    },
+    body : JSON.stringify({
+      'name' : document.querySelector('#create-client-form #name').value,
+      'phone' : document.querySelector('#create-client-form #phone').value,
+      'direction' : document.querySelector('#create-client-form #direction').value,
+      'description' : document.querySelector('#create-client-form #description').value,
+      'payment_date' : {
+        'day' : new Date(document.querySelector('#create-client-form #payment-date').value).getDay(),
+        'month' : new Date(document.querySelector('#create-client-form #payment-date').value).getMonth(),
+        'year' : new Date(document.querySelector('#create-client-form #payment-date').value).getYear()
+      },
+      'payment_group' : parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')),
+      'internet_speed' : document.querySelector('#create-client-form #internet-speed').value,
+      'ip_address' : document.querySelector('#create-client-form #ip-address').value,
+      'router_number' : document.querySelector('#create-client-form #router-number').value,
+      'line_number' : document.querySelector('#create-client-form #line-number').value,
+      'ubication_id' : document.querySelector('#create-client-form #ubication').value,
+      'service' : {
+        'id' : document.querySelector('#create-client-form #service-id').value,
+        'price' : document.querySelector('#create-client-form #service-price').value
+      }
+    })
+  })
+  .then((res) => {
+    if (res.ok){
+      console.log('OK');
+      console.log(res);
+      console.log(document.querySelector('#create-client-form #payment-date').value);
+      console.log(parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')));
+      create_client_form.reset();
+    }
+  })
+  .catch((err)=>{
+    console.error('ERROR');
+    console.error(err);
+  })
 })
 
 
-render_service_menu();
-render_village_menu();
+function parse_payment_radio_input(end_radio, mid_radio){
+  if (end_radio.checked == true){
+    return 'END';
+  }
+  if (mid_radio.checked == true){
+    return 'MID';
+  }
+}

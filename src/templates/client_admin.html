@@ -73,29 +73,27 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="payment-group" class="col-lg-4 col-form-label fw-bolder fs-5"
-      >Fecha de Pago</label
-    >
+    <label class="col-lg-4 col-form-label fw-bolder fs-5">Fecha de Pago</label>
     <div class="col-lg-4 form-check form-check-inline">
       <input
         type="radio"
+        id="mid-option"
         name="payment-group"
-        id="mid-month"
         class="form-check-input"
         value="MID"
         checked
       />
-      <label for="mid-month" class="form-check-label">Mediados de mes</label>
+      <label for="mid-option" class="form-check-label">Mediados de mes</label>
     </div>
     <div class="col-lg-3 form-check form-check-inline">
       <input
         type="radio"
+        id="end-option"
         name="payment-group"
-        id="end-month"
         class="form-check-input"
         value="END"
       />
-      <label for="end-month" class="form-check-label">Finales de mes</label>
+      <label for="end-option" class="form-check-label">Finales de mes</label>
     </div>
   </div>
   <div class="row">
@@ -125,25 +123,25 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="row">
-    <label for="internet-router" class="col-lg-4 col-form-label fw-bolder fs-5"
+    <label for="router-number" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Numero de Router</label
     >
     <div class="col-lg-2">
       <input
         type="number"
-        name="internet-router"
-        id="internet-router"
+        name="router-number"
+        id="router-number"
         class="form-control form-control-sm"
       />
     </div>
-    <label for="internet-line" class="col-lg-3 col-form-label fw-bolder fs-5"
+    <label for="line-number" class="col-lg-3 col-form-label fw-bolder fs-5"
       >Numero de Linea</label
     >
     <div class="col-lg-1">
       <input
         type="number"
-        name="internet-line"
-        id="internet-line"
+        name="line-number"
+        id="line-number"
         class="form-control form-control-sm"
       />
     </div>
@@ -153,19 +151,40 @@ endblock %} {% block content %}
       >Aldea</label
     >
     <div class="col-lg-6">
-      <select name="ubication" id="ubication" class="form-select" required>
+      <select
+        name="ubication"
+        id="ubication"
+        class="form-select form-select-sm"
+        required
+      >
         <option selected></option>
       </select>
     </div>
   </div>
   <div class="row">
-    <label for="service" class="col-lg-4 col-form-label fw-bolder fs-5"
+    <label for="service-id" class="col-lg-4 col-form-label fw-bolder fs-5"
       >Servicio</label
     >
-    <div class="col-lg-6">
-      <select name="service" id="service" class="form-select" required>
+    <div class="col-lg-3">
+      <select
+        name="service-id"
+        id="service-id"
+        class="form-select form-select-sm"
+        required
+      >
         <option selected></option>
       </select>
+    </div>
+    <label for="service-price" class="col-lg-1 col-form-label fw-bolder fs-5"
+      >Precio</label
+    >
+    <div class="col-lg-2">
+      <input
+        type="number"
+        name="service-price"
+        id="service-price"
+        class="form-control form-control-sm"
+      />
     </div>
   </div>
   <div class="d-grid gap-2 col-4 mx-auto m-3">
