@@ -45,7 +45,7 @@ def serialize_client(client):
         return {}
     else:
         return {
-            'key_id': client.key_id,
+            'id': client.key_id,
             'name': client.name,
             'phone': client.phone,
             'direction': client.direction,

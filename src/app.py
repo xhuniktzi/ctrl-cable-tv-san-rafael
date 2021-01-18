@@ -112,6 +112,16 @@ def post_village():
     return jsonify(serialize_village(new_village))
 
 
+@app.route('/api/v1/villages', methods=['PUT'])
+def put_village():
+    village = Ubication.query.filter_by(key_id=request.json['id']).first()
+    village.name = request.json['name']
+    village.code = request.json['code']
+    db.session.add(village)
+    db.session.commit()
+    return serialize_village(village)
+
+
 @app.route('/api/v1/services', methods=['GET'])
 def get_all_services():
     services = Service.query.all()
