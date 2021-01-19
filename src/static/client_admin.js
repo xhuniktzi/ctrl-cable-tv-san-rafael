@@ -73,9 +73,9 @@ create_client_form.addEventListener('submit', (e) => {
       'direction' : document.querySelector('#create-client-form #direction').value,
       'description' : document.querySelector('#create-client-form #description').value,
       'payment_date' : {
-        'day' : new Date(document.querySelector('#create-client-form #payment-date').value).getDay(),
-        'month' : new Date(document.querySelector('#create-client-form #payment-date').value).getMonth(),
-        'year' : new Date(document.querySelector('#create-client-form #payment-date').value).getYear()
+        'day' : new Date(document.querySelector('#create-client-form #payment-date').value).getDate()+1,
+        'month' : new Date(document.querySelector('#create-client-form #payment-date').value).getMonth()+1,
+        'year' : new Date(document.querySelector('#create-client-form #payment-date').value).getFullYear()
       },
       'payment_group' : parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')),
       'internet_speed' : document.querySelector('#create-client-form #internet-speed').value,
@@ -93,8 +93,6 @@ create_client_form.addEventListener('submit', (e) => {
     if (res.ok){
       console.log('OK');
       console.log(res);
-      console.log(document.querySelector('#create-client-form #payment-date').value);
-      console.log(parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')));
       create_client_form.reset();
     }
   })
