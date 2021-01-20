@@ -117,9 +117,16 @@ def put_village(id: int):
     village = Ubication.query.get(id)
     village.name = request.json['name']
     village.code = request.json['code']
-    db.session.add(village)
     db.session.commit()
-    return serialize_village(village)
+    return jsonify(serialize_village(village))
+
+
+@app.route('/api/v1/villages/<int:id>', methods=['DELETE'])
+def delete_village(id: int):
+    village = Ubication.query.get(id)
+    db.session.delete(village)
+    db.session.commit()
+    return jsonify(serialize_village(village))
 
 
 @app.route('/api/v1/services', methods=['GET'])
@@ -132,6 +139,12 @@ def get_all_services():
     return jsonify(service_list)
 
 
+@app.route('/api/v1/services/<int:id>', methods=['GET'])
+def get_service(id: int):
+    service = Service.query.get(id)
+    return jsonify(serialize_service(service))
+
+
 @app.route('/api/v1/services', methods=['POST'])
 def post_service():
     new_service = Service()
@@ -141,6 +154,23 @@ def post_service():
     db.session.add(new_service)
     db.session.commit()
     return jsonify(serialize_service(new_service))
+
+
+@app.route('/api/v1/services/<int:id>', methods=['PUT'])
+def put_service(id: int):
+    service = Service.query.get(id)
+    service.name = request.json['name']
+    service.code = request.json['code']
+    db.session.commit()
+    return jsonify(serialize_service(service))
+
+
+@app.route('/api/v1/services/<int:id>', methods=['DELETE'])
+def delete_service(id: int):
+    service = Service.query.get(id)
+    db.session.delete(service)
+    db.session.commit()
+    return jsonify(serialize_service(service))
 
 
 @app.route('/api/v1/clients', methods=['POST'])
