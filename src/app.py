@@ -74,6 +74,11 @@ def client_admin():
     return render_template('client_admin.html')
 
 
+@app.route('/admin/manage-clients/')
+def manage_clients():
+    return render_template('manage_clients.html')
+
+
 @app.route('/admin/villages/')
 def village_admin():
     return render_template('village_admin.html')
@@ -173,6 +178,22 @@ def delete_service(id: int):
     return jsonify(serialize_service(service))
 
 
+@app.route('/api/v1/clients', methods=['GET'])
+def get_all_clients():
+    clients = Client.query.all()
+    client_list = []
+    for client in clients:
+        client_element = serialize_client(client)
+        client_list.append(client_element)
+    return jsonify(client_list)
+
+
+@app.route('/api/v1/clients/<int:id>', methods=['GET'])
+def get_client(id: int):
+    client = Client.query.get(id)
+    return jsonify(serialize_client(client))
+
+
 @app.route('/api/v1/clients', methods=['POST'])
 def post_client():
     new_client = Client()
@@ -190,6 +211,31 @@ def post_client():
     db.session.add(new_client)
     db.session.commit()
     return jsonify(serialize_client(new_client))
+
+
+@app.route('/api/v1/clients/<int:id>', methods=['PUT'])
+def put_client(id: int):
+    client = Client.query.get(id)
+    client.name = request.json['name']
+    client.phone = request.json['phone']
+    client.direction = request.json['direction']
+    client.description = request.json['description']
+    client.payment_date = unserialize_date(request.json['payment_date'])
+    client.payment_group = request.json['payment_group']
+    client.internet_speed = request.json['internet_speed']
+    client.ip_address = request.json['ip_address']
+    client.router_number = request.json['router_number']
+    client.line_number = request.json['line_number']
+    client.ubication_id = request.json['ubication_id']
+    db.session.commit()
+    return jsonify(serialize_client(client))
+
+
+@app.route('/api/v1/clients/<int:id>', methods=['DELETE'])
+def delete_client(id: int):
+    client = Client.query.get(id)
+    db.session.delete(client)
+    return jsonify(serialize_client(client))
 
 
 @app.route('/api/v1/client-services', methods=['POST'])

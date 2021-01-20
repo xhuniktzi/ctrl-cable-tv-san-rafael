@@ -1,0 +1,9 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
+endblock %} {% block content %}
+<h2>Administrador de Clientes</h2>
+
+<form id="select-client-form"></form>
+
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='manage_clients.js')}}"></script>
+{% endblock script %}
