@@ -57,3 +57,14 @@ def serialize_client(client):
             'line_number': client.line_number,
             'ubication_id': client.ubication_id
         }
+
+
+def serialize_client_service(client_service):
+    if client_service is None:
+        return {}
+    else:
+        return {
+            'client_id': client_service.client_id,
+            'service_id': client_service.service_id,
+            'price': client_service.price
+        }

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from helpers import serialize_client, serialize_village, serialize_service, unserialize_date
+from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date
 import os
 
 load_dotenv()
@@ -189,13 +189,18 @@ def post_client():
     new_client.ubication_id = request.json['ubication_id']
     db.session.add(new_client)
     db.session.commit()
+    return jsonify(serialize_client(new_client))
+
+
+@app.route('/api/v1/client-services', methods=['POST'])
+def post_client_service():
     new_client_service = ClientService()
-    new_client_service.client_id = new_client.key_id
-    new_client_service.service_id = request.json['service']['id']
-    new_client_service.price = request.json['service']['price']
+    new_client_service.client_id = request.json['client_id']
+    new_client_service.service_id = request.json['service_id']
+    new_client_service.price = request.json['price']
     db.session.add(new_client_service)
     db.session.commit()
-    return jsonify(serialize_client(new_client))
+    return jsonify(serialize_client_service(new_client_service))
 
 
 if __name__ == "__main__":

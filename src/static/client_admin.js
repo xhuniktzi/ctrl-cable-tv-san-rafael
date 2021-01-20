@@ -61,8 +61,8 @@ render_village_menu();
 
 create_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
-  let url = '/api/v1/clients';
-  fetch(url , {
+  let url_clients = '/api/v1/clients';
+  fetch(url_clients , {
     method : 'POST',
     headers : {
       'Content-Type' : 'application/json'
@@ -82,19 +82,36 @@ create_client_form.addEventListener('submit', (e) => {
       'ip_address' : document.querySelector('#create-client-form #ip-address').value,
       'router_number' : document.querySelector('#create-client-form #router-number').value,
       'line_number' : document.querySelector('#create-client-form #line-number').value,
-      'ubication_id' : document.querySelector('#create-client-form #ubication').value,
-      'service' : {
-        'id' : document.querySelector('#create-client-form #service-id').value,
-        'price' : document.querySelector('#create-client-form #service-price').value
-      }
+      'ubication_id' : document.querySelector('#create-client-form #ubication').value
     })
   })
   .then((res) => {
     if (res.ok){
-      console.log('OK');
+      console.log('Client is OK');
       console.log(res);
-      create_client_form.reset();
+      return res.json();
     }
+  })
+  .then((res_json)=>{
+    let url_services = '/api/v1/client-services';
+    fetch(url_services, {
+      method : 'POST',
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify({
+        'client_id' : res_json.id,
+        'service_id' : document.querySelector('#create-client-form #service-id').value,
+        'price' : document.querySelector('#create-client-form #service-price').value
+      })
+    })
+    .then((res)=>{
+      if(res.ok){
+        console.log('Service is OK');
+        console.log(res)
+        create_client_form.reset();
+      }
+    })
   })
   .catch((err)=>{
     console.error('ERROR');
