@@ -2,7 +2,57 @@
 endblock %} {% block content %}
 <h2>Administrador de Clientes</h2>
 
-<form id="select-client-form"></form>
+<form id="select-client-form" class="m-3 p-3">
+  <h3>Selecciona un cliente</h3>
+  <div class="row">
+    <label
+      for="village"
+      class="col-lg-2 col-form-label col-form-label-sm fw-bolder fs-5"
+      >Aldea</label
+    >
+    <div class="col-lg-4">
+      <select
+        name="village"
+        id="village"
+        class="form-select form-select-sm"
+        required
+      >
+        <option selected></option>
+      </select>
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="submit"
+        value="Seleccionar Aldea"
+        class="btn btn-success btn-sm"
+      />
+    </div>
+  </div>
+
+  <div class="row">
+    <label
+      for="client"
+      class="col-lg-2 col-form-label col-form-label-sm fw-bolder fs-5"
+      >Cliente</label
+    >
+    <div class="col-lg-4">
+      <input
+        type="text"
+        name="client"
+        id="client"
+        class="form-select form-select-sm"
+        required
+      />
+    </div>
+    <div class="col-lg-2">
+      <input
+        type="submit"
+        value="Seleccionar Cliente"
+        class="btn btn-primary btn-sm"
+      />
+    </div>
+  </div>
+</form>
 
 {% endblock content %} {% block script %} {{super()}}
 <script src="{{url_for('static',filename='manage_clients.js')}}"></script>

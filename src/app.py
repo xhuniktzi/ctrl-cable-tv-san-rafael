@@ -13,7 +13,6 @@ db = SQLAlchemy(app)
 
 
 # Modelos de datos
-# param: lazy=True -> SELECT, lazy=False -> JOIN, in relation model
 class ClientService(db.Model):
     client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
                           primary_key=True)
@@ -247,6 +246,18 @@ def post_client_service():
     db.session.add(new_client_service)
     db.session.commit()
     return jsonify(serialize_client_service(new_client_service))
+
+
+# Super API
+@app.route('/api/v2/search/clients', methods=['GET'])
+def search_clients():
+    get_name = request.args.get('name', type=str)
+    search = "%{}%".format(get_name)
+    clients = Client.query.filter(Client.name.like(search)).all()
+    list_clients = []
+    for client in clients:
+        list_clients.append(serialize_client(client))
+    return jsonify(list_clients)
 
 
 if __name__ == "__main__":

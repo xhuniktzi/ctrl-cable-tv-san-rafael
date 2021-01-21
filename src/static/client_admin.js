@@ -108,7 +108,7 @@ create_client_form.addEventListener('submit', (e) => {
     .then((res)=>{
       if(res.ok){
         console.log('Service is OK');
-        console.log(res)
+        console.log(res);
         create_client_form.reset();
       }
     })
