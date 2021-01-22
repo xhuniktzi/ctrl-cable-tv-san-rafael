@@ -7,50 +7,34 @@ endblock %} {% block content %}
   <div class="row">
     <label
       for="village"
-      class="col-lg-2 col-form-label col-form-label-sm fw-bolder fs-5"
+      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
       >Aldea</label
     >
-    <div class="col-lg-4">
-      <select
-        name="village"
-        id="village"
-        class="form-select form-select-sm"
-        required
-      >
+    <div class="col-lg-6">
+      <select name="village" id="village" class="form-select form-select-sm">
         <option selected></option>
       </select>
-    </div>
-    <div class="col-lg-2">
-      <input
-        type="submit"
-        value="Seleccionar Aldea"
-        class="btn btn-success btn-sm"
-      />
     </div>
   </div>
 
   <div class="row">
     <label
       for="client"
-      class="col-lg-2 col-form-label col-form-label-sm fw-bolder fs-5"
+      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
       >Cliente</label
     >
-    <div class="col-lg-4">
+    <div class="col-lg-6">
       <input
         type="text"
         name="client"
         id="client"
-        class="form-select form-select-sm"
-        required
+        class="form-control form-control-sm"
       />
     </div>
-    <div class="col-lg-2">
-      <input
-        type="submit"
-        value="Seleccionar Cliente"
-        class="btn btn-primary btn-sm"
-      />
-    </div>
+  </div>
+
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
+    <input type="submit" value="Buscar Cliente" class="btn btn-success" />
   </div>
 </form>
 

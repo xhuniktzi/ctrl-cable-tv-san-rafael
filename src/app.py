@@ -1,3 +1,4 @@
+from typing import Any
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -252,9 +253,21 @@ def post_client_service():
 @app.route('/api/v2/search/clients', methods=['GET'])
 def search_clients():
     get_name = request.args.get('name', type=str)
-    search = "%{}%".format(get_name)
-    clients = Client.query.filter(Client.name.like(search)).all()
+    get_village = request.args.get('ubication_id', type=int)
+    clients = []
     list_clients = []
+    if get_name != None and get_village != None:
+        search_name = "%{}%".format(get_name)
+        clients = Client.query.filter(Client.name.like(search_name),
+                                      Client.ubication_id == get_village).all()
+
+    elif get_name != None and get_village == None:
+        search_name = "%{}%".format(get_name)
+        clients = Client.query.filter(Client.name.like(search_name)).all()
+
+    elif get_name == None and get_village != None:
+        clients = Client.query.filter(Client.ubication_id == get_village).all()
+
     for client in clients:
         list_clients.append(serialize_client(client))
     return jsonify(list_clients)
