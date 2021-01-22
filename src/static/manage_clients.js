@@ -1,10 +1,11 @@
 let select_client_form = document.querySelector('#select-client-form');
 let client_form_village = document.querySelector('#select-client-form #village');
 let client_form_client = document.querySelector('#select-client-form #client');
+let search_results_container = document.querySelector('#search-results');
 
+let url_villages = '/api/v1/villages';
 async function render_village_menu(){
-  let url = '/api/v1/villages';
-  await fetch(url, {
+  await fetch(url_villages, {
     method :'GET',
     headers : {
       'Content-Type' : 'application/json'
@@ -13,8 +14,8 @@ async function render_village_menu(){
   .then((res) => {
     if (res.ok){
       console.log('OK');
+      return res.json();
     }
-    return res.json();
   })
   .then((res_json) => {
     for(element of res_json){
@@ -28,6 +29,23 @@ async function render_village_menu(){
     console.error(err.message);
   })
 }
+
+// let villages = await fetch(url_villages,{
+//   method :'GET',
+//     headers : {
+//       'Content-Type' : 'application/json'
+//     }
+//   })
+//   .then((res) => {
+//     if (res.ok) {
+//       console.log('OK');
+//       return res.json();
+//     }
+//   })
+//   .catch((err) => {
+//     console.error(err.message);
+//   })
+
 
 render_village_menu();
 
@@ -46,6 +64,28 @@ select_client_form.addEventListener('submit', (e) => {{
     return res.json();
   })
   .then((res_json) => {
+    for (element of res_json){
+      let client_element = document.createElement('div');
+      client_element.classList.add('row');
+
+      let client_element_id = document.createElement('div');
+      client_element_id.id = 'client-id';
+      client_element_id.classList.add('d-none');
+      client_element_id.innerHTML = element.id;
+      client_element.appendChild(client_element_id);
+
+      let client_element_name = document.createElement('div');
+      client_element_name.id = 'client-name';
+      client_element_name.classList.add(['col-lg-5','fw-bolder']);
+      client_element_name.innerHTML = element.name;
+      client_element.appendChild(client_element_name);
+
+      let client_element_ubication = document.createElement('div');
+      client_element_ubication.id = 'client-ubication';
+      client_element_ubication.classList.add(['col-lg-3','fw-bolder']);
+
+      search_results_container.appendChild(client_element);
+    }
     console.log(res_json);
   })
   .catch((err)=>{

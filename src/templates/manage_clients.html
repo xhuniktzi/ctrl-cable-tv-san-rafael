@@ -38,6 +38,20 @@ endblock %} {% block content %}
   </div>
 </form>
 
+<div id="search-results" class="m-3 p-3">
+  <div class="row">
+    <!-- <div id="client-id" class="d-none">###</div> -->
+    <div class="col-lg-5 fw-bolder text-center">Nombre del Cliente</div>
+    <div class="col-lg-3 fw-bolder text-center">Aldea</div>
+    <!-- <div class="col-lg-2 d-grid gap-2">
+      <button type="button" class="btn btn-sm btn-primary">Editar</button>
+    </div>
+    <div class="col-lg-2 d-grid gap-2">
+      <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
+    </div> -->
+  </div>
+</div>
+
 {% endblock content %} {% block script %} {{super()}}
 <script src="{{url_for('static',filename='manage_clients.js')}}"></script>
 {% endblock script %}
