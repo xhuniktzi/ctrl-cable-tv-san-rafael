@@ -50,11 +50,12 @@ class Payment(db.Model):
     status = db.Column(db.Boolean, nullable=False)
     month = db.Column(db.String(3), nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    payment_status = db.Column(db.Boolean, nullable=False)
-    service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
-                           nullable=False)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
-                          nullable=False)
+    client_service_id = db.Column(db.Integer, db.ForeignKey(
+        'client_service.key_id'), nullable=False)
+    # service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
+    #                        nullable=False)
+    # client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
+    #                       nullable=False)
 
 
 class Service(db.Model):
@@ -234,7 +235,9 @@ def put_client(id: int):
 @app.route('/api/v1/clients/<int:id>', methods=['DELETE'])
 def delete_client(id: int):
     client = Client.query.get(id)
+    ClientService.query.filter_by(client_id=id).delete()
     db.session.delete(client)
+    db.session.commit()
     return jsonify(serialize_client(client))
 
 
@@ -269,7 +272,11 @@ def search_clients():
         clients = Client.query.filter(Client.ubication_id == get_village).all()
 
     for client in clients:
-        list_clients.append(serialize_client(client))
+        ubication_client = Ubication.query.get(client.ubication_id)
+        element_client = serialize_client(client)
+        element_client['ubication'] = serialize_village(ubication_client)
+        del element_client['ubication_id']
+        list_clients.append(element_client)
     return jsonify(list_clients)
 
 
