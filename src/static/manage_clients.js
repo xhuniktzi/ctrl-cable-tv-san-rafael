@@ -3,9 +3,9 @@ let client_form_village = document.querySelector('#select-client-form #village')
 let client_form_client = document.querySelector('#select-client-form #client');
 let search_results_container = document.querySelector('#search-results');
 
-let url_villages = '/api/v1/villages';
 async function render_village_menu(){
-  await fetch(url_villages, {
+  const url = '/api/v1/villages';
+  await fetch(url, {
     method :'GET',
     headers : {
       'Content-Type' : 'application/json'
@@ -29,25 +29,6 @@ async function render_village_menu(){
     console.error(err.message);
   })
 }
-
-// let villages = await fetch(url_villages,{
-//   method :'GET',
-//     headers : {
-//       'Content-Type' : 'application/json'
-//     }
-//   })
-//   .then((res) => {
-//     if (res.ok) {
-//       console.log('OK');
-//       return res.json();
-//     }
-//   })
-//   .catch((err) => {
-//     console.error(err.message);
-//   })
-
-
-render_village_menu();
 
 select_client_form.addEventListener('submit', (e) => {{
   e.preventDefault();
