@@ -84,14 +84,6 @@ select_client_form.addEventListener('submit', (e) => {{
       delete_button.value = element.id;
       delete_button.addEventListener('click', delete_client);
       client_element_delete.appendChild(delete_button);
-
-    //   <div class="col-lg-2 d-grid gap-2">
-    //   <button type="button" class="btn btn-sm btn-danger">Eliminar</button>
-    // </div> -->
-
-    //   <div class="col-lg-2 d-grid gap-2">
-    //   <button type="button" class="btn btn-sm btn-primary">Editar</button>
-    // </div>
     }
     console.log(res_json);
   })
