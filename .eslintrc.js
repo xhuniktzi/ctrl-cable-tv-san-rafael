@@ -8,22 +8,10 @@ module.exports = {
     'ecmaVersion': 12
   },
   'rules': {
-    'indent': [
-      'error',
-      2
-    ],
-    'linebreak-style': [
-      'error',
-      'windows'
-    ],
-    'quotes': [
-      'error',
-      'single'
-    ],
-    'semi': [
-      'error',
-      'always'
-    ],
+    'indent': ['error', 2],
+    'linebreak-style': ['error', 'windows'],
+    'quotes': ['error', 'single'],
+    'semi': ['error', 'always'],
     'space-before-function-paren': ['error', 'never'],
     'semi-spacing': ['error', {'before': false, 'after': true}],
     'keyword-spacing': ['error'],
