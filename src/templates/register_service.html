@@ -1,0 +1,39 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Servicios {%
+endblock %} {% block content %}
+<h2>Administrador de Servicios</h2>
+<form id="connect-service-form" class="m-3 p-3">
+  <h3 class="m-3">Conectar un nuevo Servicio</h3>
+  <div class="row">
+    <label for="client" class="col-lg-3 col-form-label fw-bolder fs-5"
+      >Cliente</label
+    >
+    <div class="col-lg-7">
+      <input
+        type="text"
+        name="client"
+        id="client"
+        class="form-control form-control-sm"
+      />
+    </div>
+  </div>
+  <div class="row">
+    <label
+      for="village"
+      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
+      >Aldea</label
+    >
+    <div class="col-lg-7">
+      <select name="village" id="village" class="form-select form-select-sm">
+        <option selected></option>
+      </select>
+    </div>
+  </div>
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
+    <input type="submit" value="Buscar Cliente" class="btn btn-primary" />
+  </div>
+</form>
+<div id="search-results" class="m-3 p-3"></div>
+<div id="service-list" class="m-3 p-3"></div>
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='register_service.js')}}"></script>
+{% endblock script %}

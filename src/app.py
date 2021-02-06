@@ -1,4 +1,3 @@
-from typing import Any
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -88,6 +87,11 @@ def village_admin():
 @app.route('/admin/services/')
 def service_admin():
     return render_template('service_admin.html')
+
+
+@app.route('/admin/register-service/')
+def register_service():
+    return render_template('register_service.html')
 
 
 # API
@@ -278,6 +282,28 @@ def search_clients():
         del element_client['ubication_id']
         list_clients.append(element_client)
     return jsonify(list_clients)
+
+
+@app.route('/api/v2/clients/<int:id>', methods=['GET'])
+def get_data_client(id: int):
+    client = Client.query.get(id)
+    element_client = serialize_client(client)
+    ubication_client = Ubication.query.get(client.ubication_id)
+    element_client['ubication'] = serialize_village(ubication_client)
+    del element_client['ubication_id']
+    service_list = []
+    services = ClientService.query.filter_by(client_id=client.key_id).all()
+    for service in services:
+        service_element = serialize_client_service(service)
+        service_info = Service.query.get(service.service_id)
+        service_element['name'] = service_info.name
+        service_element['code'] = service_info.code
+        service_element['id'] = service.service_id
+        del service_element['service_id']
+        del service_element['client_id']
+        service_list.append(service_element)
+        element_client['services'] = service_list
+    return jsonify(element_client)
 
 
 if __name__ == "__main__":
