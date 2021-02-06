@@ -13,15 +13,15 @@ create_service_form.addEventListener('submit', (e) => {
       'code' :  document.querySelector('#create-service-form #code').value
     })
   })
-  .then((res)=>{
-    if (res.ok){
-      console.log('OK');
-      console.log(res);
-      create_service_form.reset();
-    }
-  })
-  .catch((err)=>{
-    console.error('ERROR');
-    console.error(err);
-  })
-})
+    .then((res)=>{
+      if (res.ok){
+        console.log('OK');
+        console.log(res);
+        create_service_form.reset();
+      }
+    })
+    .catch((err)=>{
+      console.error('ERROR');
+      console.error(err);
+    });
+});

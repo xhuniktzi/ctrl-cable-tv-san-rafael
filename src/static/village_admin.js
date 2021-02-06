@@ -13,15 +13,15 @@ create_village_form.addEventListener('submit', (e) => {
       'code' :  document.querySelector('#create-village-form #code').value
     })
   })
-  .then((res)=>{
-    if (res.ok){
-      console.log('OK');
-      console.log(res);
-      create_village_form.reset();
-    }
-  })
-  .catch((err)=>{
-    console.error('ERROR');
-    console.error(err);
-  })
-})
+    .then((res)=>{
+      if (res.ok){
+        console.log('OK');
+        console.log(res);
+        create_village_form.reset();
+      }
+    })
+    .catch((err)=>{
+      console.error('ERROR');
+      console.error(err);
+    });
+});

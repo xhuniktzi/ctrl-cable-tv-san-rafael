@@ -10,23 +10,23 @@ async function render_village_menu(){
       'Content-Type' : 'application/json'
     }
   })
-  .then((res) => {
-    if (res.ok){
-      console.log('OK');
-    }
-    return res.json();
-  })
-  .then((res_json) => {
-    for(element of res_json){
-      let opt_element = document.createElement('option');
-      opt_element.value = element.id;
-      opt_element.innerHTML = element.name;
-      client_form_ubication.appendChild(opt_element);
-    }
-  })
-  .catch((err)=>{
-    console.error(err.message);
-  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+      }
+      return res.json();
+    })
+    .then((res_json) => {
+      for(let element of res_json){
+        let opt_element = document.createElement('option');
+        opt_element.value = element.id;
+        opt_element.innerHTML = element.name;
+        client_form_ubication.appendChild(opt_element);
+      }
+    })
+    .catch((err)=>{
+      console.error(err.message);
+    });
 }
 
 async function render_service_menu(){
@@ -37,23 +37,23 @@ async function render_service_menu(){
       'Content-Type' : 'application/json'
     }
   })
-  .then((res) => {
-    if (res.ok){
-      console.log('OK');
-    }
-    return res.json();
-  })
-  .then((res_json) => {
-    for(element of res_json){
-      let opt_element = document.createElement('option');
-      opt_element.value = element.id;
-      opt_element.innerHTML = element.name;
-      client_form_service.appendChild(opt_element);
-    }
-  })
-  .catch((err)=>{
-    console.error(err.message);
-  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+      }
+      return res.json();
+    })
+    .then((res_json) => {
+      for(let element of res_json){
+        let opt_element = document.createElement('option');
+        opt_element.value = element.id;
+        opt_element.innerHTML = element.name;
+        client_form_service.appendChild(opt_element);
+      }
+    })
+    .catch((err)=>{
+      console.error(err.message);
+    });
 }
 
 render_service_menu();
@@ -85,39 +85,39 @@ create_client_form.addEventListener('submit', (e) => {
       'ubication_id' : document.querySelector('#create-client-form #ubication').value
     })
   })
-  .then((res) => {
-    if (res.ok){
-      console.log('Client is OK');
-      console.log(res);
-      return res.json();
-    }
-  })
-  .then((res_json)=>{
-    let url_services = '/api/v1/client-services';
-    fetch(url_services, {
-      method : 'POST',
-      headers : {
-        'Content-Type' : 'application/json'
-      },
-      body : JSON.stringify({
-        'client_id' : res_json.id,
-        'service_id' : document.querySelector('#create-client-form #service-id').value,
-        'price' : document.querySelector('#create-client-form #service-price').value
-      })
-    })
-    .then((res)=>{
-      if(res.ok){
-        console.log('Service is OK');
+    .then((res) => {
+      if (res.ok){
+        console.log('Client is OK');
         console.log(res);
-        create_client_form.reset();
+        return res.json();
       }
     })
-  })
-  .catch((err)=>{
-    console.error('ERROR');
-    console.error(err);
-  })
-})
+    .then((res_json)=>{
+      let url_services = '/api/v1/client-services';
+      fetch(url_services, {
+        method : 'POST',
+        headers : {
+          'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify({
+          'client_id' : res_json.id,
+          'service_id' : document.querySelector('#create-client-form #service-id').value,
+          'price' : document.querySelector('#create-client-form #service-price').value
+        })
+      })
+        .then((res)=>{
+          if(res.ok){
+            console.log('Service is OK');
+            console.log(res);
+            create_client_form.reset();
+          }
+        });
+    })
+    .catch((err)=>{
+      console.error('ERROR');
+      console.error(err);
+    });
+});
 
 
 function parse_payment_radio_input(end_radio, mid_radio){

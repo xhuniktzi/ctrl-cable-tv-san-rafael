@@ -11,23 +11,23 @@ async function render_village_menu(){
       'Content-Type' : 'application/json'
     }
   })
-  .then((res) => {
-    if (res.ok){
-      console.log('OK');
-      return res.json();
-    }
-  })
-  .then((res_json) => {
-    for(element of res_json){
-      const opt_element = document.createElement('option');
-      opt_element.value = element.id;
-      opt_element.innerHTML = element.name;
-      client_form_village.appendChild(opt_element);
-    }
-  })
-  .catch((err)=>{
-    console.error(err.message);
-  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      for(let element of res_json){
+        const opt_element = document.createElement('option');
+        opt_element.value = element.id;
+        opt_element.innerHTML = element.name;
+        client_form_village.appendChild(opt_element);
+      }
+    })
+    .catch((err)=>{
+      console.error(err.message);
+    });
 }
 
 select_client_form.addEventListener('submit', (e) => {{
@@ -39,58 +39,58 @@ select_client_form.addEventListener('submit', (e) => {{
   fetch(url, {
     method :'GET',
   })
-  .then((res) => {
-    if (res.ok){
-      console.log('OK');
-    }
-    return res.json();
-  })
-  .then((res_json) => {
-    for (element of res_json){
-      const client_element = document.createElement('div');
-      client_element.classList.add('row','m-2','p-2','border');
-      search_results_container.appendChild(client_element);
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+      }
+      return res.json();
+    })
+    .then((res_json) => {
+      for (let element of res_json){
+        const client_element = document.createElement('div');
+        client_element.classList.add('row','m-2','p-2','border');
+        search_results_container.appendChild(client_element);
 
-      const client_element_name = document.createElement('div');
-      client_element_name.classList.add('col-lg-5', 'text-center');
-      client_element_name.innerHTML = element.name;
-      client_element.appendChild(client_element_name);
+        const client_element_name = document.createElement('div');
+        client_element_name.classList.add('col-lg-5', 'text-center');
+        client_element_name.innerHTML = element.name;
+        client_element.appendChild(client_element_name);
 
-      const client_element_ubication = document.createElement('div');
-      client_element_ubication.classList.add('col-lg-3', 'text-center');
-      client_element_ubication.innerHTML = element.ubication.name;
-      client_element.appendChild(client_element_ubication);
+        const client_element_ubication = document.createElement('div');
+        client_element_ubication.classList.add('col-lg-3', 'text-center');
+        client_element_ubication.innerHTML = element.ubication.name;
+        client_element.appendChild(client_element_ubication);
 
-      const client_element_edit = document.createElement('div');
-      client_element_edit.classList.add('col-lg-2', 'd-grid', 'gap-2');
-      client_element.appendChild(client_element_edit);
+        const client_element_edit = document.createElement('div');
+        client_element_edit.classList.add('col-lg-2', 'd-grid', 'gap-2');
+        client_element.appendChild(client_element_edit);
 
-      const edit_button =  document.createElement('button');
-      edit_button.type = 'button';
-      edit_button.classList.add('btn', 'btn-sm', 'btn-primary');
-      edit_button.innerHTML = 'Editar';
-      edit_button.value = element.id;
-      edit_button.addEventListener('click', update_client);
-      client_element_edit.appendChild(edit_button);
+        const edit_button =  document.createElement('button');
+        edit_button.type = 'button';
+        edit_button.classList.add('btn', 'btn-sm', 'btn-primary');
+        edit_button.innerHTML = 'Editar';
+        edit_button.value = element.id;
+        edit_button.addEventListener('click', update_client);
+        client_element_edit.appendChild(edit_button);
 
-      const client_element_delete = document.createElement('div');
-      client_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
-      client_element.appendChild(client_element_delete);
+        const client_element_delete = document.createElement('div');
+        client_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
+        client_element.appendChild(client_element_delete);
 
-      const delete_button =  document.createElement('button');
-      delete_button.type = 'button';
-      delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
-      delete_button.innerHTML = 'Eliminar';
-      delete_button.value = element.id;
-      delete_button.addEventListener('click', delete_client);
-      client_element_delete.appendChild(delete_button);
-    }
-    console.log(res_json);
-  })
-  .catch((err)=>{
-    console.error(err.message);
-  })
-}})
+        const delete_button =  document.createElement('button');
+        delete_button.type = 'button';
+        delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
+        delete_button.innerHTML = 'Eliminar';
+        delete_button.value = element.id;
+        delete_button.addEventListener('click', delete_client);
+        client_element_delete.appendChild(delete_button);
+      }
+      console.log(res_json);
+    })
+    .catch((err)=>{
+      console.error(err.message);
+    });
+}});
 
 function update_client(){
   console.log(this.value);
@@ -105,18 +105,18 @@ function delete_client(){
       'Content-Type' : 'application/json'
     }
   })
-  .then((res)=>{
-    if(res.ok){
-      console.log(url);
-      console.log('delete: ' + this.value);
-      return res.json();
-    }
-  })
-  .then((res_json) => {
-    console.log(res_json);
-  })
-  .catch((err)=>{
-    console.error(err.message);
-  })
+    .then((res)=>{
+      if(res.ok){
+        console.log(url);
+        console.log('delete: ' + this.value);
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
+    })
+    .catch((err)=>{
+      console.error(err.message);
+    });
 }
 render_village_menu();
