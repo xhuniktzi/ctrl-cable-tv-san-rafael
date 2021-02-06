@@ -23,6 +23,15 @@ module.exports = {
     'semi': [
       'error',
       'always'
-    ]
+    ],
+    'space-before-function-paren': ['error', 'never'],
+    'semi-spacing': ['error', {'before': false, 'after': true}],
+    'keyword-spacing': ['error'],
+    'no-multi-spaces': ['error'],
+    'space-in-parens': ['error', 'never'],
+    'arrow-spacing': ['error'],
+    'comma-spacing': ['error'],
+    'key-spacing': ['error'],
+    'space-infix-ops': ['error']
   }
 };

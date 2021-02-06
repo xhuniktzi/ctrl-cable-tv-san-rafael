@@ -5,9 +5,9 @@ let client_form_service = document.querySelector('#create-client-form #service-i
 async function render_village_menu(){
   let url = '/api/v1/villages';
   await fetch(url, {
-    method :'GET',
-    headers : {
-      'Content-Type' : 'application/json'
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
     .then((res) => {
@@ -17,14 +17,14 @@ async function render_village_menu(){
       return res.json();
     })
     .then((res_json) => {
-      for(let element of res_json){
+      for (let element of res_json){
         let opt_element = document.createElement('option');
         opt_element.value = element.id;
         opt_element.innerHTML = element.name;
         client_form_ubication.appendChild(opt_element);
       }
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err.message);
     });
 }
@@ -32,9 +32,9 @@ async function render_village_menu(){
 async function render_service_menu(){
   let url = '/api/v1/services';
   await fetch(url, {
-    method :'GET',
-    headers : {
-      'Content-Type' : 'application/json'
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
     .then((res) => {
@@ -44,14 +44,14 @@ async function render_service_menu(){
       return res.json();
     })
     .then((res_json) => {
-      for(let element of res_json){
+      for (let element of res_json){
         let opt_element = document.createElement('option');
         opt_element.value = element.id;
         opt_element.innerHTML = element.name;
         client_form_service.appendChild(opt_element);
       }
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err.message);
     });
 }
@@ -62,27 +62,27 @@ render_village_menu();
 create_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
   let url_clients = '/api/v1/clients';
-  fetch(url_clients , {
-    method : 'POST',
-    headers : {
-      'Content-Type' : 'application/json'
+  fetch(url_clients, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     },
-    body : JSON.stringify({
-      'name' : document.querySelector('#create-client-form #name').value,
-      'phone' : document.querySelector('#create-client-form #phone').value,
-      'direction' : document.querySelector('#create-client-form #direction').value,
-      'description' : document.querySelector('#create-client-form #description').value,
-      'payment_date' : {
-        'day' : new Date(document.querySelector('#create-client-form #payment-date').value).getDate()+1,
-        'month' : new Date(document.querySelector('#create-client-form #payment-date').value).getMonth()+1,
-        'year' : new Date(document.querySelector('#create-client-form #payment-date').value).getFullYear()
+    body: JSON.stringify({
+      'name': document.querySelector('#create-client-form #name').value,
+      'phone': document.querySelector('#create-client-form #phone').value,
+      'direction': document.querySelector('#create-client-form #direction').value,
+      'description': document.querySelector('#create-client-form #description').value,
+      'payment_date': {
+        'day': new Date(document.querySelector('#create-client-form #payment-date').value).getDate() + 1,
+        'month': new Date(document.querySelector('#create-client-form #payment-date').value).getMonth() + 1,
+        'year': new Date(document.querySelector('#create-client-form #payment-date').value).getFullYear()
       },
-      'payment_group' : parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')),
-      'internet_speed' : document.querySelector('#create-client-form #internet-speed').value,
-      'ip_address' : document.querySelector('#create-client-form #ip-address').value,
-      'router_number' : document.querySelector('#create-client-form #router-number').value,
-      'line_number' : document.querySelector('#create-client-form #line-number').value,
-      'ubication_id' : document.querySelector('#create-client-form #ubication').value
+      'payment_group': parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')),
+      'internet_speed': document.querySelector('#create-client-form #internet-speed').value,
+      'ip_address': document.querySelector('#create-client-form #ip-address').value,
+      'router_number': document.querySelector('#create-client-form #router-number').value,
+      'line_number': document.querySelector('#create-client-form #line-number').value,
+      'ubication_id': document.querySelector('#create-client-form #ubication').value
     })
   })
     .then((res) => {
@@ -92,28 +92,28 @@ create_client_form.addEventListener('submit', (e) => {
         return res.json();
       }
     })
-    .then((res_json)=>{
+    .then((res_json) => {
       let url_services = '/api/v1/client-services';
       fetch(url_services, {
-        method : 'POST',
-        headers : {
-          'Content-Type' : 'application/json'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-        body : JSON.stringify({
-          'client_id' : res_json.id,
-          'service_id' : document.querySelector('#create-client-form #service-id').value,
-          'price' : document.querySelector('#create-client-form #service-price').value
+        body: JSON.stringify({
+          'client_id': res_json.id,
+          'service_id': document.querySelector('#create-client-form #service-id').value,
+          'price': document.querySelector('#create-client-form #service-price').value
         })
       })
-        .then((res)=>{
-          if(res.ok){
+        .then((res) => {
+          if (res.ok){
             console.log('Service is OK');
             console.log(res);
             create_client_form.reset();
           }
         });
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error('ERROR');
       console.error(err);
     });

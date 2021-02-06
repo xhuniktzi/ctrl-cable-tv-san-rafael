@@ -6,9 +6,9 @@ const search_results_container = document.querySelector('#search-results');
 async function render_village_menu(){
   const url = '/api/v1/villages';
   await fetch(url, {
-    method :'GET',
-    headers : {
-      'Content-Type' : 'application/json'
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
     .then((res) => {
@@ -18,14 +18,14 @@ async function render_village_menu(){
       }
     })
     .then((res_json) => {
-      for(let element of res_json){
+      for (let element of res_json){
         const opt_element = document.createElement('option');
         opt_element.value = element.id;
         opt_element.innerHTML = element.name;
         client_form_village.appendChild(opt_element);
       }
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err.message);
     });
 }
@@ -34,10 +34,10 @@ select_client_form.addEventListener('submit', (e) => {{
   e.preventDefault();
   search_results_container.innerHTML = null;
   let url = '/api/v2/search/clients?';
-  url = url.concat('name='+client_form_client.value+'&');
-  url = url.concat('ubication_id='+client_form_village.value+'&');
+  url = url.concat('name=' + client_form_client.value + '&');
+  url = url.concat('ubication_id=' + client_form_village.value + '&');
   fetch(url, {
-    method :'GET',
+    method: 'GET',
   })
     .then((res) => {
       if (res.ok){
@@ -48,7 +48,7 @@ select_client_form.addEventListener('submit', (e) => {{
     .then((res_json) => {
       for (let element of res_json){
         const client_element = document.createElement('div');
-        client_element.classList.add('row','m-2','p-2','border');
+        client_element.classList.add('row', 'm-2', 'p-2', 'border');
         search_results_container.appendChild(client_element);
 
         const client_element_name = document.createElement('div');
@@ -65,7 +65,7 @@ select_client_form.addEventListener('submit', (e) => {{
         client_element_edit.classList.add('col-lg-2', 'd-grid', 'gap-2');
         client_element.appendChild(client_element_edit);
 
-        const edit_button =  document.createElement('button');
+        const edit_button = document.createElement('button');
         edit_button.type = 'button';
         edit_button.classList.add('btn', 'btn-sm', 'btn-primary');
         edit_button.innerHTML = 'Editar';
@@ -77,7 +77,7 @@ select_client_form.addEventListener('submit', (e) => {{
         client_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
         client_element.appendChild(client_element_delete);
 
-        const delete_button =  document.createElement('button');
+        const delete_button = document.createElement('button');
         delete_button.type = 'button';
         delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
         delete_button.innerHTML = 'Eliminar';
@@ -87,7 +87,7 @@ select_client_form.addEventListener('submit', (e) => {{
       }
       console.log(res_json);
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err.message);
     });
 }});
@@ -100,13 +100,13 @@ function delete_client(){
   let url = '/api/v1/clients/';
   url = url.concat(this.value);
   fetch(url, {
-    method : 'DELETE',
-    headers : {
-      'Content-Type' : 'application/json'
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
     }
   })
-    .then((res)=>{
-      if(res.ok){
+    .then((res) => {
+      if (res.ok){
         console.log(url);
         console.log('delete: ' + this.value);
         return res.json();
@@ -115,7 +115,7 @@ function delete_client(){
     .then((res_json) => {
       console.log(res_json);
     })
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err.message);
     });
 }
