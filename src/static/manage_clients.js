@@ -51,8 +51,13 @@ select_client_form.addEventListener('submit', (e) => {{
         client_element.classList.add('row', 'm-2', 'p-2', 'border');
         search_results_container.appendChild(client_element);
 
+        const client_element_id = document.createElement('div');
+        client_element_id.classList.add('col-lg-1', 'text-center');
+        client_element_id.innerHTML = element.id;
+        client_element.appendChild(client_element_id);
+
         const client_element_name = document.createElement('div');
-        client_element_name.classList.add('col-lg-5', 'text-center');
+        client_element_name.classList.add('col-lg-4', 'text-center');
         client_element_name.innerHTML = element.name;
         client_element.appendChild(client_element_name);
 
