@@ -4,7 +4,7 @@ endblock %} {% block content %}
 <form id="connect-service-form" class="m-3 p-3">
   <h3 class="m-3">Conectar un nuevo Servicio</h3>
   <div class="row">
-    <label for="client" class="col-lg-3 col-form-label fw-bolder fs-5"
+    <label for="client" class="col-lg-2 col-form-label-sm fw-bolder fs-5"
       >Cliente</label
     >
     <div class="col-lg-7">
@@ -19,7 +19,7 @@ endblock %} {% block content %}
   <div class="row">
     <label
       for="village"
-      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
+      class="col-lg-2 col-form-label-sm col-form-label-sm-sm fw-bolder fs-5"
       >Aldea</label
     >
     <div class="col-lg-7">
@@ -29,11 +29,39 @@ endblock %} {% block content %}
     </div>
   </div>
   <div class="d-grid gap-2 col-4 mx-auto m-3">
-    <input type="submit" value="Buscar Cliente" class="btn btn-primary" />
+    <input type="submit" value="Buscar Cliente" class="btn btn-success" />
   </div>
 </form>
-<div id="search-results" class="m-3 p-3"></div>
-<div id="service-list" class="m-3 p-3"></div>
+<div id="search-results" class="m-3 p-3 d-none"></div>
+<div id="service-list" class="m-3 p-3 d-none"></div>
+<form id="register-service-form" class="d-none m-3 p-3">
+  <div class="row">
+    <label
+      for="service"
+      class="col-lg-3 col-form-label-sm col-form-label-sm-sm fw-bolder fs-5"
+      >Añadir Servicio</label
+    >
+    <div class="col-lg-3">
+      <select name="service" id="service" class="form-select form-select-sm">
+        <option selected></option>
+      </select>
+    </div>
+    <label for="service-price" class="col-lg-2 col-form-label-sm fw-bolder fs-5"
+      >Precio</label
+    >
+    <div class="col-lg-2">
+      <input
+        type="number"
+        name="service-price"
+        id="service-price"
+        class="form-control form-control-sm"
+      />
+    </div>
+    <div class="col-lg-2 d-grid gap-2 mx-auto">
+      <input type="submit" value="Registrar" class="btn btn-sm btn-primary" />
+    </div>
+  </div>
+</form>
 {% endblock content %} {% block script %} {{super()}}
 <script src="{{url_for('static',filename='register_service.js')}}"></script>
 {% endblock script %}
