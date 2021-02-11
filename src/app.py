@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date
+from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment
 import os
 
 load_dotenv()
@@ -49,12 +49,10 @@ class Payment(db.Model):
     status = db.Column(db.Boolean, nullable=False)
     month = db.Column(db.String(3), nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    client_service_id = db.Column(db.Integer, db.ForeignKey(
-        'client_service.key_id'), nullable=False)
-    # service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
-    #                        nullable=False)
-    # client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
-    #                       nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey(
+        'service.key_id'), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey(
+        'client.key_id'), nullable=False)
 
 
 class Service(db.Model):
@@ -304,6 +302,30 @@ def get_data_client(id: int):
         service_list.append(service_element)
         element_client['services'] = service_list
     return jsonify(element_client)
+
+
+@app.route('/api/v2/payments', methods=['POST'])
+def post_payments():
+    client = Client.query.get(request.json['client_id'])
+    payments = request.json['payments']
+    list_payments = []
+    for pay in payments:
+        new_payment = Payment()
+        new_payment.client_id = client.key_id
+        new_payment.mount = pay['mount']
+        new_payment.month = pay['month']
+        new_payment.year = pay['year']
+        client_service = ClientService.query.filter_by(
+            client_id=client.key_id, service_id=pay['service_id']).first()
+        if client_service != None:
+            service = Service.query.get(client_service.service_id)
+            new_payment.status = bool(
+                new_payment.mount >= client_service.price)
+            new_payment.service_id = service.key_id
+            db.session.add(new_payment)
+            db.session.commit()
+            list_payments.append(serialize_payment(new_payment))
+    return jsonify(list_payments)
 
 
 if __name__ == "__main__":

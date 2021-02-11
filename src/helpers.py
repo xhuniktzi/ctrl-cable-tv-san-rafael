@@ -68,3 +68,18 @@ def serialize_client_service(client_service):
             'service_id': client_service.service_id,
             'price': client_service.price
         }
+
+
+def serialize_payment(payment):
+    if payment is None:
+        return {}
+    else:
+        return {
+            'id': payment.key_id,
+            'mount': payment.mount,
+            'status': bool(payment.status),
+            'month': payment.month,
+            'year': payment.year,
+            'service_id': payment.service_id,
+            'client_id': payment.client_id,
+        }
