@@ -47,7 +47,8 @@ class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
-    month = db.Column(db.String(3), nullable=False)
+    month = db.Column(db.Integer, db.ForeignKey(
+        'month.key_id'), nullable=False)
     year = db.Column(db.Integer, nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey(
         'service.key_id'), nullable=False)
@@ -61,7 +62,14 @@ class Service(db.Model):
     code = db.Column(db.String(5), nullable=False)
 
 
+# Modelo estático de datos
+class Month(db.Model):
+    key_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(3), nullable=False)
+
 # Rutas
+
+
 @app.route('/dashboard/')
 def dashboard():
     return render_template('dashboard.html')
@@ -92,7 +100,13 @@ def register_service():
     return render_template('register_service.html')
 
 
+@app.route('/system/payment/')
+def payment():
+    return render_template('payment.html')
+
 # API
+
+
 @app.route('/api/v1/villages', methods=['GET'])
 def get_all_villages():
     villages = Ubication.query.all()
@@ -304,6 +318,27 @@ def get_data_client(id: int):
     return jsonify(element_client)
 
 
+@app.route('/api/v2/payments/<int:id>', methods=['GET'])
+def get_payments(id: int):
+    client = Client.query.get(id)
+    payments = Payment.query.filter_by(client_id=client.key_id).all()
+    list_payments = []
+    for payment in payments:
+        payment_element = serialize_payment(payment)
+        del payment_element['client_id']
+        del payment_element['service_id']
+        month = Month.query.get(payment.month)
+        payment_element['month'] = month.name
+        service = Service.query.get(payment.service_id)
+        payment_element['service'] = serialize_service(service)
+        client_service = ClientService.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id).first()
+        payment_element['service']['price'] = client_service.price
+        list_payments.append(payment_element)
+
+    return jsonify(list_payments)
+
+
 @app.route('/api/v2/payments', methods=['POST'])
 def post_payments():
     client = Client.query.get(request.json['client_id'])
@@ -313,7 +348,8 @@ def post_payments():
         new_payment = Payment()
         new_payment.client_id = client.key_id
         new_payment.mount = pay['mount']
-        new_payment.month = pay['month']
+        month = Month.query.get(pay['month'])
+        new_payment.month = month.key_id
         new_payment.year = pay['year']
         client_service = ClientService.query.filter_by(
             client_id=client.key_id, service_id=pay['service_id']).first()

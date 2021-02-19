@@ -139,6 +139,7 @@ function select_client(){
       return res.json();
     })
     .then((res_json) => {
+      register_service_form.classList.remove('d-none');
       for (let service of res_json.services){
         const service_element = document.createElement('div');
         service_element.classList.add('row', 'm-2', 'p-2', 'border');
@@ -159,7 +160,6 @@ function select_client(){
         service_price.innerHTML = `Q. ${service.price}`;
         service_element.appendChild(service_price);
       }
-      register_service_form.classList.remove('d-none');
       console.log(res_json);
     });
 }

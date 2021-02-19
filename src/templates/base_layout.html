@@ -59,6 +59,10 @@
             class="nav-link fs-4 row text-dark"
             >Conectar un Servicio</a
           >
+          <h2 class="bg-primary row p-3">Sistema de pagos</h2>
+          <a href="{{url_for('payment')}}" class="nav-link fs-4 row text-dark"
+            >Realizar pago individual</a
+          >
         </nav>
         <div class="col-lg-9 border border-dark overflow-auto">
           {% block content %} {% endblock content %}
