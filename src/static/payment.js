@@ -4,6 +4,8 @@ const select_form_village = document.querySelector('#select-client-form #village
 const search_results_container = document.querySelector('#search-results');
 const payment_history_container = document.querySelector('#payment-history');
 const payment_list_container = document.querySelector('#payment-list');
+const payment_form_container = document.querySelector('#payment-form');
+// const service_payment_form = document.querySelector('#payment-form #service');
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -93,10 +95,12 @@ select_client_form.addEventListener('submit', (e) => {
 });
 
 function select_client(){
-  search_results_container.innerHTML = null;
-  search_results_container.classList.add('d-none');
+  payment_history_container.innerHTML = null;
   payment_history_container.classList.remove('d-none');
+  payment_list_container.innerHTML = null;
   payment_list_container.classList.remove('d-none');
+  payment_form_container.innerHTML = null;
+  payment_form_container.classList.remove('d-none');
 
   let url = `/api/v2/payments/${this.value}`;
 
@@ -149,6 +153,27 @@ function select_client(){
         payment_element_service_price.innerHTML = element.service.price;
         payment_element.appendChild(payment_element_service_price);
       }
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+
+  const url_client = `/api/v2/clients/${this.value}`;
+
+  fetch(url_client, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
     })
     .catch((err) => {
       console.error(err.message);
