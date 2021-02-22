@@ -8,13 +8,13 @@ flask = "*"
 flask-sqlalchemy = "*"
 pymysql = "*"
 python-dotenv = "*"
-pylint-flask = "*"
-pylint-flask-sqlalchemy = "*"
-pylint-sqlalchemy = "*"
 
 [dev-packages]
 autopep8 = "*"
 pylint = "*"
+pylint-flask = "*"
+pylint-flask-sqlalchemy = "*"
+pylint-sqlalchemy = "*"
 
 [requires]
 python_version = "3"

@@ -11,7 +11,11 @@
       integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
       crossorigin="anonymous"
     />
-
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static',filename='favicon.ico')}}"
+      type="image/x-icon"
+    />
     {% endblock head %}
   </head>
   <body>
@@ -33,7 +37,12 @@
           <a
             href="{{url_for('client_admin')}}"
             class="nav-link fs-4 row text-dark"
-            >Clientes</a
+            >Crear Cliente</a
+          >
+          <a
+            href="{{url_for('manage_clients')}}"
+            class="nav-link fs-4 row text-dark"
+            >Administrar Cliente</a
           >
           <a
             href="{{url_for('village_admin')}}"
@@ -44,6 +53,15 @@
             href="{{url_for('service_admin')}}"
             class="nav-link fs-4 row text-dark"
             >Servicios</a
+          >
+          <a
+            href="{{url_for('register_service')}}"
+            class="nav-link fs-4 row text-dark"
+            >Conectar un Servicio</a
+          >
+          <h2 class="bg-primary row p-3">Sistema de pagos</h2>
+          <a href="{{url_for('payment')}}" class="nav-link fs-4 row text-dark"
+            >Realizar pago individual</a
           >
         </nav>
         <div class="col-lg-9 border border-dark overflow-auto">
