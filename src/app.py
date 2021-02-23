@@ -320,7 +320,8 @@ def get_data_client(id: int):
 @app.route('/api/v2/payments/<int:id>', methods=['GET'])
 def get_payments(id: int):
     client = Client.query.get(id)
-    payments = Payment.query.filter_by(client_id=client.key_id).all()
+    payments = Payment.query.filter_by(client_id=client.key_id).order_by(
+        Payment.year.desc()).order_by(Payment.month.desc()).order_by(Payment.service_id.desc()).all()
     list_payments = []
     for payment in payments:
         payment_element = serialize_payment(payment)
@@ -359,30 +360,31 @@ def post_payments():
             month = 1
             year = year + 1
 
-    i = 0
-    count = request.json['count']
     list_payments = []
-    while count > i:
-        new_payment = Payment()
-        new_payment.mount = client_service.price
-        new_payment.status = True
-        new_payment.service_id = service.key_id
-        new_payment.client_id = client.key_id
+    if client_service != None:
+        i = 0
+        count = request.json['count']
+        while count > i:
+            new_payment = Payment()
+            new_payment.mount = client_service.price
+            new_payment.status = True
+            new_payment.service_id = service.key_id
+            new_payment.client_id = client.key_id
 
-        if month <= 12:
-            new_payment.month = month
-            new_payment.year = year
-            month = month + 1
-        else:
-            year = year + 1
-            month = 1
-            new_payment.month = month
-            new_payment.year = year
+            if month <= 12:
+                new_payment.month = month
+                new_payment.year = year
+                month = month + 1
+            else:
+                year = year + 1
+                month = 1
+                new_payment.month = month
+                new_payment.year = year
 
-        db.session.add(new_payment)
-        db.session.commit()
-        list_payments.append(serialize_payment(new_payment))
-        i = i + 1
+            db.session.add(new_payment)
+            db.session.commit()
+            list_payments.append(serialize_payment(new_payment))
+            i = i + 1
 
     return jsonify(list_payments)
 

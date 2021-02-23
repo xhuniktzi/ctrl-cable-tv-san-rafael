@@ -3,7 +3,7 @@ const select_form_client = document.querySelector('#select-client-form #client')
 const select_form_village = document.querySelector('#select-client-form #village');
 const search_results_container = document.querySelector('#search-results');
 const payment_history_container = document.querySelector('#payment-history');
-const payment_list_container = document.querySelector('#payment-list');
+// const payment_list_container = document.querySelector('#payment-list');
 const payment_form_container = document.querySelector('#payment-form');
 // const service_payment_form = document.querySelector('#payment-form #service');
 
@@ -24,6 +24,7 @@ async function render_village_menu(){
     .then((res_json) => {
       for (let element of res_json){
         const opt_element = document.createElement('option');
+        opt_element.value = element.id;
         opt_element.innerHTML = element.name;
         select_form_village.appendChild(opt_element);
       }
@@ -97,13 +98,10 @@ select_client_form.addEventListener('submit', (e) => {
 function select_client(){
   payment_history_container.innerHTML = null;
   payment_history_container.classList.remove('d-none');
-  payment_list_container.innerHTML = null;
-  payment_list_container.classList.remove('d-none');
-  payment_form_container.innerHTML = null;
+  search_results_container.innerHTML = null;
+  search_results_container.classList.add('d-none');
   payment_form_container.classList.remove('d-none');
-
   let url = `/api/v2/payments/${this.value}`;
-
   fetch(url, {
     method: 'GET',
     headers: {
