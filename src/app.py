@@ -395,7 +395,16 @@ def put_payments(id: int):
     payments = request.json
     list_payments = []
     for pay in payments:
+        service = Service.query.get(pay['service_id'])
         registered_payments = Payment.query.filter_by(client_id=client.key_id)
+        mount = pay['mount']
+        month = Month.query.get(pay['month'])
+        year = pay['year']
+        client_service = ClientService.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id).first()
+        if client_service != None:
+            status = bool(mount >= client_service.price)
+
         flag = False
         for check_pay in registered_payments:
             if ((check_pay.month == int(pay['month']))
@@ -403,41 +412,26 @@ def put_payments(id: int):
                     and (check_pay.service_id == int(pay['service_id']))):
                 flag = True
                 break
-        if flag:
-            payment = Payment.query.filter_by(
-                month=int(pay['month']), year=int(pay['year']),
-                service_id=int(pay['service_id'])).first()
-            payment.client_id = client.key_id
-            payment.mount = pay['mount']
-            month = Month.query.get(pay['month'])
-            payment.month = month.key_id
-            payment.year = pay['year']
-            client_service = ClientService.query.filter_by(
-                client_id=client.key_id, service_id=pay['service_id']).first()
-            if client_service != None:
-                service = Service.query.get(client_service.service_id)
-                payment.status = bool(
-                    payment.mount >= client_service.price)
-                payment.service_id = service.key_id
-            db.session.commit()
-            list_payments.append(serialize_payment(payment))
-        else:
-            new_payment = Payment()
-            new_payment.client_id = client.key_id
-            new_payment.mount = pay['mount']
-            month = Month.query.get(pay['month'])
-            new_payment.month = month.key_id
-            new_payment.year = pay['year']
-            client_service = ClientService.query.filter_by(
-                client_id=client.key_id, service_id=pay['service_id']).first()
-            if client_service != None:
-                service = Service.query.get(client_service.service_id)
-                new_payment.status = bool(
-                    new_payment.mount >= client_service.price)
+
+        if client_service != None:
+            if flag:
+                payment = Payment.query.filter_by(
+                    client_id=client.key_id, service_id=service.key_id, month=month.key_id, year=year).first()
+                payment.mount = mount
+                payment.status = status
+                db.session.commit()
+                list_payments.append(serialize_payment(payment))
+            else:
+                new_payment = Payment()
+                new_payment.mount = mount
+                new_payment.status = status
+                new_payment.month = month.key_id
+                new_payment.year = year
                 new_payment.service_id = service.key_id
-            db.session.add(new_payment)
-            db.session.commit()
-            list_payments.append(serialize_payment(new_payment))
+                new_payment.client_id = client.key_id
+                db.session.add(new_payment)
+                db.session.commit()
+                list_payments.append(serialize_payment(new_payment))
     return jsonify(list_payments)
 
 
