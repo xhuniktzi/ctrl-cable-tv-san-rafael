@@ -5,7 +5,12 @@ const search_results_container = document.querySelector('#search-results');
 const payment_history_container = document.querySelector('#payment-history');
 // const payment_list_container = document.querySelector('#payment-list');
 const payment_form_container = document.querySelector('#payment-form');
-// const service_payment_form = document.querySelector('#payment-form #service');
+const group_payment_form = document.querySelector('#payment-form #group-payment');
+const individual_payment_form = document.querySelector('#payment-form #individual-payment');
+const group_payment_service = document.querySelector('#group-payment #service');
+const individual_payment_service = document.querySelector('#individual-payment #service');
+
+let current_client = 0;
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -34,12 +39,105 @@ async function render_village_menu(){
     });
 }
 
+async function render_service_menu(){
+  const url = '/api/v1/services';
+  await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
+      for (let service of res_json){
+        const opt_service = document.createElement('option');
+        opt_service.value = service.id;
+        opt_service.innerHTML = service.name;
+        individual_payment_service.appendChild(opt_service);
+
+        const opt_service_2 = document.createElement('option');
+        opt_service_2.value = service.id;
+        opt_service_2.innerHTML = service.name;
+        group_payment_service.appendChild(opt_service_2);
+      }
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
+function fetch_payments(client){
+  const url = `/api/v2/payments/${client}`;
+  payment_history_container.innerHTML = null;
+  payment_history_container.classList.remove('d-none');
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
+      for (let element of res_json){
+        const payment_element = document.createElement('div');
+        payment_element.classList.add('row', 'm-2', 'p-2', 'border');
+        payment_history_container.appendChild(payment_element);
+
+        const payment_element_service_code = document.createElement('div');
+        payment_element_service_code.classList.add('col-lg-2', 'text-center');
+        payment_element_service_code.innerHTML = element.service.name;
+        payment_element.appendChild(payment_element_service_code);
+
+        const payment_element_month = document.createElement('div');
+        payment_element_month.classList.add('col-lg-2', 'text-center');
+        payment_element_month.innerHTML = element.month;
+        payment_element.appendChild(payment_element_month);
+
+        const payment_element_year = document.createElement('div');
+        payment_element_year.classList.add('col-lg-2', 'text-center');
+        payment_element_year.innerHTML = element.year;
+        payment_element.appendChild(payment_element_year);
+
+        const payment_element_mount = document.createElement('div');
+        payment_element_mount.classList.add('col-lg-2', 'text-center');
+        payment_element_mount.innerHTML = element.mount;
+        payment_element.appendChild(payment_element_mount);
+
+        const payment_element_status = document.createElement('div');
+        payment_element_status.classList.add('col-lg-2', 'text-center');
+        payment_element_status.innerHTML = element.status;
+        payment_element.appendChild(payment_element_status);
+
+        const payment_element_service_price = document.createElement('div');
+        payment_element_service_price.classList.add('col-lg-2', 'text-center');
+        payment_element_service_price.innerHTML = element.service.price;
+        payment_element.appendChild(payment_element_service_price);
+      }
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
 select_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
-  search_results_container.innerHTML = null;
-  search_results_container.classList.remove('d-none');
   payment_history_container.innerHTML = null;
   payment_history_container.classList.add('d-none');
+  search_results_container.innerHTML = null;
+  search_results_container.classList.remove('d-none');
+  payment_form_container.classList.add('d-none');
   let url = '/api/v2/search/clients?';
   url = url.concat('name=' + select_form_client.value + '&');
   url = url.concat('ubication_id=' + select_form_village.value + '&');
@@ -95,87 +193,54 @@ select_client_form.addEventListener('submit', (e) => {
     });
 });
 
+group_payment_form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const url = '/api/v2/payments';
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      'client_id': current_client,
+      'service_id': group_payment_service.value,
+      'count': document.querySelector('#group-payment #count').value
+    })
+  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      document.querySelector('#group-payment form').reset();
+      console.log(res_json);
+      let params = '?';
+      for (let param of res_json){
+        console.log(param);
+        params = params + 'pay=' + param.id + '&';
+      }
+      const url = `/print/receipt/${current_client}/`;
+      window.open(url + params);
+      fetch_payments(current_client);
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+});
+
+individual_payment_form.addEventListener('submit', (e) => {
+  e.preventDefault();
+});
+
 function select_client(){
-  payment_history_container.innerHTML = null;
-  payment_history_container.classList.remove('d-none');
   search_results_container.innerHTML = null;
   search_results_container.classList.add('d-none');
   payment_form_container.classList.remove('d-none');
-  let url = `/api/v2/payments/${this.value}`;
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((res) => {
-      if (res.ok) {
-        console.log('OK');
-        return res.json();
-      }
-    })
-    .then((res_json) => {
-      console.log(res_json);
-      for (let element of res_json){
-        const payment_element = document.createElement('div');
-        payment_element.classList.add('row', 'm-2', 'p-2', 'border');
-        payment_history_container.appendChild(payment_element);
-
-        const payment_element_service_code = document.createElement('div');
-        payment_element_service_code.classList.add('col-lg-2', 'text-center');
-        payment_element_service_code.innerHTML = element.service.name;
-        payment_element.appendChild(payment_element_service_code);
-
-        const payment_element_month = document.createElement('div');
-        payment_element_month.classList.add('col-lg-2', 'text-center');
-        payment_element_month.innerHTML = element.month;
-        payment_element.appendChild(payment_element_month);
-
-        const payment_element_year = document.createElement('div');
-        payment_element_year.classList.add('col-lg-2', 'text-center');
-        payment_element_year.innerHTML = element.year;
-        payment_element.appendChild(payment_element_year);
-
-        const payment_element_mount = document.createElement('div');
-        payment_element_mount.classList.add('col-lg-2', 'text-center');
-        payment_element_mount.innerHTML = element.mount;
-        payment_element.appendChild(payment_element_mount);
-
-        const payment_element_status = document.createElement('div');
-        payment_element_status.classList.add('col-lg-2', 'text-center');
-        payment_element_status.innerHTML = element.status;
-        payment_element.appendChild(payment_element_status);
-
-        const payment_element_service_price = document.createElement('div');
-        payment_element_service_price.classList.add('col-lg-2', 'text-center');
-        payment_element_service_price.innerHTML = element.service.price;
-        payment_element.appendChild(payment_element_service_price);
-      }
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
-
-  const url_client = `/api/v2/clients/${this.value}`;
-
-  fetch(url_client, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then((res) => {
-      if (res.ok) {
-        console.log('OK');
-        return res.json();
-      }
-    })
-    .then((res_json) => {
-      console.log(res_json);
-    })
-    .catch((err) => {
-      console.error(err.message);
-    });
+  current_client = this.value;
+  fetch_payments(current_client);
 }
 
 render_village_menu();
+render_service_menu();

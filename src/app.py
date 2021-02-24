@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment
@@ -44,6 +44,7 @@ class Client(db.Model):
                              nullable=False)
 
 
+# TODO: Gestionar fecha de pago, datetime
 class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
@@ -55,6 +56,7 @@ class Payment(db.Model):
         'service.key_id'), nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey(
         'client.key_id'), nullable=False)
+    datetime = db.Column(db.DateTime, nullable=False)
 
 
 class Service(db.Model):
@@ -103,6 +105,17 @@ def register_service():
 @app.route('/system/payment/')
 def payment():
     return render_template('payment.html')
+
+
+@app.route('/print/receipt/<int:id>/')
+def receipt(id: int):
+    client = Client.query.get(id)
+    payment_list = request.args.getlist('pay')
+    payments = map(lambda pay: Payment.query.get(pay), payment_list)
+    ubication = Ubication.query.get(client.ubication_id)
+    def service(service): return Service.query.get(service)
+    def month(month): return Month.query.get(month)
+    return render_template('receipt.html', client=client, payments=payments, ubication=ubication, service=service, month=month)
 
 
 # API
@@ -363,7 +376,7 @@ def post_payments():
     list_payments = []
     if client_service != None:
         i = 0
-        count = request.json['count']
+        count = int(request.json['count'])
         while count > i:
             new_payment = Payment()
             new_payment.mount = client_service.price
@@ -406,12 +419,13 @@ def put_payments(id: int):
             status = bool(mount >= client_service.price)
 
         flag = False
-        for check_pay in registered_payments:
-            if ((check_pay.month == int(pay['month']))
-                and (check_pay.year == int(pay['year']))
-                    and (check_pay.service_id == int(pay['service_id']))):
-                flag = True
-                break
+        if registered_payments != None:
+            for check_pay in registered_payments:
+                if ((check_pay.month == int(pay['month']))
+                    and (check_pay.year == int(pay['year']))
+                        and (check_pay.service_id == int(pay['service_id']))):
+                    flag = True
+                    break
 
         if client_service != None:
             if flag:
@@ -419,6 +433,7 @@ def put_payments(id: int):
                     client_id=client.key_id, service_id=service.key_id, month=month.key_id, year=year).first()
                 payment.mount = mount
                 payment.status = status
+                payment.datetime = datetime.now()
                 db.session.commit()
                 list_payments.append(serialize_payment(payment))
             else:
@@ -429,9 +444,11 @@ def put_payments(id: int):
                 new_payment.year = year
                 new_payment.service_id = service.key_id
                 new_payment.client_id = client.key_id
+                new_payment.datetime = datetime.now()
                 db.session.add(new_payment)
                 db.session.commit()
                 list_payments.append(serialize_payment(new_payment))
+
     return jsonify(list_payments)
 
 
