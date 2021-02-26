@@ -44,7 +44,6 @@ class Client(db.Model):
                              nullable=False)
 
 
-# TODO: Gestionar fecha de pago, datetime
 class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
@@ -63,6 +62,7 @@ class Service(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     code = db.Column(db.String(5), nullable=False)
+    status = db.Column(db.Boolean, nullable=False)
 
 
 # Modelo estático de datos
@@ -112,10 +112,8 @@ def receipt(id: int):
     client = Client.query.get(id)
     payment_list = request.args.getlist('pay')
     payments = map(lambda pay: Payment.query.get(pay), payment_list)
-    ubication = Ubication.query.get(client.ubication_id)
-    def service(service): return Service.query.get(service)
-    def month(month): return Month.query.get(month)
-    return render_template('receipt.html', client=client, payments=payments, ubication=ubication, service=service, month=month)
+    # TODO: render receipt
+    return render_template('receipt.html')
 
 
 # API
@@ -379,6 +377,7 @@ def post_payments():
         count = int(request.json['count'])
         while count > i:
             new_payment = Payment()
+            new_payment.datetime = datetime.now()
             new_payment.mount = client_service.price
             new_payment.status = True
             new_payment.service_id = service.key_id
@@ -408,11 +407,11 @@ def put_payments(id: int):
     payments = request.json
     list_payments = []
     for pay in payments:
-        service = Service.query.get(pay['service_id'])
+        service = Service.query.get(int(pay['service_id']))
         registered_payments = Payment.query.filter_by(client_id=client.key_id)
-        mount = pay['mount']
-        month = Month.query.get(pay['month'])
-        year = pay['year']
+        mount = int(pay['mount'])
+        month = Month.query.get(int(pay['month']))
+        year = int(pay['year'])
         client_service = ClientService.query.filter_by(
             client_id=client.key_id, service_id=service.key_id).first()
         if client_service != None:

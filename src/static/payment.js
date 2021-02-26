@@ -3,14 +3,17 @@ const select_form_client = document.querySelector('#select-client-form #client')
 const select_form_village = document.querySelector('#select-client-form #village');
 const search_results_container = document.querySelector('#search-results');
 const payment_history_container = document.querySelector('#payment-history');
-// const payment_list_container = document.querySelector('#payment-list');
+const payment_list_container = document.querySelector('#payment-list');
 const payment_form_container = document.querySelector('#payment-form');
-const group_payment_form = document.querySelector('#payment-form #group-payment');
-const individual_payment_form = document.querySelector('#payment-form #individual-payment');
-const group_payment_service = document.querySelector('#group-payment #service');
-const individual_payment_service = document.querySelector('#individual-payment #service');
+const standard_payment_form = document.querySelector('#payment-form #standard-payment');
+const parcial_payment_form = document.querySelector('#payment-form #parcial-payment');
+const standard_payment_service = document.querySelector('#standard-payment #service');
+const parcial_payment_service = document.querySelector('#parcial-payment #service');
+const add_payment_button = document.querySelector('#add-payment');
+
 
 let current_client = 0;
+let list_payments = [];
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -59,12 +62,12 @@ async function render_service_menu(){
         const opt_service = document.createElement('option');
         opt_service.value = service.id;
         opt_service.innerHTML = service.name;
-        individual_payment_service.appendChild(opt_service);
+        parcial_payment_service.appendChild(opt_service);
 
         const opt_service_2 = document.createElement('option');
         opt_service_2.value = service.id;
         opt_service_2.innerHTML = service.name;
-        group_payment_service.appendChild(opt_service_2);
+        standard_payment_service.appendChild(opt_service_2);
       }
     })
     .catch((err) => {
@@ -76,6 +79,7 @@ function fetch_payments(client){
   const url = `/api/v2/payments/${client}`;
   payment_history_container.innerHTML = null;
   payment_history_container.classList.remove('d-none');
+  payment_list_container.innerHTML = null;
   fetch(url, {
     method: 'GET',
     headers: {
@@ -92,36 +96,42 @@ function fetch_payments(client){
       console.log(res_json);
       for (let element of res_json){
         const payment_element = document.createElement('div');
-        payment_element.classList.add('row', 'm-2', 'p-2', 'border');
+        payment_element.classList.add('row', 'm-2', 'p-2', 'border', 'fw-bold');
         payment_history_container.appendChild(payment_element);
 
-        const payment_element_service_code = document.createElement('div');
-        payment_element_service_code.classList.add('col-lg-2', 'text-center');
-        payment_element_service_code.innerHTML = element.service.name;
-        payment_element.appendChild(payment_element_service_code);
+        const payment_element_date = document.createElement('div');
+        payment_element_date.classList.add('col-lg-2', 'text-center');
+        payment_element_date.innerHTML = `${element.date.day}/${element.date.month}/${element.date.year}`;
+        payment_element.appendChild(payment_element_date);
+
+        const payment_element_service_name = document.createElement('div');
+        payment_element_service_name.classList.add('col-lg-2', 'text-center');
+        payment_element_service_name.innerHTML = element.service.name;
+        payment_element.appendChild(payment_element_service_name);
 
         const payment_element_month = document.createElement('div');
-        payment_element_month.classList.add('col-lg-2', 'text-center');
+        payment_element_month.classList.add('col-lg-1', 'text-center');
         payment_element_month.innerHTML = element.month;
         payment_element.appendChild(payment_element_month);
 
         const payment_element_year = document.createElement('div');
-        payment_element_year.classList.add('col-lg-2', 'text-center');
+        payment_element_year.classList.add('col-lg-1', 'text-center');
         payment_element_year.innerHTML = element.year;
         payment_element.appendChild(payment_element_year);
 
         const payment_element_mount = document.createElement('div');
-        payment_element_mount.classList.add('col-lg-2', 'text-center');
+        payment_element_mount.classList.add('col-lg-1', 'text-center');
         payment_element_mount.innerHTML = element.mount;
         payment_element.appendChild(payment_element_mount);
 
-        const payment_element_status = document.createElement('div');
-        payment_element_status.classList.add('col-lg-2', 'text-center');
-        payment_element_status.innerHTML = element.status;
-        payment_element.appendChild(payment_element_status);
+        if (element.status){
+          payment_element.classList.add('bg-success', 'bg-gradient');
+        } else {
+          payment_element.classList.add('bg-warning', 'bg-gradient');
+        }
 
         const payment_element_service_price = document.createElement('div');
-        payment_element_service_price.classList.add('col-lg-2', 'text-center');
+        payment_element_service_price.classList.add('col-lg-1', 'text-center');
         payment_element_service_price.innerHTML = element.service.price;
         payment_element.appendChild(payment_element_service_price);
       }
@@ -193,7 +203,7 @@ select_client_form.addEventListener('submit', (e) => {
     });
 });
 
-group_payment_form.addEventListener('submit', (e) => {
+standard_payment_form.addEventListener('submit', (e) => {
   e.preventDefault();
   const url = '/api/v2/payments';
   fetch(url, {
@@ -203,8 +213,8 @@ group_payment_form.addEventListener('submit', (e) => {
     },
     body: JSON.stringify({
       'client_id': current_client,
-      'service_id': group_payment_service.value,
-      'count': document.querySelector('#group-payment #count').value
+      'service_id': standard_payment_service.value,
+      'count': document.querySelector('#standard-payment #count').value
     })
   })
     .then((res) => {
@@ -214,7 +224,7 @@ group_payment_form.addEventListener('submit', (e) => {
       }
     })
     .then((res_json) => {
-      document.querySelector('#group-payment form').reset();
+      document.querySelector('#standard-payment form').reset();
       console.log(res_json);
       let params = '?';
       for (let param of res_json){
@@ -230,8 +240,64 @@ group_payment_form.addEventListener('submit', (e) => {
     });
 });
 
-individual_payment_form.addEventListener('submit', (e) => {
+add_payment_button.addEventListener('click', (e) => {
   e.preventDefault();
+  let element = {
+    'service_id': document.querySelector('#parcial-payment #service').value,
+    'mount': document.querySelector('#parcial-payment #mount').value,
+    'month': document.querySelector('#parcial-payment #month').value,
+    'year': document.querySelector('#parcial-payment #year').value
+  };
+  list_payments.push(element);
+
+  const payment_element = document.createElement('div');
+  payment_element.classList.add('row', 'm-2', 'p-2', 'border');
+  payment_list_container.appendChild(payment_element);
+
+  const payment_element_service_name = document.createElement('div');
+  payment_element_service_name.classList.add('col-lg-2', 'text-center');
+  payment_element_service_name.innerHTML = document.querySelector('#parcial-payment #service').innerHTML;
+  payment_element.appendChild(payment_element_service_name);
+
+  const payment_element_mount = document.createElement('div');
+  payment_element_mount.classList.add('col-lg-2', 'text-center');
+  payment_element_mount.innerHTML = element.mount;
+  payment_element.appendChild(payment_element_mount);
+
+  document.querySelector('#parcial-payment form').reset();
+});
+
+parcial_payment_form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const url = `/api/v2/payments/${current_client}`;
+  fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(list_payments)
+  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+        list_payments.splice(0, list_payments.length);
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
+      let params = '?';
+      for (let param of res_json){
+        console.log(param);
+        params = params + 'pay=' + param.id + '&';
+      }
+      const url = `/print/receipt/${current_client}/`;
+      window.open(url + params);
+      fetch_payments(current_client);
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
 });
 
 function select_client(){
