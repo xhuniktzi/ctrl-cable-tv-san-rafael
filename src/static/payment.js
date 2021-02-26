@@ -256,13 +256,27 @@ add_payment_button.addEventListener('click', (e) => {
 
   const payment_element_service_name = document.createElement('div');
   payment_element_service_name.classList.add('col-lg-2', 'text-center');
-  payment_element_service_name.innerHTML = document.querySelector('#parcial-payment #service').innerHTML;
+  const select_service = document.querySelector('#parcial-payment #service');
+  const select_service_text = select_service.options[select_service.selectedIndex].innerText;
+  payment_element_service_name.innerHTML = select_service_text;
   payment_element.appendChild(payment_element_service_name);
 
   const payment_element_mount = document.createElement('div');
   payment_element_mount.classList.add('col-lg-2', 'text-center');
   payment_element_mount.innerHTML = element.mount;
   payment_element.appendChild(payment_element_mount);
+
+  const payment_element_month = document.createElement('div');
+  payment_element_month.classList.add('col-lg-2', 'text-center');
+  const select_month = document.querySelector('#parcial-payment #month');
+  const select_month_text = select_month.options[select_month.selectedIndex].innerText;
+  payment_element_month.innerHTML = select_month_text;
+  payment_element.appendChild(payment_element_month);
+
+  const payment_element_year = document.createElement('div');
+  payment_element_year.classList.add('col-lg-2', 'text-center');
+  payment_element_year.innerHTML = element.year;
+  payment_element.appendChild(payment_element_year);
 
   document.querySelector('#parcial-payment form').reset();
 });

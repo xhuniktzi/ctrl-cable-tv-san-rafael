@@ -107,6 +107,11 @@ def payment():
     return render_template('payment.html')
 
 
+@app.route('/system/orders/')
+def orders():
+    return render_template('orders.html')
+
+
 @app.route('/print/receipt/<int:id>/')
 def receipt(id: int):
     client = Client.query.get(id)
