@@ -182,7 +182,7 @@ def post_service():
     new_service = Service()
     new_service.name = request.json['name']
     new_service.code = request.json['code']
-
+    new_service.status = request.json['status']
     db.session.add(new_service)
     db.session.commit()
     return jsonify(serialize_service(new_service))
