@@ -112,13 +112,120 @@ def orders():
     return render_template('orders.html')
 
 
+# Prints
 @app.route('/print/receipt/<int:id>/')
 def receipt(id: int):
     client = Client.query.get(id)
     payment_list = request.args.getlist('pay')
-    payments = map(lambda pay: Payment.query.get(pay), payment_list)
+    payments = list(map(lambda pay: Payment.query.get(pay), payment_list))
     # TODO: render receipt
     return render_template('receipt.html')
+
+
+@app.route('/print/orders')
+def print_orders():
+    get_payment_status = request.args.get('payment_status', type=str)
+    get_village = request.args.get('ubication_id', type=int)
+    clients = []
+    if get_payment_status != '' and get_village != None:
+        clients = Client.query.filter_by(payment_group=get_payment_status,
+                                         ubication_id=get_village).all()
+
+    elif get_payment_status != '' and get_village == None:
+        clients = Client.query.filter_by(
+            payment_group=get_payment_status).all()
+
+    elif get_payment_status == '' and get_village != None:
+        clients = Client.query.filter_by(ubication_id=get_village).all()
+
+    elif get_payment_status == '' and get_village == None:
+        clients = Client.query.all()
+
+    data_clients = []
+
+    for client in clients:
+        obj_client = {
+            'name': client.name,
+            'direction': client.direction,
+            'ubication': Ubication.query.get(client.ubication_id).name,
+            'orders': {
+                'parcial': list(),
+                'standard': list(),
+            },
+            'total': 0
+        }
+        client_services = ClientService.query.filter_by(
+            client_id=client.key_id).all()
+
+        for client_service in client_services:
+            service = Service.query.get(client_service.service_id)
+            parcial_payments = Payment.query.filter_by(client_id=client.key_id,
+                                                       service_id=service.key_id,
+                                                       status=False).all()
+            last_payment = Payment.query.filter_by(client_id=client.key_id,
+                                                   service_id=service.key_id).order_by(Payment.year.desc()).order_by(Payment.month.desc()).first()
+
+            if last_payment == None:
+                continue
+
+            for payment in parcial_payments:
+                obj_client['orders']['parcial'].append({
+                    'name': service.name,
+                    'mount': client_service.price - payment.mount,
+                    'month': Month.query.get(payment.month).name,
+                    'year': payment.year
+                })
+                obj_client['total'] = obj_client['total'] + \
+                    (client_service.price - payment.mount)
+
+            first_month = last_payment.month + 1
+            first_year = last_payment.year
+            if first_month > 12:
+                first_month = 1
+                first_year = first_year + 1
+
+            now_month = datetime.now().month
+            now_year = datetime.now().year
+            if service.status:
+                now_month = now_month - 1
+                if now_month < 1:
+                    now_month = 12
+                    now_year = now_year - 1
+
+            if (now_year > first_year) or ((now_year == first_year) and (now_month >= first_month)):
+                count = 0
+                tmp_month = first_month
+                tmp_year = first_year
+
+                while (now_year > tmp_year) or ((now_year == tmp_year) and (now_month >= tmp_month)):
+                    count = count + 1
+                    tmp_month = tmp_month + 1
+                    if tmp_month > 12:
+                        tmp_month = 1
+                        tmp_year = tmp_year + 1
+
+                obj_client['orders']['standard'].append({
+                    'name': service.name,
+                    'price': client_service.price,
+                    'first_payment': {
+                        'month': Month.query.get(first_month).name,
+                        'year': first_year
+                    },
+                    'new_payment': {
+                        'month': Month.query.get(now_month).name,
+                        'year': now_year
+                    },
+                    'count':  count,
+                    'mount': count * client_service.price
+                })
+                obj_client['total'] = obj_client['total'] + \
+                    count * client_service.price
+
+        if (len(obj_client['orders']['standard']) != 0) or (len(obj_client['orders']['parcial']) != 0):
+            data_clients.append(obj_client)
+
+    print(data_clients)
+    return render_template('print_orders.html', data_clients=data_clients)
 
 
 # API

@@ -66,17 +66,17 @@ select_client_form.addEventListener('submit', (e) => {{
         client_element_ubication.innerHTML = element.ubication.name;
         client_element.appendChild(client_element_ubication);
 
-        const client_element_edit = document.createElement('div');
-        client_element_edit.classList.add('col-lg-2', 'd-grid', 'gap-2');
-        client_element.appendChild(client_element_edit);
+        // const client_element_edit = document.createElement('div');
+        // client_element_edit.classList.add('col-lg-2', 'd-grid', 'gap-2');
+        // client_element.appendChild(client_element_edit);
 
-        const edit_button = document.createElement('button');
-        edit_button.type = 'button';
-        edit_button.classList.add('btn', 'btn-sm', 'btn-primary');
-        edit_button.innerHTML = 'Editar';
-        edit_button.value = element.id;
-        edit_button.addEventListener('click', update_client);
-        client_element_edit.appendChild(edit_button);
+        // const edit_button = document.createElement('button');
+        // edit_button.type = 'button';
+        // edit_button.classList.add('btn', 'btn-sm', 'btn-primary');
+        // edit_button.innerHTML = 'Editar';
+        // edit_button.value = element.id;
+        // edit_button.addEventListener('click', update_client);
+        // client_element_edit.appendChild(edit_button);
 
         const client_element_delete = document.createElement('div');
         client_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
@@ -96,10 +96,6 @@ select_client_form.addEventListener('submit', (e) => {{
       console.error(err.message);
     });
 }});
-
-function update_client(){
-  console.log(this.value);
-}
 
 function delete_client(){
   let url = '/api/v1/clients/';
