@@ -521,13 +521,10 @@ def put_payments(id: int):
     for pay in payments:
         service = Service.query.get(int(pay['service_id']))
         registered_payments = Payment.query.filter_by(client_id=client.key_id)
-        mount = int(pay['mount'])
         month = Month.query.get(int(pay['month']))
         year = int(pay['year'])
         client_service = ClientService.query.filter_by(
             client_id=client.key_id, service_id=service.key_id).first()
-        if client_service != None:
-            status = bool(mount >= client_service.price)
 
         flag = False
         if registered_payments != None:
@@ -542,6 +539,9 @@ def put_payments(id: int):
             if flag:
                 payment = Payment.query.filter_by(
                     client_id=client.key_id, service_id=service.key_id, month=month.key_id, year=year).first()
+                mount = payment.mount + int(pay['mount'])
+                if client_service != None:
+                    status = bool(mount >= client_service.price)
                 payment.mount = mount
                 payment.status = status
                 payment.datetime = datetime.now()
@@ -549,6 +549,9 @@ def put_payments(id: int):
                 list_payments.append(serialize_payment(payment))
             else:
                 new_payment = Payment()
+                mount = int(pay['mount'])
+                if client_service != None:
+                    status = bool(mount >= client_service.price)
                 new_payment.mount = mount
                 new_payment.status = status
                 new_payment.month = month.key_id
