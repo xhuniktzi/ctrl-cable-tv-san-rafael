@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ordenes de Pago</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/print_orders.css') }}"
+    />
+  </head>
+  <body>
+    {% for client in data_clients %}
+    <div class="payment-order order-top">
+      <h1>Orden de pago</h1>
+      <div class="client-data">
+        <p class="tag">Nombre</p>
+        <p>{{ client.name }}</p>
+        <p class="tag">Dirección</p>
+        <p>{{ client.direction }}</p>
+        <p class="tag">Ubicación</p>
+        <p>{{ client.ubication }}</p>
+      </div>
+      <div class="orders-table">
+        {% for order in client.orders.parcial %}
+        <div class="item">
+          Abono al servicio: "{{ order.name }}", cuota del mes de {{ order.month
+          }} del año {{ order.year }}
+        </div>
+        <div class="item">Q. {{ order.mount }}</div>
+        {% endfor %} {% for order in client.orders.standard %}
+        <div class="item">
+          {{ order.count }} cuotas del servicio: "{{ order.name }}", del mes de
+          {{ order.first_payment.month }} del año {{ order.first_payment.year }}
+          al mes de {{ order.new_payment.month }} del año {{
+          order.new_payment.year }}
+        </div>
+        <div class="item">Q .{{order.mount}}</div>
+        {% endfor %}
+        <div class="total-tag">Total</div>
+        <div class="item">Q. {{ client.total }}</div>
+      </div>
+    </div>
+    <div class="payment-order order-bottom">
+      <h1>Orden de pago</h1>
+      <div class="client-data">
+        <p class="tag">Nombre</p>
+        <p>{{ client.name }}</p>
+        <p class="tag">Dirección</p>
+        <p>{{ client.direction }}</p>
+        <p class="tag">Ubicación</p>
+        <p>{{ client.ubication }}</p>
+      </div>
+      <div class="orders-table">
+        {% for order in client.orders.parcial %}
+        <div class="item">
+          Abono al servicio: "{{ order.name }}", cuota del mes de {{ order.month
+          }} del año {{ order.year }}
+        </div>
+        <div class="item">Q. {{ order.mount }}</div>
+        {% endfor %} {% for order in client.orders.standard %}
+        <div class="item">
+          {{ order.count }} cuotas del servicio: "{{ order.name }}", del mes de
+          {{ order.first_payment.month }} del año {{ order.first_payment.year }}
+          al mes de {{ order.new_payment.month }} del año {{
+          order.new_payment.year }}
+        </div>
+        <div class="item">Q .{{order.mount}}</div>
+        {% endfor %}
+        <div class="total-tag">Total</div>
+        <div class="item">Q. {{ client.total }}</div>
+      </div>
+    </div>
+    <div class="page-break"></div>
+    {% endfor %}
+  </body>
+</html>

@@ -1,4 +1,5 @@
-let create_service_form = document.querySelector('#create-service-form');
+const create_service_form = document.querySelector('#create-service-form');
+const service_flag_checkbox = document.querySelector('#service-flag');
 
 create_service_form.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -10,7 +11,8 @@ create_service_form.addEventListener('submit', (e) => {
     },
     body: JSON.stringify({
       'name': document.querySelector('#create-service-form #name').value,
-      'code': document.querySelector('#create-service-form #code').value
+      'code': document.querySelector('#create-service-form #code').value,
+      'status': service_flag_checkbox.checked
     })
   })
     .then((res) => {

@@ -61,6 +61,10 @@ render_village_menu();
 
 create_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  // eslint-disable-next-line no-undef
+  let date = dayjs(document.querySelector('#create-client-form #payment-date').value);
+  console.log(date);
+  console.log(`${date.date()}/${date.month()}/${date.year()}`);
   let url_clients = '/api/v1/clients';
   fetch(url_clients, {
     method: 'POST',
@@ -73,9 +77,9 @@ create_client_form.addEventListener('submit', (e) => {
       'direction': document.querySelector('#create-client-form #direction').value,
       'description': document.querySelector('#create-client-form #description').value,
       'payment_date': {
-        'day': new Date(document.querySelector('#create-client-form #payment-date').value).getDate() + 1,
-        'month': new Date(document.querySelector('#create-client-form #payment-date').value).getMonth() + 1,
-        'year': new Date(document.querySelector('#create-client-form #payment-date').value).getFullYear()
+        'day': date.date(),
+        'month': date.month(),
+        'year': date.year()
       },
       'payment_group': parse_payment_radio_input(document.querySelector('#create-client-form #end-option'), document.querySelector('#create-client-form #mid-option')),
       'internet_speed': document.querySelector('#create-client-form #internet-speed').value,

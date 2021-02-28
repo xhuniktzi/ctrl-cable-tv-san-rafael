@@ -25,7 +25,7 @@ def serialize_service(service):
 
 
 def unserialize_date(date):
-    return datetime(int(date['year']), int(date['month']), int(date['day']))
+    return datetime(int(date['year']), int(date['month'])+1, int(date['day']))
 
 
 def serialize_date(date: datetime):
@@ -82,4 +82,5 @@ def serialize_payment(payment):
             'year': payment.year,
             'service_id': payment.service_id,
             'client_id': payment.client_id,
+            'date': serialize_date(payment.datetime)
         }

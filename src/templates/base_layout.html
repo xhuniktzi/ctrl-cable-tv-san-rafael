@@ -63,6 +63,9 @@
           <a href="{{url_for('payment')}}" class="nav-link fs-4 row text-dark"
             >Realizar pago individual</a
           >
+          <a href="{{url_for('orders')}}" class="nav-link fs-4 row text-dark"
+            >Generar ordenes de pagos</a
+          >
         </nav>
         <div class="col-lg-9 border border-dark overflow-auto">
           {% block content %} {% endblock content %}
@@ -75,6 +78,12 @@
       integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
       crossorigin="anonymous"
     ></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/locale/es.js"></script>
+    <script>
+      dayjs().format();
+      dayjs().locale("es");
+    </script>
     {% endblock script %} {% endblock body %}
   </body>
 </html>
