@@ -110,7 +110,7 @@ function fetch_payments(client){
         payment_element.appendChild(payment_element_service_name);
 
         const payment_element_month = document.createElement('div');
-        payment_element_month.classList.add('col-lg-1', 'text-center');
+        payment_element_month.classList.add('col-lg-2', 'text-center');
         payment_element_month.innerHTML = element.month;
         payment_element.appendChild(payment_element_month);
 

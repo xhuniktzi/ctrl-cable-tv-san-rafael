@@ -68,7 +68,7 @@ class Service(db.Model):
 # Modelo estático de datos
 class Month(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(3), nullable=False)
+    name = db.Column(db.String(12), nullable=False)
 
 
 # Rutas
@@ -206,7 +206,7 @@ def print_orders():
 
                 obj_client['orders']['standard'].append({
                     'name': service.name,
-                    'price': client_service.price,
+                    # 'price': client_service.price,
                     'first_payment': {
                         'month': Month.query.get(first_month).name,
                         'year': first_year
@@ -224,7 +224,6 @@ def print_orders():
         if (len(obj_client['orders']['standard']) != 0) or (len(obj_client['orders']['parcial']) != 0):
             data_clients.append(obj_client)
 
-    print(data_clients)
     return render_template('print_orders.html', data_clients=data_clients)
 
 
