@@ -118,8 +118,26 @@ def receipt(id: int):
     client = Client.query.get(id)
     payment_list = request.args.getlist('pay')
     payments = list(map(lambda pay: Payment.query.get(pay), payment_list))
-    # TODO: render receipt
-    return render_template('receipt.html')
+
+    receipt = {
+        'name': client.name,
+        'ubication': Ubication.query.get(client.ubication_id).name,
+        'direction': client.direction,
+        'payments': list(),
+        'total': 0
+    }
+
+    for payment in payments:
+        receipt['payments'].append({
+            'month': Month.query.get(payment.month).name,
+            'year': payment.year,
+            'service': Service.query.get(payment.service_id).name,
+            'status': payment.status,
+            'mount': payment.mount
+        })
+        receipt['total'] = receipt['total'] + payment.mount
+
+    return render_template('print_receipt.html', receipt=receipt)
 
 
 @app.route('/print/orders')

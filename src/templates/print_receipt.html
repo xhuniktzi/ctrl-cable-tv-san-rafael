@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recibo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/print_receipt.css') }}">
+  </head>
+  <body>
+    <div class="receipt">
+      <h1>Recibo</h1>
+      <div class="client-data">
+        <p class="tag">Nombre</p>
+        <p>{{ receipt.name }}</p>
+        <p class="tag">Dirección</p>
+        <p>{{ receipt.direction }}</p>
+        <p class="tag">Ubicación</p>
+        <p>{{ receipt.ubication }}</p>
+      </div>
+      <div class="receipt-table">
+        {% for payment in receipt.payments %}
+          {% if payment.status %}
+            <div class="item">Cuota del servicio: "{{ payment.service }}", del mes de {{ payment.month }} del año {{ payment.year }}</div>
+          {% else %}
+            <div class="item">Abono al servicio: "{{ payment.service }}", del mes de {{ payment.month }} del año {{ payment.year }}</div>
+          {% endif %}
+            <div class="item">Q. {{ payment.mount }}</div>
+        {% endfor %}
+          <div class="total-tag">Total</div>
+          <div class="item">Q. {{ receipt.total }}</div>
+      </div>
+    </div>
+    </ul>
+  </body>
+</html>

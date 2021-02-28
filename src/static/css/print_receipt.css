@@ -16,7 +16,6 @@ body {
   body {
     background-color: white;
     color: black;
-    /* border: 1px dashed red; Debug */
     width: 21cm;
   }
   h1 {
@@ -25,18 +24,10 @@ body {
     margin-bottom: 12pt;
   }
 
-  .payment-order {
+  .receipt {
     height: 50%;
-  }
-
-  .order-top {
-    margin-bottom: 18pt;
-  }
-
-  .order-bottom {
-    margin-top: 12pt;
-    padding-top: 12pt;
-    border-top: 1px dashed black;
+    padding-bottom: 12pt;
+    border-bottom: 1px dashed black;
   }
 
   .client-data {
@@ -46,18 +37,18 @@ body {
     row-gap: 12pt;
   }
 
-  .orders-table {
+  .receipt-table {
     display: grid;
     grid-template-columns: 88% 12%;
   }
 
-  .orders-table .item {
+  .receipt-table .item {
     padding: 8pt;
     text-align: center;
     border: 1px solid black;
   }
 
-  .orders-table .total-tag {
+  .receipt-table .total-tag {
     padding: 8pt;
     text-align: right;
     font-weight: bold;
@@ -65,9 +56,5 @@ body {
 
   .tag {
     font-weight: bold;
-  }
-
-  .page-break {
-    page-break-after: always;
   }
 }
