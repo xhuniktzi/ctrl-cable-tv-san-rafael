@@ -494,15 +494,14 @@ def post_payments():
             new_payment.service_id = service.key_id
             new_payment.client_id = client.key_id
 
-            if month <= 12:
-                new_payment.month = month
-                new_payment.year = year
-                month = month + 1
-            else:
-                year = year + 1
+            month = month + 1
+
+            if month > 12:
                 month = 1
-                new_payment.month = month
-                new_payment.year = year
+                year = year + 1
+
+            new_payment.month = month
+            new_payment.year = year
 
             db.session.add(new_payment)
             db.session.commit()
