@@ -30,8 +30,20 @@
         <nav
           class="container-fluid col-lg-3 border border-dark nav flex-column text-center"
         >
-          <a href="{{url_for('dashboard')}}" class="nav-link fs-4 row text-dark"
-            >Dashboard</a
+          <a
+            href="{{url_for('login_user')}}"
+            class="nav-link fs-4 row text-dark"
+            >Ingresar</a
+          >
+          <a
+            href="{{url_for('register_user')}}"
+            class="nav-link fs-4 row text-dark"
+            >Registrar Usuario</a
+          >
+          <a
+            href="{{url_for('logout_user')}}"
+            class="nav-link fs-4 row text-dark"
+            >Salir</a
           >
           <h2 class="bg-primary row p-3">Operaciones de administración</h2>
           <a

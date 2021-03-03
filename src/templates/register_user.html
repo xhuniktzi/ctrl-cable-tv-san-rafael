@@ -1,0 +1,15 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Servicios {%
+endblock %} {% block content %}
+<h2>Registrar Usuario</h2>
+
+{% from '_macro.html' import render_field %}
+
+<form class="m-3 p-3" method="POST">
+  {{ render_field(form.username, class='form-control form-control-sm') }} {{
+  render_field(form.password, class='form-control form-control-sm') }}
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
+    <input type="submit" value="Registrar Usuario" class="btn btn-primary" />
+  </div>
+</form>
+
+{% endblock content %} {% block script %} {{super()}} {% endblock script %}

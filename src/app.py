@@ -1,13 +1,18 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, session, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment
+from forms import RegisterForm, LoginForm
 import os
 from datetime import datetime
 
 load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+app.config['SQLALCHEMY_BINDS'] = {
+    'users': os.getenv('DATABASE_USERS')
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my_secret_key'
 db = SQLAlchemy(app)
@@ -71,10 +76,74 @@ class Month(db.Model):
     name = db.Column(db.String(12), nullable=False)
 
 
+# Datos Login
+class User(db.Model):
+    __bind_key__ = 'users'
+    key_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(256))
+    created_date = db.Column(db.DateTime, default=datetime.now())
+
+    def __init__(self, username: str, passwd: str):
+        self.username = username
+        self.password = self.__create_passwd(passwd)
+
+    def __create_passwd(self, passwd: str):
+        return generate_password_hash(passwd)
+
+    def check_passwd(self, passwd: str):
+        return check_password_hash(self.password, passwd)
+
+
+@app.before_request
+def before_request():
+    if 'username' not in session and request.endpoint not in ['login_user']:
+        return redirect(url_for('login_user'))
+    elif 'username' in session and request.endpoint in ['login_user']:
+        return redirect(url_for('welcome'))
+
+
+# AUTH
+@app.route('/auth/register/', methods=['GET', 'POST'])
+def register_user():
+    register_form = RegisterForm(request.form)
+    if request.method == 'POST' and register_form.validate():
+        username = register_form.username.data
+        password = register_form.password.data
+        check_user = User.query.filter_by(username=username).first()
+        if check_user != None:
+            return redirect(url_for('welcome'))  # TODO: error handler
+        user = User(username, password)
+        db.session.add(user)
+        db.session.commit()
+    return render_template('register_user.html', form=register_form)
+
+
+@app.route('/auth/login/', methods=['GET', 'POST'])
+def login_user():
+    login_form = LoginForm(request.form)
+    if request.method == 'POST' and login_form.validate():
+        username = login_form.username.data
+        password = login_form.password.data
+        user = User.query.filter_by(username=username).first()
+        if user != None and user.check_passwd(password):
+            session['username'] = username
+            return redirect(url_for('welcome'))
+        # TODO: Error handler
+    return render_template('login_user.html', form=login_form)
+
+
+@app.route('/auth/logout/')
+def logout_user():
+    if 'username' in session:
+        session.pop('username')
+    return redirect(url_for('login_user'))
+
+
 # Rutas
-@app.route('/dashboard/')
-def dashboard():
-    return render_template('dashboard.html')
+@app.route('/')
+def welcome():
+    return render_template('welcome.html')
 
 
 @app.route('/admin/clients/')

@@ -1,0 +1,8 @@
+{% macro render_field(field) %}
+<div class="row">
+  <div class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5">
+    {{ field.label }}
+  </div>
+  <div class="col-lg-7">{{ field(**kwargs)|safe }}</div>
+</div>
+{% endmacro %}
