@@ -49,6 +49,7 @@ class Client(db.Model):
                              nullable=False)
 
 
+# TODO: data payments expected
 class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
@@ -103,7 +104,19 @@ def before_request():
         return redirect(url_for('welcome'))
 
 
+# TODO: Normal User Permission
+# User: Register new client
+# User: No edit client
+# User: No villages
+# User: No create service
+# User: Connect Services
+# User: Payments
+# User: order payments
+# User: no table
+# User: no dashboard
+# TODO: view login handler
 # AUTH
+# TODO: view login user
 @app.route('/auth/register/', methods=['GET', 'POST'])
 def register_user():
     register_form = RegisterForm(request.form)
@@ -181,6 +194,7 @@ def orders():
     return render_template('orders.html')
 
 
+# TODO: print table
 # Prints
 @app.route('/print/receipt/<int:id>/')
 def receipt(id: int):
@@ -209,6 +223,7 @@ def receipt(id: int):
     return render_template('print_receipt.html', receipt=receipt)
 
 
+# TODO: insert internet speed
 @app.route('/print/orders')
 def print_orders():
     get_payment_status = request.args.get('payment_status', type=str)
@@ -221,7 +236,7 @@ def print_orders():
     elif get_payment_status != '' and get_village == None:
         clients = Client.query.filter_by(
             payment_group=get_payment_status).all()
-
+    # TODO: order by village
     elif get_payment_status == '' and get_village != None:
         clients = Client.query.filter_by(ubication_id=get_village).all()
 
@@ -581,14 +596,14 @@ def post_payments():
             new_payment.service_id = service.key_id
             new_payment.client_id = client.key_id
 
+            new_payment.month = month
+            new_payment.year = year
+
             month = month + 1
 
             if month > 12:
                 month = 1
                 year = year + 1
-
-            new_payment.month = month
-            new_payment.year = year
 
             db.session.add(new_payment)
             db.session.commit()
@@ -598,6 +613,7 @@ def post_payments():
     return jsonify(list_payments)
 
 
+# TODO: only registered services
 @app.route('/api/v2/payments/<int:id>', methods=['PUT'])
 def put_payments(id: int):
     client = Client.query.get(id)
