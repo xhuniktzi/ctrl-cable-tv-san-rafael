@@ -689,4 +689,4 @@ def put_payments(id: int):
 if __name__ == "__main__":
     db.create_all()
     app.jinja_env.globals.update(is_admin=is_admin)
-    app.run(debug=True)
+    app.run()
