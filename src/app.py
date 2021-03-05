@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for, jsonify, redirect
+from flask import Flask, render_template, request, session, url_for, jsonify, redirect, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
@@ -81,8 +81,9 @@ class Month(db.Model):
 class User(db.Model):
     __bind_key__ = 'users'
     key_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(256))
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(256), nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now())
 
     def __init__(self, username: str, passwd: str):
@@ -96,22 +97,36 @@ class User(db.Model):
         return check_password_hash(self.password, passwd)
 
 
+def is_admin(username: str):
+    user = User.query.filter_by(username=username).first()
+    return user.is_admin
+
+
 @app.before_request
 def before_request():
-    if 'username' not in session and request.endpoint not in ['login_user']:
+    normal_user_endpoints = ['welcome', 'logout_user', 'client_admin', 'register_service', 'payment', 'orders', 'receipt',
+                             'print_orders', 'get_all_villages', 'get_all_services', 'get_client',
+                             'post_client', 'post_client_service', 'search_clients', 'get_data_client',
+                             'get_payments', 'post_payments', 'put_payments']
+    if ('username' not in session) and (request.endpoint not in ['login_user']):
         return redirect(url_for('login_user'))
-    elif 'username' in session and request.endpoint in ['login_user']:
+    elif ('username' in session) and (request.endpoint in ['login_user']):
         return redirect(url_for('welcome'))
+    elif ('username' in session) and (request.endpoint not in normal_user_endpoints):
+        user = User.query.filter_by(username=session['username']).first()
+        if not user.is_admin:
+            print('Not Admin')
+            return abort(401)
 
 
 # TODO: Normal User Permission
-# User: Register new client
-# User: No edit client
-# User: No villages
-# User: No create service
+# User: Register new client OK
+# User: No edit client  OK
+# User: No villages  OK
+# User: No create service  OK
 # User: Connect Services
-# User: Payments
-# User: order payments
+# User: Payments  OK
+# User: order payments  OK
 # User: no table
 # User: no dashboard
 # TODO: view login handler
@@ -127,6 +142,7 @@ def register_user():
         if check_user != None:
             return redirect(url_for('welcome'))  # TODO: error handler
         user = User(username, password)
+        user.is_admin = False
         db.session.add(user)
         db.session.commit()
     return render_template('register_user.html', form=register_form)
@@ -142,7 +158,8 @@ def login_user():
         if user != None and user.check_passwd(password):
             session['username'] = username
             return redirect(url_for('welcome'))
-        # TODO: Error handler
+        else:
+            abort(401)
     return render_template('login_user.html', form=login_form)
 
 
@@ -153,6 +170,7 @@ def logout_user():
     return redirect(url_for('login_user'))
 
 
+# TODO: create dashboard view
 # Rutas
 @app.route('/')
 def welcome():
@@ -224,6 +242,7 @@ def receipt(id: int):
 
 
 # TODO: insert internet speed
+# TODO: instert description
 @app.route('/print/orders')
 def print_orders():
     get_payment_status = request.args.get('payment_status', type=str)
@@ -669,4 +688,5 @@ def put_payments(id: int):
 
 if __name__ == "__main__":
     db.create_all()
+    app.jinja_env.globals.update(is_admin=is_admin)
     app.run(debug=True)
