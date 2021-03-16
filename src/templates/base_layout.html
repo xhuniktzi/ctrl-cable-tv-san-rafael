@@ -16,7 +16,16 @@
       href="{{url_for('static',filename='favicon.ico')}}"
       type="image/x-icon"
     />
-    {% endblock head %}
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lobster&display=swap"
+      rel="stylesheet"
+    />
+    {% if session['username'] %} {% if is_admin(session['username']) %}
+    <meta id="meta-admin" name="is-admin" content="yes" />
+    {% else %}
+    <meta id="meta-admin" name="is-admin" content="no" />
+    {% endif %} {% endif %} {% endblock head %}
   </head>
   <body>
     {% block body %} {% block header %}

@@ -104,7 +104,7 @@ def is_admin(username: str):
 
 @app.before_request
 def before_request():
-    normal_user_endpoints = ['welcome', 'logout_user', 'client_admin', 'register_service', 'payment', 'orders', 'receipt',
+    normal_user_endpoints = ['static', 'welcome', 'logout_user', 'client_admin', 'register_service', 'payment', 'orders', 'receipt',
                              'print_orders', 'get_all_villages', 'get_all_services', 'get_client',
                              'post_client', 'post_client_service', 'search_clients', 'get_data_client',
                              'get_payments', 'post_payments', 'put_payments']
@@ -115,7 +115,6 @@ def before_request():
     elif ('username' in session) and (request.endpoint not in normal_user_endpoints):
         user = User.query.filter_by(username=session['username']).first()
         if not user.is_admin:
-            print('Not Admin')
             return abort(401)
 
 
@@ -129,9 +128,6 @@ def before_request():
 # User: order payments  OK
 # User: no table
 # User: no dashboard
-# TODO: view login handler
-# AUTH
-# TODO: view login user
 @app.route('/auth/register/', methods=['GET', 'POST'])
 def register_user():
     register_form = RegisterForm(request.form)
@@ -216,29 +212,30 @@ def orders():
 # Prints
 @app.route('/print/receipt/<int:id>/')
 def receipt(id: int):
-    client = Client.query.get(id)
-    payment_list = request.args.getlist('pay')
-    payments = list(map(lambda pay: Payment.query.get(pay), payment_list))
+    # client = Client.query.get(id)
+    # payment_list = request.args.getlist('pay')
+    # payments = list(map(lambda pay: Payment.query.get(pay), payment_list))
 
-    receipt = {
-        'name': client.name,
-        'ubication': Ubication.query.get(client.ubication_id).name,
-        'direction': client.direction,
-        'payments': list(),
-        'total': 0
-    }
+    # receipt = {
+    #     'name': client.name,
+    #     'ubication': Ubication.query.get(client.ubication_id).name,
+    #     'direction': client.direction,
+    #     'payments': list(),
+    #     'total': 0
+    # }
 
-    for payment in payments:
-        receipt['payments'].append({
-            'month': Month.query.get(payment.month).name,
-            'year': payment.year,
-            'service': Service.query.get(payment.service_id).name,
-            'status': payment.status,
-            'mount': payment.mount
-        })
-        receipt['total'] = receipt['total'] + payment.mount
+    # for payment in payments:
+    #     receipt['payments'].append({
+    #         'month': Month.query.get(payment.month).name,
+    #         'year': payment.year,
+    #         'service': Service.query.get(payment.service_id).name,
+    #         'status': payment.status,
+    #         'mount': payment.mount
+    #     })
+    #     receipt['total'] = receipt['total'] + payment.mount
 
-    return render_template('print_receipt.html', receipt=receipt)
+    # return render_template('print_receipt.html', receipt=receipt)
+    return render_template('print_receipt.html')
 
 
 # TODO: insert internet speed
@@ -247,105 +244,75 @@ def receipt(id: int):
 def print_orders():
     get_payment_status = request.args.get('payment_status', type=str)
     get_village = request.args.get('ubication_id', type=int)
+
     clients = []
     if get_payment_status != '' and get_village != None:
         clients = Client.query.filter_by(payment_group=get_payment_status,
-                                         ubication_id=get_village).all()
+                                         ubication_id=get_village).order_by(Client.ubication_id.desc()).all()
 
     elif get_payment_status != '' and get_village == None:
-        clients = Client.query.filter_by(
-            payment_group=get_payment_status).all()
-    # TODO: order by village
+        clients = Client.query.filter_by(payment_group=get_payment_status).order_by(
+            Client.ubication_id.desc()).all()
+
     elif get_payment_status == '' and get_village != None:
         clients = Client.query.filter_by(ubication_id=get_village).all()
 
     elif get_payment_status == '' and get_village == None:
-        clients = Client.query.all()
+        clients = Client.query.order_by(Client.ubication_id.desc()).all()
 
-    data_clients = []
+    data = []
 
     for client in clients:
-        obj_client = {
-            'name': client.name,
-            'direction': client.direction,
-            'ubication': Ubication.query.get(client.ubication_id).name,
-            'orders': {
-                'parcial': list(),
-                'standard': list(),
-            },
-            'total': 0
-        }
         client_services = ClientService.query.filter_by(
             client_id=client.key_id).all()
-
         for client_service in client_services:
             service = Service.query.get(client_service.service_id)
-            parcial_payments = Payment.query.filter_by(client_id=client.key_id,
-                                                       service_id=service.key_id,
-                                                       status=False).all()
-            last_payment = Payment.query.filter_by(client_id=client.key_id,
-                                                   service_id=service.key_id).order_by(Payment.year.desc()).order_by(Payment.month.desc()).first()
+            receipt = {
+                'name': client.name,
+                'ubication': Ubication.query.get(client.ubication_id).name,
+                'direction': client.direction,
+                'description': client.description,
+                'service': service.name,
+                'total': 0,  # Default value
+                'internet_speed': client.internet_speed,
+                'parcial': list(),
+                'month_list': {
+                    '1': '',
+                    '2': '',
+                    '3': '',
+                    '4': '',
+                    '5': '',
+                    '6': '',
+                    '7': '',
+                    '8': '',
+                    '9': '',
+                    '10': '',
+                    '11': '',
+                    '12': ''
+                }
+            }
 
-            if last_payment == None:
-                continue
+            parcial_payments = Payment.query.filter_by(client_id=client.key_id, service_id=service.key_id, status=False).order_by(
+                Payment.year.asc()).order_by(Payment.month.asc()).all()
 
             for payment in parcial_payments:
-                obj_client['orders']['parcial'].append({
-                    'name': service.name,
-                    'mount': client_service.price - payment.mount,
+                receipt['parcial'].append({
                     'month': Month.query.get(payment.month).name,
-                    'year': payment.year
+                    'year': payment.year,
+                    'mount': client_service.price - payment.mount
                 })
-                obj_client['total'] = obj_client['total'] + \
+                receipt['total'] = receipt['total'] + \
                     (client_service.price - payment.mount)
 
-            first_month = last_payment.month + 1
-            first_year = last_payment.year
-            if first_month > 12:
-                first_month = 1
-                first_year = first_year + 1
+                if payment.year == datetime.now().year:
+                    value = 'Q. {} P.'.format(
+                        client_service.price - payment.mount)
+                    receipt['month_list'][str(payment.month)] = value
 
-            now_month = datetime.now().month
-            now_year = datetime.now().year
-            if service.status:
-                now_month = now_month - 1
-                if now_month < 1:
-                    now_month = 12
-                    now_year = now_year - 1
+            data.append(receipt)
 
-            if (now_year > first_year) or ((now_year == first_year) and (now_month >= first_month)):
-                count = 0
-                tmp_month = first_month
-                tmp_year = first_year
-
-                while (now_year > tmp_year) or ((now_year == tmp_year) and (now_month >= tmp_month)):
-                    count = count + 1
-                    tmp_month = tmp_month + 1
-                    if tmp_month > 12:
-                        tmp_month = 1
-                        tmp_year = tmp_year + 1
-
-                obj_client['orders']['standard'].append({
-                    'name': service.name,
-                    # 'price': client_service.price,
-                    'first_payment': {
-                        'month': Month.query.get(first_month).name,
-                        'year': first_year
-                    },
-                    'new_payment': {
-                        'month': Month.query.get(now_month).name,
-                        'year': now_year
-                    },
-                    'count':  count,
-                    'mount': count * client_service.price
-                })
-                obj_client['total'] = obj_client['total'] + \
-                    count * client_service.price
-
-        if (len(obj_client['orders']['standard']) != 0) or (len(obj_client['orders']['parcial']) != 0):
-            data_clients.append(obj_client)
-
-    return render_template('print_orders.html', data_clients=data_clients)
+    print(data)
+    return render_template('print_orders.html', data=data)
 
 
 # API
@@ -686,7 +653,16 @@ def put_payments(id: int):
     return jsonify(list_payments)
 
 
+@app.route('/api/v2/payments/<int:id>', methods=['DELETE'])
+def delete_payments(id: int):
+    payment = Payment.query.get(id)
+    db.session.delete(payment)
+    db.session.commit()
+    return jsonify(serialize_payment(payment))
+
+
 if __name__ == "__main__":
     db.create_all()
     app.jinja_env.globals.update(is_admin=is_admin)
+    app.jinja_env.globals.update(datetime=datetime.now())
     app.run()
