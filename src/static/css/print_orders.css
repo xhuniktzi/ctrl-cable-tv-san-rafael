@@ -16,58 +16,156 @@ body {
   body {
     background-color: white;
     color: black;
-    /* border: 1px dashed red; Debug */
     width: 21cm;
+    height: 28cm;
   }
-  h1 {
+
+  h2 {
+    font-size: large;
     text-align: center;
-    font-size: 16pt;
-    margin-bottom: 12pt;
+  }
+
+  .order-head {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .head-logo {
+    padding: 6pt;
+    width: 100px;
+    height: 115px;
+  }
+
+  .head-info h1 {
+    font-size: larger;
+    text-align: center;
+    font-style: italic;
+    font-family: "Lobster", cursive;
+  }
+
+  .title-content {
+    text-align: center;
+    font-family: "Lobster", cursive;
+    font-size: small;
   }
 
   .payment-order {
+    padding: 10pt;
     height: 50%;
   }
 
-  .order-top {
-    margin-bottom: 18pt;
-  }
-
-  .order-bottom {
-    margin-top: 12pt;
-    padding-top: 12pt;
-    border-top: 1px dashed black;
-  }
-
-  .client-data {
+  .info {
     display: grid;
-    margin-bottom: 12pt;
-    grid-template-columns: 12% 88%;
-    row-gap: 12pt;
+    grid-template-columns: 70% 30%;
   }
 
-  .orders-table {
+  .client-info,
+  .general-info {
+    padding: 1pt;
+    border: 0.5px solid black;
+  }
+
+  .client-info {
     display: grid;
-    grid-template-columns: 88% 12%;
+    grid-template-columns: 20% 80%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
   }
 
-  .orders-table .item {
-    padding: 8pt;
-    text-align: center;
-    border: 1px solid black;
+  .general-info {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: repeat(4, 1fr);
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
   }
 
-  .orders-table .total-tag {
-    padding: 8pt;
-    text-align: right;
-    font-weight: bold;
+  .tag,
+  .content {
+    font-size: small;
+    padding: 4pt;
   }
 
   .tag {
     font-weight: bold;
   }
 
-  .page-break {
-    page-break-after: always;
+  .tag::after {
+    content: ":";
+  }
+
+  .content {
+    border-bottom: 1px dotted black;
+    text-align: right;
+  }
+
+  .order-info {
+    margin: 8pt 64pt;
+    padding: 6pt;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+    border: 1px dotted gray;
+  }
+
+  .order-month-list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .order-month-list .month {
+    font-size: small;
+    padding: 6pt;
+    border: 1.5px dotted black;
+  }
+
+  .order-month-list .top-left {
+    border-top-left-radius: 15px;
+  }
+  .order-month-list .top-right {
+    border-top-right-radius: 15px;
+  }
+  .order-month-list .bottom-left {
+    border-bottom-left-radius: 15px;
+  }
+  .order-month-list .bottom-right {
+    border-bottom-right-radius: 15px;
+  }
+
+  .order-status {
+    margin: 8pt 64pt;
+    padding: 6pt;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+    border: 1px dotted gray;
+  }
+
+  .order-footer {
+    display: grid;
+    padding: 8pt;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas:
+      "ignore ignore line"
+      "ignore ignore sign";
+  }
+  .line {
+    grid-area: line;
+    border-bottom: 1px solid black;
+  }
+  .sign {
+    text-align: center;
+    grid-area: sign;
+  }
+
+  .top-order {
+    border-bottom: 1px dashed black;
+  }
+
+  .bottom-order {
+    border-top: 1px dashed black;
   }
 }

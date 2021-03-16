@@ -11,6 +11,8 @@ const standard_payment_service = document.querySelector('#standard-payment #serv
 const parcial_payment_service = document.querySelector('#parcial-payment #service');
 const add_payment_button = document.querySelector('#add-payment');
 
+const meta_admin = document.querySelector('meta#meta-admin');
+
 
 let current_client = 0;
 let list_payments = [];
@@ -42,9 +44,9 @@ async function render_village_menu(){
     });
 }
 
-async function render_service_menu(){
-  const url = '/api/v1/services';
-  await fetch(url, {
+function render_service_menu(client){
+  const url = `/api/v2/clients/${client}`;
+  fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -58,7 +60,7 @@ async function render_service_menu(){
     })
     .then((res_json) => {
       console.log(res_json);
-      for (let service of res_json){
+      for (let service of res_json.services){
         const opt_service = document.createElement('option');
         opt_service.value = service.id;
         opt_service.innerHTML = service.name;
@@ -134,6 +136,20 @@ function fetch_payments(client){
         payment_element_service_price.classList.add('col-lg-1', 'text-center');
         payment_element_service_price.innerHTML = element.service.price;
         payment_element.appendChild(payment_element_service_price);
+
+        if (meta_admin.getAttribute('content') == 'yes'){
+          const payment_element_delete = document.createElement('div');
+          payment_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
+          payment_element.appendChild(payment_element_delete);
+
+          const delete_button = document.createElement('button');
+          delete_button.type = 'button';
+          delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
+          delete_button.innerHTML = 'Eliminar';
+          delete_button.value = element.id;
+          delete_button.addEventListener('click', delete_payment);
+          payment_element_delete.appendChild(delete_button);
+        }
       }
     })
     .catch((err) => {
@@ -231,8 +247,8 @@ standard_payment_form.addEventListener('submit', (e) => {
         console.log(param);
         params = params + 'pay=' + param.id + '&';
       }
-      const url = `/print/receipt/${current_client}/`;
-      window.open(url + params);
+      // const url = `/print/receipt/${current_client}/`;
+      // window.open(url + params);
       fetch_payments(current_client);
     })
     .catch((err) => {
@@ -305,8 +321,8 @@ parcial_payment_form.addEventListener('submit', (e) => {
         console.log(param);
         params = params + 'pay=' + param.id + '&';
       }
-      const url = `/print/receipt/${current_client}/`;
-      window.open(url + params);
+      // const url = `/print/receipt/${current_client}/`;
+      // window.open(url + params);
       fetch_payments(current_client);
     })
     .catch((err) => {
@@ -320,7 +336,29 @@ function select_client(){
   payment_form_container.classList.remove('d-none');
   current_client = this.value;
   fetch_payments(current_client);
+  render_service_menu(current_client);
+}
+
+function delete_payment(){
+  const url = `/api/v2/payments/${this.value}`;
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }})
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      console.log(res_json);
+      fetch_payments(current_client);
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
 }
 
 render_village_menu();
-render_service_menu();

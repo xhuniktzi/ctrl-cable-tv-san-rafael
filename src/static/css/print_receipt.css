@@ -18,43 +18,4 @@ body {
     color: black;
     width: 21cm;
   }
-  h1 {
-    text-align: center;
-    font-size: 16pt;
-    margin-bottom: 12pt;
-  }
-
-  .receipt {
-    height: 50%;
-    padding-bottom: 12pt;
-    border-bottom: 1px dashed black;
-  }
-
-  .client-data {
-    display: grid;
-    margin-bottom: 12pt;
-    grid-template-columns: 12% 88%;
-    row-gap: 12pt;
-  }
-
-  .receipt-table {
-    display: grid;
-    grid-template-columns: 88% 12%;
-  }
-
-  .receipt-table .item {
-    padding: 8pt;
-    text-align: center;
-    border: 1px solid black;
-  }
-
-  .receipt-table .total-tag {
-    padding: 8pt;
-    text-align: right;
-    font-weight: bold;
-  }
-
-  .tag {
-    font-weight: bold;
-  }
 }

@@ -11,68 +11,129 @@
     />
   </head>
   <body>
-    {% for client in data_clients %}
-    <div class="payment-order order-top">
-      <h1>Orden de pago</h1>
-      <div class="client-data">
-        <p class="tag">Nombre</p>
-        <p>{{ client.name }}</p>
-        <p class="tag">Dirección</p>
-        <p>{{ client.direction }}</p>
-        <p class="tag">Ubicación</p>
-        <p>{{ client.ubication }}</p>
+    <div class="payment-order top-order">
+      <div class="order-head">
+        <img
+          class="head-logo"
+          src="{{ url_for('static', filename='img/internet2.png') }}"
+        />
+        <div class="head-info">
+          <h1>Fiber - TelNet</h1>
+          <div>
+            <div class="title-content">
+              Huehuetenango, San Rafael la Independencia, Sector Cooperativa
+            </div>
+          </div>
+          <div>
+            <div class="title-content">40714370</div>
+          </div>
+        </div>
+        <h2>Orden de pago</h2>
       </div>
-      <div class="orders-table">
-        {% for order in client.orders.parcial %}
-        <div class="item">
-          Abono al servicio: "{{ order.name }}", cuota del mes de {{ order.month
-          }} del año {{ order.year }}
+      <div class="info">
+        <div class="client-info">
+          <div class="tag">Nombre</div>
+          <div class="content">*Nombre*</div>
+          <div class="tag">Ubicación</div>
+          <div class="content">*Ubicación*</div>
+          <div class="tag">Dirección</div>
+          <div class="content">*Dirección*</div>
+          <div class="tag">Descripción</div>
+          <div class="content">*Descripción*</div>
         </div>
-        <div class="item">Q. {{ order.mount }}</div>
-        {% endfor %} {% for order in client.orders.standard %}
-        <div class="item">
-          {{ order.count }} cuotas del servicio: "{{ order.name }}", del mes de
-          {{ order.first_payment.month }} del año {{ order.first_payment.year }}
-          al mes de {{ order.new_payment.month }} del año {{
-          order.new_payment.year }}
+        <div class="general-info">
+          <div class="tag">Total</div>
+          <div class="content">*00000.00*</div>
+          <div class="tag">Internet</div>
+          <div class="content">*000*</div>
         </div>
-        <div class="item">Q .{{order.mount}}</div>
-        {% endfor %}
-        <div class="total-tag">Total</div>
-        <div class="item">Q. {{ client.total }}</div>
+      </div>
+      <div class="order-info">
+        <span>*Nombre del Servicio*</span>
+        <span> - </span>
+        <span>*Año Actual*</span>
+      </div>
+      <div class="order-month-list">
+        <div class="month top-left">ENE</div>
+        <div class="month">FEB</div>
+        <div class="month bottom-left">MAR</div>
+        <div class="month">ABR</div>
+        <div class="month">MAY</div>
+        <div class="month">JUN</div>
+        <div class="month">JUL</div>
+        <div class="month">AGO</div>
+        <div class="month">SEP</div>
+        <div class="month top-right">OCT</div>
+        <div class="month">NOV</div>
+        <div class="month bottom-right">DIC</div>
+      </div>
+      <div class="order-status">*Pagos atrasados*</div>
+      <div class="order-footer">
+        <div class="line"></div>
+        <div class="sign">Firma</div>
       </div>
     </div>
-    <div class="payment-order order-bottom">
-      <h1>Orden de pago</h1>
-      <div class="client-data">
-        <p class="tag">Nombre</p>
-        <p>{{ client.name }}</p>
-        <p class="tag">Dirección</p>
-        <p>{{ client.direction }}</p>
-        <p class="tag">Ubicación</p>
-        <p>{{ client.ubication }}</p>
+    <div class="payment-order bottom-order">
+      <div class="order-head">
+        <img
+          class="head-logo"
+          src="{{ url_for('static', filename='img/internet2.png') }}"
+        />
+        <div class="head-info">
+          <h1>Fiber - TelNet</h1>
+          <div>
+            <div class="title-content">
+              Huehuetenango, San Rafael la Independencia, Sector Cooperativa
+            </div>
+          </div>
+          <div>
+            <div class="title-content">40714370</div>
+          </div>
+        </div>
+        <h2>Orden de pago</h2>
       </div>
-      <div class="orders-table">
-        {% for order in client.orders.parcial %}
-        <div class="item">
-          Abono al servicio: "{{ order.name }}", cuota del mes de {{ order.month
-          }} del año {{ order.year }}
+      <div class="info">
+        <div class="client-info">
+          <div class="tag">Nombre</div>
+          <div class="content">*Nombre*</div>
+          <div class="tag">Ubicación</div>
+          <div class="content">*Ubicación*</div>
+          <div class="tag">Dirección</div>
+          <div class="content">*Dirección*</div>
+          <div class="tag">Descripción</div>
+          <div class="content">*Descripción*</div>
         </div>
-        <div class="item">Q. {{ order.mount }}</div>
-        {% endfor %} {% for order in client.orders.standard %}
-        <div class="item">
-          {{ order.count }} cuotas del servicio: "{{ order.name }}", del mes de
-          {{ order.first_payment.month }} del año {{ order.first_payment.year }}
-          al mes de {{ order.new_payment.month }} del año {{
-          order.new_payment.year }}
+        <div class="general-info">
+          <div class="tag">Total</div>
+          <div class="content">*00000.00*</div>
+          <div class="tag">Internet</div>
+          <div class="content">*000*</div>
         </div>
-        <div class="item">Q .{{order.mount}}</div>
-        {% endfor %}
-        <div class="total-tag">Total</div>
-        <div class="item">Q. {{ client.total }}</div>
+      </div>
+      <div class="order-info">
+        <span>*Nombre del Servicio*</span>
+        <span> - </span>
+        <span>*Año Actual*</span>
+      </div>
+      <div class="order-month-list">
+        <div class="month top-left">ENE</div>
+        <div class="month">FEB</div>
+        <div class="month bottom-left">MAR</div>
+        <div class="month">ABR</div>
+        <div class="month">MAY</div>
+        <div class="month">JUN</div>
+        <div class="month">JUL</div>
+        <div class="month">AGO</div>
+        <div class="month">SEP</div>
+        <div class="month top-right">OCT</div>
+        <div class="month">NOV</div>
+        <div class="month bottom-right">DIC</div>
+      </div>
+      <div class="order-status">*Pagos atrasados*</div>
+      <div class="order-footer">
+        <div class="line"></div>
+        <div class="sign">Firma</div>
       </div>
     </div>
-    <div class="page-break"></div>
-    {% endfor %}
   </body>
 </html>
