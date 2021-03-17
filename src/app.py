@@ -260,59 +260,7 @@ def print_orders():
     elif get_payment_status == '' and get_village == None:
         clients = Client.query.order_by(Client.ubication_id.desc()).all()
 
-    data = []
-
-    for client in clients:
-        client_services = ClientService.query.filter_by(
-            client_id=client.key_id).all()
-        for client_service in client_services:
-            service = Service.query.get(client_service.service_id)
-            receipt = {
-                'name': client.name,
-                'ubication': Ubication.query.get(client.ubication_id).name,
-                'direction': client.direction,
-                'description': client.description,
-                'service': service.name,
-                'total': 0,  # Default value
-                'internet_speed': client.internet_speed,
-                'parcial': list(),
-                'month_list': {
-                    '1': '',
-                    '2': '',
-                    '3': '',
-                    '4': '',
-                    '5': '',
-                    '6': '',
-                    '7': '',
-                    '8': '',
-                    '9': '',
-                    '10': '',
-                    '11': '',
-                    '12': ''
-                }
-            }
-
-            parcial_payments = Payment.query.filter_by(client_id=client.key_id, service_id=service.key_id, status=False).order_by(
-                Payment.year.asc()).order_by(Payment.month.asc()).all()
-
-            for payment in parcial_payments:
-                receipt['parcial'].append({
-                    'month': Month.query.get(payment.month).name,
-                    'year': payment.year,
-                    'mount': client_service.price - payment.mount
-                })
-                receipt['total'] = receipt['total'] + \
-                    (client_service.price - payment.mount)
-
-                if payment.year == datetime.now().year:
-                    value = 'Q. {} P.'.format(
-                        client_service.price - payment.mount)
-                    receipt['month_list'][str(payment.month)] = value
-
-            data.append(receipt)
-
-    print(data)
-    return render_template('print_orders.html', data=data)
+    return render_template('print_orders.html')
 
 
 # API

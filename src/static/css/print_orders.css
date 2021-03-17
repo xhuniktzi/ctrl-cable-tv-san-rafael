@@ -116,8 +116,10 @@ body {
   }
 
   .order-month-list .month {
+    display: flex;
+    justify-content: space-between;
     font-size: small;
-    padding: 6pt;
+    padding: 2pt;
     border: 1.5px dotted black;
   }
 

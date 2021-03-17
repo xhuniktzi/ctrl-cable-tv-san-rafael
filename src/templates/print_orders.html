@@ -11,7 +11,6 @@
     />
   </head>
   <body>
-    {% for obj in data %}
     <div class="payment-order top-order">
       <div class="order-head">
         <img
@@ -31,47 +30,65 @@
       <div class="info">
         <div class="client-info">
           <div class="tag">Nombre</div>
-          <div class="content">{{ obj.name }}</div>
+          <div class="content"></div>
           <div class="tag">Ubicación</div>
-          <div class="content">{{ obj.ubication }}</div>
+          <div class="content"></div>
           <div class="tag">Dirección</div>
-          <div class="content">{{ obj.direction }}</div>
+          <div class="content"></div>
           <div class="tag">Descripción</div>
-          <div class="content">{{ obj.description }}</div>
+          <div class="content"></div>
         </div>
         <div class="general-info">
           <div class="tag">Total</div>
-          <div class="content">Q. {{ obj.total }}</div>
+          <div class="content">Q.</div>
           <div class="tag">Internet</div>
-          <div class="content">{{ obj.internet_speed }} Mb/s</div>
+          <div class="content">Mb/s</div>
         </div>
       </div>
       <div class="order-info">
-        <span>{{ obj.service }}</span>
+        <span> Servicio </span>
         <span> - </span>
         <span>{{ datetime.year }}</span>
       </div>
       <div class="order-month-list">
-        <div class="month top-left">ENE {{ obj.month_list['1'] }}</div>
-        <div class="month">FEB {{ obj.month_list['2'] }}</div>
-        <div class="month bottom-left">MAR</div>
-        <div class="month">ABR</div>
-        <div class="month">MAY</div>
-        <div class="month">JUN</div>
-        <div class="month">JUL</div>
-        <div class="month">AGO</div>
-        <div class="month">SEP</div>
-        <div class="month top-right">OCT</div>
-        <div class="month">NOV</div>
-        <div class="month bottom-right">DIC</div>
+        <div class="month top-left">
+          <span class="tag">ENE</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">FEB</span> <span class="content"></span>
+        </div>
+        <div class="month bottom-left">
+          <span class="tag">MAR</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">ABR</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">MAY</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">JUN</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">JUL</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">AGO</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">SEP</span> <span class="content"></span>
+        </div>
+        <div class="month top-right">
+          <span class="tag">OCT</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">NOV</span> <span class="content"></span>
+        </div>
+        <div class="month bottom-right">
+          <span class="tag">DIC</span> <span class="content"></span>
+        </div>
       </div>
-      <div class="order-status">
-        {% for parcial in obj.parcial %}
-        <span>
-          {{ parcial.month }} {{ parcial.year }} Q. {{ parcial.mount }} P.
-        </span>
-        {% endfor %}
-      </div>
+      <div class="order-status"></div>
       <div class="order-footer">
         <div class="line"></div>
         <div class="sign">Firma</div>
@@ -96,52 +113,69 @@
       <div class="info">
         <div class="client-info">
           <div class="tag">Nombre</div>
-          <div class="content">{{ obj.name }}</div>
+          <div class="content"></div>
           <div class="tag">Ubicación</div>
-          <div class="content">{{ obj.ubication }}</div>
+          <div class="content"></div>
           <div class="tag">Dirección</div>
-          <div class="content">{{ obj.direction }}</div>
+          <div class="content"></div>
           <div class="tag">Descripción</div>
-          <div class="content">{{ obj.description }}</div>
+          <div class="content"></div>
         </div>
         <div class="general-info">
           <div class="tag">Total</div>
-          <div class="content">Q. {{ obj.total }}</div>
+          <div class="content">Q.</div>
           <div class="tag">Internet</div>
-          <div class="content">{{ obj.internet_speed }} Mb/s</div>
+          <div class="content">Mb/s</div>
         </div>
       </div>
       <div class="order-info">
-        <span>{{ obj.service }}</span>
+        <span> Servicio </span>
         <span> - </span>
         <span>{{ datetime.year }}</span>
       </div>
       <div class="order-month-list">
-        <div class="month top-left">ENE</div>
-        <div class="month">FEB</div>
-        <div class="month bottom-left">MAR</div>
-        <div class="month">ABR</div>
-        <div class="month">MAY</div>
-        <div class="month">JUN</div>
-        <div class="month">JUL</div>
-        <div class="month">AGO</div>
-        <div class="month">SEP</div>
-        <div class="month top-right">OCT</div>
-        <div class="month">NOV</div>
-        <div class="month bottom-right">DIC</div>
+        <div class="month top-left">
+          <span class="tag">ENE</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">FEB</span> <span class="content"></span>
+        </div>
+        <div class="month bottom-left">
+          <span class="tag">MAR</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">ABR</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">MAY</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">JUN</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">JUL</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">AGO</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">SEP</span> <span class="content"></span>
+        </div>
+        <div class="month top-right">
+          <span class="tag">OCT</span> <span class="content"></span>
+        </div>
+        <div class="month">
+          <span class="tag">NOV</span> <span class="content"></span>
+        </div>
+        <div class="month bottom-right">
+          <span class="tag">DIC</span> <span class="content"></span>
+        </div>
       </div>
-      <div class="order-status">
-        {% for parcial in obj.parcial %}
-        <span>
-          {{ parcial.month }} {{ parcial.year }} Q. {{ parcial.mount }} P.
-        </span>
-        {% endfor %}
-      </div>
+      <div class="order-status"></div>
       <div class="order-footer">
         <div class="line"></div>
         <div class="sign">Firma</div>
       </div>
     </div>
-    {% endfor %}
   </body>
 </html>
