@@ -10,9 +10,7 @@ from datetime import datetime
 load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
-app.config['SQLALCHEMY_BINDS'] = {
-    'users': os.getenv('DATABASE_USERS')
-}
+app.config['SQLALCHEMY_BINDS'] = {'users': os.getenv('DATABASE_USERS')}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my_secret_key'
 db = SQLAlchemy(app)
@@ -20,9 +18,11 @@ db = SQLAlchemy(app)
 
 # Modelos de datos
 class ClientService(db.Model):
-    client_id = db.Column(db.Integer, db.ForeignKey('client.key_id'),
+    client_id = db.Column(db.Integer,
+                          db.ForeignKey('client.key_id'),
                           primary_key=True)
-    service_id = db.Column(db.Integer, db.ForeignKey('service.key_id'),
+    service_id = db.Column(db.Integer,
+                           db.ForeignKey('service.key_id'),
                            primary_key=True)
     price = db.Column(db.Integer, nullable=False)
 
@@ -45,7 +45,8 @@ class Client(db.Model):
     ip_address = db.Column(db.String(16), nullable=True)
     router_number = db.Column(db.Integer, nullable=True)
     line_number = db.Column(db.Integer, nullable=True)
-    ubication_id = db.Column(db.Integer, db.ForeignKey('ubication.key_id'),
+    ubication_id = db.Column(db.Integer,
+                             db.ForeignKey('ubication.key_id'),
                              nullable=False)
 
 
@@ -54,13 +55,16 @@ class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
-    month = db.Column(db.Integer, db.ForeignKey(
-        'month.key_id'), nullable=False)
+    month = db.Column(db.Integer,
+                      db.ForeignKey('month.key_id'),
+                      nullable=False)
     year = db.Column(db.Integer, nullable=False)
-    service_id = db.Column(db.Integer, db.ForeignKey(
-        'service.key_id'), nullable=False)
-    client_id = db.Column(db.Integer, db.ForeignKey(
-        'client.key_id'), nullable=False)
+    service_id = db.Column(db.Integer,
+                           db.ForeignKey('service.key_id'),
+                           nullable=False)
+    client_id = db.Column(db.Integer,
+                          db.ForeignKey('client.key_id'),
+                          nullable=False)
     datetime = db.Column(db.DateTime, nullable=False)
 
 
@@ -104,15 +108,20 @@ def is_admin(username: str):
 
 @app.before_request
 def before_request():
-    normal_user_endpoints = ['static', 'welcome', 'logout_user', 'client_admin', 'register_service', 'payment', 'orders', 'receipt',
-                             'print_orders', 'get_all_villages', 'get_all_services', 'get_client',
-                             'post_client', 'post_client_service', 'search_clients', 'get_data_client',
-                             'get_payments', 'post_payments', 'put_payments']
-    if ('username' not in session) and (request.endpoint not in ['login_user']):
+    normal_user_endpoints = [
+        'static', 'welcome', 'logout_user', 'client_admin', 'register_service',
+        'payment', 'orders', 'receipt', 'print_orders', 'get_all_villages',
+        'get_all_services', 'get_client', 'post_client', 'post_client_service',
+        'search_clients', 'get_data_client', 'get_payments', 'post_payments',
+        'put_payments'
+    ]
+    if ('username' not in session) and (request.endpoint not in ['login_user'
+                                                                 ]):
         return redirect(url_for('login_user'))
     elif ('username' in session) and (request.endpoint in ['login_user']):
         return redirect(url_for('welcome'))
-    elif ('username' in session) and (request.endpoint not in normal_user_endpoints):
+    elif ('username' in session) and (request.endpoint
+                                      not in normal_user_endpoints):
         user = User.query.filter_by(username=session['username']).first()
         if not user.is_admin:
             return abort(401)
@@ -246,11 +255,13 @@ def print_orders():
     clients = []
     if get_payment_status != '' and get_village != None:
         clients = Client.query.filter_by(payment_group=get_payment_status,
-                                         ubication_id=get_village).order_by(Client.ubication_id.desc()).all()
+                                         ubication_id=get_village).order_by(
+                                             Client.ubication_id.desc()).all()
 
     elif get_payment_status != '' and get_village == None:
-        clients = Client.query.filter_by(payment_group=get_payment_status).order_by(
-            Client.ubication_id.desc()).all()
+        clients = Client.query.filter_by(
+            payment_group=get_payment_status).order_by(
+                Client.ubication_id.desc()).all()
 
     elif get_payment_status == '' and get_village != None:
         clients = Client.query.filter_by(ubication_id=get_village).all()
@@ -266,8 +277,10 @@ def print_orders():
         for client_service in client_services:
             service = Service.query.get(client_service.service_id)
 
-            last_payment = Payment.query.filter_by(client_id=client.key_id, service_id=service.key_id).order_by(
-                Payment.year.desc()).order_by(Payment.month.desc()).first()
+            last_payment = Payment.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).order_by(
+                    Payment.year.desc()).order_by(
+                        Payment.month.desc()).first()
 
             if last_payment == None:
                 continue  # Break if not payments
@@ -285,7 +298,10 @@ def print_orders():
             }
 
             year_parcial_payments = Payment.query.filter_by(
-                client_id=client.key_id, service_id=service.key_id, status=False, year=datetime.now().year).all()
+                client_id=client.key_id,
+                service_id=service.key_id,
+                status=False,
+                year=datetime.now().year).all()
 
             for payment in year_parcial_payments:
                 template = 'Q. {} PEND'
@@ -295,19 +311,25 @@ def print_orders():
                     (client_service.price - payment.mount)
 
             year_standard_payments = Payment.query.filter_by(
-                client_id=client.key_id, service_id=service.key_id, status=True, year=datetime.now().year).all()
+                client_id=client.key_id,
+                service_id=service.key_id,
+                status=True,
+                year=datetime.now().year).all()
 
             for payment in year_standard_payments:
                 obj_order['list_payments'][payment.month] = 'PAGADO'
 
             other_parcial_payments = Payment.query.filter_by(
-                client_id=client.key_id, service_id=service.key_id, status=False).filter(Payment.year != datetime.now().year).all()
+                client_id=client.key_id,
+                service_id=service.key_id,
+                status=False).filter(
+                    Payment.year != datetime.now().year).all()
 
             for payment in other_parcial_payments:
                 mount = client_service.price - payment.mount
                 msg = 'Pend. {} {}, Q. {}'
-                info = msg.format(Month.query.get(
-                    payment.month).name, payment.year, mount)
+                info = msg.format(
+                    Month.query.get(payment.month).name, payment.year, mount)
                 obj_order['messages'].append(info)
                 obj_order['total'] = obj_order['total'] + \
                     (client_service.price - payment.mount)
@@ -321,7 +343,9 @@ def print_orders():
                     now_month = 12
                     now_year = now_year - 1
 
-            if (now_year > last_payment.year) or ((now_year == last_payment.year) and (now_month > last_payment.month)):
+            if (now_year > last_payment.year) or (
+                (now_year == last_payment.year) and
+                (now_month > last_payment.month)):
                 tmp_month = last_payment.month
                 tmp_year = last_payment.year
                 count = 0
@@ -346,8 +370,11 @@ def print_orders():
                         first_year = first_year + 1
 
                     msg = '{} cuotas desde {}/{} hasta {}/{}'
-                    info = msg.format(count, Month.query.get(first_month).name,
-                                      first_year, Month.query.get(now_month).name, now_year)
+                    info = msg.format(count,
+                                      Month.query.get(first_month).name,
+                                      first_year,
+                                      Month.query.get(now_month).name,
+                                      now_year)
                     obj_order['messages'].append(info)
                 else:
                     msg = 'cuota de {}/{}'.format(
@@ -532,8 +559,9 @@ def search_clients():
     list_clients = []
     if get_name != None and get_village != None:
         search_name = "%{}%".format(get_name)
-        clients = Client.query.filter(Client.name.like(search_name),
-                                      Client.ubication_id == get_village).all()
+        clients = Client.query.filter(
+            Client.name.like(search_name),
+            Client.ubication_id == get_village).all()
 
     elif get_name != None and get_village == None:
         search_name = "%{}%".format(get_name)
@@ -577,7 +605,8 @@ def get_data_client(id: int):
 def get_payments(id: int):
     client = Client.query.get(id)
     payments = Payment.query.filter_by(client_id=client.key_id).order_by(
-        Payment.year.desc()).order_by(Payment.month.desc()).order_by(Payment.service_id.desc()).all()
+        Payment.year.desc()).order_by(Payment.month.desc()).order_by(
+            Payment.service_id.desc()).all()
     list_payments = []
     for payment in payments:
         payment_element = serialize_payment(payment)
@@ -598,10 +627,11 @@ def get_payments(id: int):
 def post_payments():
     client = Client.query.get(request.json['client_id'])
     service = Service.query.get(request.json['service_id'])
-    client_service = ClientService.query.filter_by(service_id=service.key_id,
-                                                   client_id=client.key_id).first()
-    last_payment = Payment.query.filter_by(client_id=client.key_id,
-                                           service_id=service.key_id).order_by(Payment.year.desc()).order_by(Payment.month.desc()).first()
+    client_service = ClientService.query.filter_by(
+        service_id=service.key_id, client_id=client.key_id).first()
+    last_payment = Payment.query.filter_by(
+        client_id=client.key_id, service_id=service.key_id).order_by(
+            Payment.year.desc()).order_by(Payment.month.desc()).first()
     month = 0
     year = 0
 
@@ -663,15 +693,17 @@ def put_payments(id: int):
         if registered_payments != None:
             for check_pay in registered_payments:
                 if ((check_pay.month == int(pay['month']))
-                    and (check_pay.year == int(pay['year']))
+                        and (check_pay.year == int(pay['year']))
                         and (check_pay.service_id == int(pay['service_id']))):
                     flag = True
                     break
 
         if client_service != None:
             if flag:
-                payment = Payment.query.filter_by(
-                    client_id=client.key_id, service_id=service.key_id, month=month.key_id, year=year).first()
+                payment = Payment.query.filter_by(client_id=client.key_id,
+                                                  service_id=service.key_id,
+                                                  month=month.key_id,
+                                                  year=year).first()
                 mount = payment.mount + int(pay['mount'])
                 if client_service != None:
                     status = bool(mount >= client_service.price)

@@ -25,18 +25,15 @@ def serialize_service(service):
 
 
 def unserialize_date(date):
-    return datetime(int(date['year']), int(date['month'])+1, int(date['day']))
+    return datetime(int(date['year']),
+                    int(date['month']) + 1, int(date['day']))
 
 
 def serialize_date(date: datetime):
     if date is None:
         return {}
     else:
-        return {
-            'day': date.day,
-            'month': date.month,
-            'year': date.year
-        }
+        return {'day': date.day, 'month': date.month, 'year': date.year}
 
 
 def serialize_client(client):
