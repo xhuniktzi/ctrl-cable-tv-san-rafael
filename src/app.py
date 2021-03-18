@@ -238,8 +238,6 @@ def receipt(id: int):
     return render_template('print_receipt.html')
 
 
-# TODO: insert internet speed
-# TODO: instert description
 @app.route('/print/orders')
 def print_orders():
     get_payment_status = request.args.get('payment_status', type=str)
@@ -323,10 +321,6 @@ def print_orders():
                     now_month = 12
                     now_year = now_year - 1
 
-            print('now - {}/{}'.format(Month.query.get(now_month).name, now_year))
-            print(
-                'last - {}/{}'.format(Month.query.get(last_payment.month).name, last_payment.year))
-
             if (now_year > last_payment.year) or ((now_year == last_payment.year) and (now_month > last_payment.month)):
                 tmp_month = last_payment.month
                 tmp_year = last_payment.year
@@ -337,13 +331,31 @@ def print_orders():
                     if tmp_month > 12:
                         tmp_month = 1
                         tmp_year = tmp_year + 1
-                    print('{} - {}/{}'.format(count,
-                                              Month.query.get(tmp_month).name, tmp_year))
-            else:
-                print('pass')
-                pass
 
-            data.append(obj_order)
+                    if tmp_year == datetime.now().year:
+                        obj_order['list_payments'][tmp_month] = 'PAGAR'
+
+                    obj_order['total'] = obj_order['total'] + \
+                        client_service.price
+
+                if count > 1:
+                    first_month = last_payment.month + 1
+                    first_year = last_payment.year
+                    if first_month > 12:
+                        first_month = 1
+                        first_year = first_year + 1
+
+                    msg = '{} cuotas desde {}/{} hasta {}/{}'
+                    info = msg.format(count, Month.query.get(first_month).name,
+                                      first_year, Month.query.get(now_month).name, now_year)
+                    obj_order['messages'].append(info)
+                else:
+                    msg = 'cuota de {}/{}'.format(
+                        Month.query.get(now_month).name, now_year)
+                    obj_order['messages'].append(msg)
+
+            if obj_order['total'] != 0:
+                data.append(obj_order)
 
     print(data)
     return render_template('print_orders.html', data=data)
