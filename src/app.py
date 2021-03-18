@@ -260,7 +260,93 @@ def print_orders():
     elif get_payment_status == '' and get_village == None:
         clients = Client.query.order_by(Client.ubication_id.desc()).all()
 
-    return render_template('print_orders.html')
+    data = []
+
+    for client in clients:
+        client_services = ClientService.query.filter_by(
+            client_id=client.key_id)
+        for client_service in client_services:
+            service = Service.query.get(client_service.service_id)
+
+            last_payment = Payment.query.filter_by(client_id=client.key_id, service_id=service.key_id).order_by(
+                Payment.year.desc()).order_by(Payment.month.desc()).first()
+
+            if last_payment == None:
+                continue  # Break if not payments
+
+            obj_order = {
+                'name': client.name,
+                'ubication': Ubication.query.get(client.ubication_id).name,
+                'direction': client.direction,
+                'description': client.description,
+                'service': service.name,
+                'internet_speed': client.internet_speed,
+                'total': 0,
+                'list_payments': dict(),
+                'messages': list(),
+            }
+
+            year_parcial_payments = Payment.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id, status=False, year=datetime.now().year).all()
+
+            for payment in year_parcial_payments:
+                template = 'Q. {} PEND'
+                message = template.format(client_service.price - payment.mount)
+                obj_order['list_payments'][payment.month] = message
+                obj_order['total'] = obj_order['total'] + \
+                    (client_service.price - payment.mount)
+
+            year_standard_payments = Payment.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id, status=True, year=datetime.now().year).all()
+
+            for payment in year_standard_payments:
+                obj_order['list_payments'][payment.month] = 'PAGADO'
+
+            other_parcial_payments = Payment.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id, status=False).filter(Payment.year != datetime.now().year).all()
+
+            for payment in other_parcial_payments:
+                mount = client_service.price - payment.mount
+                msg = 'Pend. {} {}, Q. {}'
+                info = msg.format(Month.query.get(
+                    payment.month).name, payment.year, mount)
+                obj_order['messages'].append(info)
+                obj_order['total'] = obj_order['total'] + \
+                    (client_service.price - payment.mount)
+
+            now_month = datetime.now().month
+            now_year = datetime.now().year
+
+            if service.status:
+                now_month = now_month - 1
+                if now_month < 1:
+                    now_month = 12
+                    now_year = now_year - 1
+
+            print('now - {}/{}'.format(Month.query.get(now_month).name, now_year))
+            print(
+                'last - {}/{}'.format(Month.query.get(last_payment.month).name, last_payment.year))
+
+            if (now_year > last_payment.year) or ((now_year == last_payment.year) and (now_month > last_payment.month)):
+                tmp_month = last_payment.month
+                tmp_year = last_payment.year
+                count = 0
+                while (tmp_month != now_month) or (tmp_year != now_year):
+                    count = count + 1
+                    tmp_month = tmp_month + 1
+                    if tmp_month > 12:
+                        tmp_month = 1
+                        tmp_year = tmp_year + 1
+                    print('{} - {}/{}'.format(count,
+                                              Month.query.get(tmp_month).name, tmp_year))
+            else:
+                print('pass')
+                pass
+
+            data.append(obj_order)
+
+    print(data)
+    return render_template('print_orders.html', data=data)
 
 
 # API

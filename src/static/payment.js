@@ -45,6 +45,8 @@ async function render_village_menu(){
 }
 
 function render_service_menu(client){
+  parcial_payment_service.innerHTML = null;
+  standard_payment_service.innerHTML = null;
   const url = `/api/v2/clients/${client}`;
   fetch(url, {
     method: 'GET',
@@ -102,28 +104,23 @@ function fetch_payments(client){
         payment_history_container.appendChild(payment_element);
 
         const payment_element_date = document.createElement('div');
-        payment_element_date.classList.add('col-lg-2', 'text-center');
+        payment_element_date.classList.add('col-lg-1', 'text-center');
         payment_element_date.innerHTML = `${element.date.day}/${element.date.month}/${element.date.year}`;
         payment_element.appendChild(payment_element_date);
 
         const payment_element_service_name = document.createElement('div');
-        payment_element_service_name.classList.add('col-lg-2', 'text-center');
+        payment_element_service_name.classList.add('col-lg-3', 'text-center');
         payment_element_service_name.innerHTML = element.service.name;
         payment_element.appendChild(payment_element_service_name);
 
-        const payment_element_month = document.createElement('div');
-        payment_element_month.classList.add('col-lg-2', 'text-center');
-        payment_element_month.innerHTML = element.month;
-        payment_element.appendChild(payment_element_month);
-
-        const payment_element_year = document.createElement('div');
-        payment_element_year.classList.add('col-lg-1', 'text-center');
-        payment_element_year.innerHTML = element.year;
-        payment_element.appendChild(payment_element_year);
+        const payment_element_dateinfo = document.createElement('div');
+        payment_element_dateinfo.classList.add('col-lg-2', 'text-center');
+        payment_element_dateinfo.innerHTML = `${element.month}/${element.year}`;
+        payment_element.appendChild(payment_element_dateinfo);
 
         const payment_element_mount = document.createElement('div');
-        payment_element_mount.classList.add('col-lg-1', 'text-center');
-        payment_element_mount.innerHTML = element.mount;
+        payment_element_mount.classList.add('col-lg-2', 'text-center');
+        payment_element_mount.innerHTML = `Q. ${element.mount}`;
         payment_element.appendChild(payment_element_mount);
 
         if (element.status){
@@ -133,8 +130,8 @@ function fetch_payments(client){
         }
 
         const payment_element_service_price = document.createElement('div');
-        payment_element_service_price.classList.add('col-lg-1', 'text-center');
-        payment_element_service_price.innerHTML = element.service.price;
+        payment_element_service_price.classList.add('col-lg-2', 'text-center');
+        payment_element_service_price.innerHTML = `Q. ${element.service.price}`;
         payment_element.appendChild(payment_element_service_price);
 
         if (meta_admin.getAttribute('content') == 'yes'){
@@ -145,7 +142,7 @@ function fetch_payments(client){
           const delete_button = document.createElement('button');
           delete_button.type = 'button';
           delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
-          delete_button.innerHTML = 'Eliminar';
+          delete_button.innerHTML = 'Anular';
           delete_button.value = element.id;
           delete_button.addEventListener('click', delete_payment);
           payment_element_delete.appendChild(delete_button);

@@ -11,6 +11,8 @@
     />
   </head>
   <body>
+    {% for obj in data %}
+
     <div class="payment-order top-order">
       <div class="order-head">
         <img
@@ -30,65 +32,81 @@
       <div class="info">
         <div class="client-info">
           <div class="tag">Nombre</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.name }}</div>
           <div class="tag">Ubicación</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.ubication }}</div>
           <div class="tag">Dirección</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.direction }}</div>
           <div class="tag">Descripción</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.description }}</div>
         </div>
         <div class="general-info">
           <div class="tag">Total</div>
-          <div class="content">Q.</div>
+          <div class="content">Q. {{ obj.total }}</div>
           <div class="tag">Internet</div>
-          <div class="content">Mb/s</div>
+          <div class="content">{{ obj.internet_speed }} Mb/s</div>
         </div>
       </div>
       <div class="order-info">
-        <span> Servicio </span>
+        <span>{{ obj.service }}</span>
         <span> - </span>
         <span>{{ datetime.year }}</span>
       </div>
       <div class="order-month-list">
         <div class="month top-left">
-          <span class="tag">ENE</span> <span class="content"></span>
+          <span class="tag">ENE</span>
+          <span class="content">{{ obj.list_payments[1] }}</span>
         </div>
         <div class="month">
-          <span class="tag">FEB</span> <span class="content"></span>
+          <span class="tag">FEB</span>
+          <span class="content">{{ obj.list_payments[2] }}</span>
         </div>
         <div class="month bottom-left">
-          <span class="tag">MAR</span> <span class="content"></span>
+          <span class="tag">MAR</span>
+          <span class="content">{{ obj.list_payments[3] }}</span>
         </div>
         <div class="month">
-          <span class="tag">ABR</span> <span class="content"></span>
+          <span class="tag">ABR</span>
+          <span class="content">{{ obj.list_payments[4] }}</span>
         </div>
         <div class="month">
-          <span class="tag">MAY</span> <span class="content"></span>
+          <span class="tag">MAY</span>
+          <span class="content">{{ obj.list_payments[5] }}</span>
         </div>
         <div class="month">
-          <span class="tag">JUN</span> <span class="content"></span>
+          <span class="tag">JUN</span>
+          <span class="content">{{ obj.list_payments[6] }}</span>
         </div>
         <div class="month">
-          <span class="tag">JUL</span> <span class="content"></span>
+          <span class="tag">JUL</span>
+          <span class="content">{{ obj.list_payments[7] }}</span>
         </div>
         <div class="month">
-          <span class="tag">AGO</span> <span class="content"></span>
+          <span class="tag">AGO</span>
+          <span class="content">{{ obj.list_payments[8] }}</span>
         </div>
         <div class="month">
-          <span class="tag">SEP</span> <span class="content"></span>
+          <span class="tag">SEP</span>
+          <span class="content">{{ obj.list_payments[9] }}</span>
         </div>
         <div class="month top-right">
-          <span class="tag">OCT</span> <span class="content"></span>
+          <span class="tag">OCT</span>
+          <span class="content">{{ obj.list_payments[10] }}</span>
         </div>
         <div class="month">
-          <span class="tag">NOV</span> <span class="content"></span>
+          <span class="tag">NOV</span>
+          <span class="content">{{ obj.list_payments[11] }}</span>
         </div>
         <div class="month bottom-right">
-          <span class="tag">DIC</span> <span class="content"></span>
+          <span class="tag">DIC</span>
+          <span class="content">{{ obj.list_payments[12] }}</span>
         </div>
       </div>
-      <div class="order-status"></div>
+      <div class="order-status">
+        {% for message in obj.messages %}
+        <span>{{ message }}.</span>
+        {% endfor %}
+      </div>
       <div class="order-footer">
         <div class="line"></div>
         <div class="sign">Firma</div>
@@ -113,69 +131,86 @@
       <div class="info">
         <div class="client-info">
           <div class="tag">Nombre</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.name }}</div>
           <div class="tag">Ubicación</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.ubication }}</div>
           <div class="tag">Dirección</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.direction }}</div>
           <div class="tag">Descripción</div>
-          <div class="content"></div>
+          <div class="content">{{ obj.description }}</div>
         </div>
         <div class="general-info">
           <div class="tag">Total</div>
-          <div class="content">Q.</div>
+          <div class="content">Q. {{ obj.total }}</div>
           <div class="tag">Internet</div>
-          <div class="content">Mb/s</div>
+          <div class="content">{{ obj.internet_speed }} Mb/s</div>
         </div>
       </div>
       <div class="order-info">
-        <span> Servicio </span>
+        <span>{{ obj.service }}</span>
         <span> - </span>
         <span>{{ datetime.year }}</span>
       </div>
       <div class="order-month-list">
         <div class="month top-left">
-          <span class="tag">ENE</span> <span class="content"></span>
+          <span class="tag">ENE</span>
+          <span class="content">{{ obj.list_payments[1] }}</span>
         </div>
         <div class="month">
-          <span class="tag">FEB</span> <span class="content"></span>
+          <span class="tag">FEB</span>
+          <span class="content">{{ obj.list_payments[2] }}</span>
         </div>
         <div class="month bottom-left">
-          <span class="tag">MAR</span> <span class="content"></span>
+          <span class="tag">MAR</span>
+          <span class="content">{{ obj.list_payments[3] }}</span>
         </div>
         <div class="month">
-          <span class="tag">ABR</span> <span class="content"></span>
+          <span class="tag">ABR</span>
+          <span class="content">{{ obj.list_payments[4] }}</span>
         </div>
         <div class="month">
-          <span class="tag">MAY</span> <span class="content"></span>
+          <span class="tag">MAY</span>
+          <span class="content">{{ obj.list_payments[5] }}</span>
         </div>
         <div class="month">
-          <span class="tag">JUN</span> <span class="content"></span>
+          <span class="tag">JUN</span>
+          <span class="content">{{ obj.list_payments[6] }}</span>
         </div>
         <div class="month">
-          <span class="tag">JUL</span> <span class="content"></span>
+          <span class="tag">JUL</span>
+          <span class="content">{{ obj.list_payments[7] }}</span>
         </div>
         <div class="month">
-          <span class="tag">AGO</span> <span class="content"></span>
+          <span class="tag">AGO</span>
+          <span class="content">{{ obj.list_payments[8] }}</span>
         </div>
         <div class="month">
-          <span class="tag">SEP</span> <span class="content"></span>
+          <span class="tag">SEP</span>
+          <span class="content">{{ obj.list_payments[9] }}</span>
         </div>
         <div class="month top-right">
-          <span class="tag">OCT</span> <span class="content"></span>
+          <span class="tag">OCT</span>
+          <span class="content">{{ obj.list_payments[10] }}</span>
         </div>
         <div class="month">
-          <span class="tag">NOV</span> <span class="content"></span>
+          <span class="tag">NOV</span>
+          <span class="content">{{ obj.list_payments[11] }}</span>
         </div>
         <div class="month bottom-right">
-          <span class="tag">DIC</span> <span class="content"></span>
+          <span class="tag">DIC</span>
+          <span class="content">{{ obj.list_payments[12] }}</span>
         </div>
       </div>
-      <div class="order-status"></div>
+      <div class="order-status">
+        {% for message in obj.messages %}
+        <span>{{ message }}.</span>
+        {% endfor %}
+      </div>
       <div class="order-footer">
         <div class="line"></div>
         <div class="sign">Firma</div>
       </div>
     </div>
+    {% endfor %}
   </body>
 </html>

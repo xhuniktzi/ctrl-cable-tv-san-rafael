@@ -100,8 +100,8 @@ body {
   }
 
   .order-info {
-    margin: 8pt 64pt;
-    padding: 6pt;
+    margin: 4pt 64pt;
+    padding: 4pt;
     text-align: center;
     font-size: small;
     font-weight: bold;
@@ -137,8 +137,8 @@ body {
   }
 
   .order-status {
-    margin: 8pt 64pt;
-    padding: 6pt;
+    margin: 4pt 64pt;
+    padding: 4pt;
     text-align: center;
     font-size: small;
     font-weight: bold;
@@ -155,10 +155,12 @@ body {
       "ignore ignore sign";
   }
   .line {
+    padding: 4pt;
     grid-area: line;
     border-bottom: 1px solid black;
   }
   .sign {
+    padding: 4pt;
     text-align: center;
     grid-area: sign;
   }
