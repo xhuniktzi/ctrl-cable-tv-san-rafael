@@ -384,7 +384,6 @@ def print_orders():
             if obj_order['total'] != 0:
                 data.append(obj_order)
 
-    print(data)
     return render_template('print_orders.html', data=data)
 
 
@@ -533,7 +532,8 @@ def put_client(id: int):
 @app.route('/api/v1/clients/<int:id>', methods=['DELETE'])
 def delete_client(id: int):
     client = Client.query.get(id)
-    ClientService.query.filter_by(client_id=id).delete()
+    ClientService.query.filter_by(client_id=client.key_id).delete()
+    Payment.query.filter_by(client_id=client.key_id).delete()
     db.session.delete(client)
     db.session.commit()
     return jsonify(serialize_client(client))

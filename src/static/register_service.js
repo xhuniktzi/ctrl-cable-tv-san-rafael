@@ -62,8 +62,52 @@ async function render_service_menu(){
     });
 }
 
+function render_services_client(id){
+  search_results_container.innerHTML = null;
+  search_results_container.classList.add('d-none');
+  service_list_container.innerHTML = null;
+  service_list_container.classList.remove('d-none');
+
+  const url = '/api/v2/clients/' + id;
+  
+  fetch(url, {
+    method: 'GET'
+  })
+    .then((res) => {
+      if (res.ok){
+        console.log('OK');
+      }
+      return res.json();
+    })
+    .then((res_json) => {
+      register_service_form.classList.remove('d-none');
+      for (let service of res_json.services){
+        const service_element = document.createElement('div');
+        service_element.classList.add('row', 'm-2', 'p-2', 'border');
+        service_list_container.appendChild(service_element);
+
+        const service_id = document.createElement('div');
+        service_id.classList.add('col-lg-1', 'text-center');
+        service_id.innerHTML = service.id;
+        service_element.appendChild(service_id);
+
+        const service_name = document.createElement('div');
+        service_name.classList.add('col-lg-4', 'text-center');
+        service_name.innerHTML = service.name;
+        service_element.appendChild(service_name);
+
+        const service_price = document.createElement('div');
+        service_price.classList.add('col-lg-3', 'text-center');
+        service_price.innerHTML = `Q. ${service.price}`;
+        service_element.appendChild(service_price);
+      }
+      console.log(res_json);
+    });
+}
+
 connect_service_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  current_client_id = null;
   search_results_container.innerHTML = null;
   search_results_container.classList.remove('d-none');
   service_list_container.innerHTML = null;
@@ -122,46 +166,8 @@ connect_service_form.addEventListener('submit', (e) => {
 });
 
 function select_client(){
-  search_results_container.innerHTML = null;
-  search_results_container.classList.add('d-none');
-  service_list_container.innerHTML = null;
-  service_list_container.classList.remove('d-none');
-
-  const url = '/api/v2/clients/' + this.value;
+  render_services_client(this.value);
   current_client_id = this.value;
-  fetch(url, {
-    method: 'GET'
-  })
-    .then((res) => {
-      if (res.ok){
-        console.log('OK');
-      }
-      return res.json();
-    })
-    .then((res_json) => {
-      register_service_form.classList.remove('d-none');
-      for (let service of res_json.services){
-        const service_element = document.createElement('div');
-        service_element.classList.add('row', 'm-2', 'p-2', 'border');
-        service_list_container.appendChild(service_element);
-
-        const service_id = document.createElement('div');
-        service_id.classList.add('col-lg-1', 'text-center');
-        service_id.innerHTML = service.id;
-        service_element.appendChild(service_id);
-
-        const service_name = document.createElement('div');
-        service_name.classList.add('col-lg-4', 'text-center');
-        service_name.innerHTML = service.name;
-        service_element.appendChild(service_name);
-
-        const service_price = document.createElement('div');
-        service_price.classList.add('col-lg-3', 'text-center');
-        service_price.innerHTML = `Q. ${service.price}`;
-        service_element.appendChild(service_price);
-      }
-      console.log(res_json);
-    });
 }
 
 register_service_form.addEventListener('submit', (e) => {
@@ -183,6 +189,7 @@ register_service_form.addEventListener('submit', (e) => {
         console.log('OK');
         console.log(res);
         register_service_form.reset();
+        render_services_client(current_client_id);
       }
     })
     .catch((err) => {
