@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 app.config['SQLALCHEMY_BINDS'] = {'users': os.getenv('DATABASE_USERS')}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my_secret_key'
+app.jinja_env.globals.update(datetime=datetime.now())
 db = SQLAlchemy(app)
 
 
@@ -104,6 +105,9 @@ class User(db.Model):
 def is_admin(username: str):
     user = User.query.filter_by(username=username).first()
     return user.is_admin
+
+
+app.jinja_env.globals.update(is_admin=is_admin)
 
 
 @app.before_request
@@ -739,8 +743,6 @@ def delete_payments(id: int):
     return jsonify(serialize_payment(payment))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     db.create_all()
-    app.jinja_env.globals.update(is_admin=is_admin)
-    app.jinja_env.globals.update(datetime=datetime.now())
-    app.run()
+    app.run(host='0.0.0.0', ssl_context='adhoc')

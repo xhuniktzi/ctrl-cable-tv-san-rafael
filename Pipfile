@@ -9,6 +9,7 @@ flask-sqlalchemy = "*"
 pymysql = "*"
 python-dotenv = "*"
 wtforms = "*"
+pyopenssl = "*"
 
 [dev-packages]
 pylint = "*"
