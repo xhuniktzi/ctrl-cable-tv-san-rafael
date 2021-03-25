@@ -9,13 +9,14 @@ flask-sqlalchemy = "*"
 pymysql = "*"
 python-dotenv = "*"
 wtforms = "*"
+pyopenssl = "*"
 
 [dev-packages]
-autopep8 = "*"
 pylint = "*"
 pylint-flask = "*"
 pylint-flask-sqlalchemy = "*"
 pylint-sqlalchemy = "*"
+yapf = "*"
 
 [requires]
 python_version = "3"
