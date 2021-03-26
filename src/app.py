@@ -4,13 +4,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment
 from forms import RegisterForm, LoginForm
-import os
+from os import getenv
 from datetime import datetime
 
 load_dotenv()
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
-app.config['SQLALCHEMY_BINDS'] = {'users': os.getenv('DATABASE_USERS')}
+app.config['SQLALCHEMY_DATABASE_URI'] = getenv('DATABASE_URI')
+app.config['SQLALCHEMY_BINDS'] = {'users': getenv('DATABASE_USERS')}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'my_secret_key'
 app.jinja_env.globals.update(datetime=datetime.now())
