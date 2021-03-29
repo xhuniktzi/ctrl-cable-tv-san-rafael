@@ -81,6 +81,14 @@ body {
     border-bottom-right-radius: 15px;
   }
 
+  .general-info .total-tag {
+    font-size: 16pt;
+  }
+
+  .general-info .total-tag::after {
+    content: ".°°";
+  }
+
   .tag,
   .content {
     font-size: small;
@@ -98,6 +106,10 @@ body {
   .content {
     border-bottom: 1px dotted black;
     text-align: right;
+  }
+
+  .client-info .content {
+    text-align: left;
   }
 
   .order-info {
