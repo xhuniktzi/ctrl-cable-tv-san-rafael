@@ -239,13 +239,14 @@ standard_payment_form.addEventListener('submit', (e) => {
     .then((res_json) => {
       document.querySelector('#standard-payment form').reset();
       console.log(res_json);
-      let params = '?';
+      let count = 0;
+      let service_value = standard_payment_service.value;
+      // eslint-disable-next-line no-unused-vars
       for (let param of res_json){
-        console.log(param);
-        params = params + 'pay=' + param.id + '&';
+        count = count + 1;
       }
-      // const url = `/print/receipt/${current_client}/`;
-      // window.open(url + params);
+      const url = `/print/standard-receipt/${current_client}/${service_value}/${count}`;
+      window.open(url);
       fetch_payments(current_client);
     })
     .catch((err) => {
@@ -318,8 +319,8 @@ parcial_payment_form.addEventListener('submit', (e) => {
         console.log(param);
         params = params + 'pay=' + param.id + '&';
       }
-      // const url = `/print/receipt/${current_client}/`;
-      // window.open(url + params);
+      //const url = `/print/receipt/${current_client}/`;
+      //window.open(url + params);
       fetch_payments(current_client);
     })
     .catch((err) => {
