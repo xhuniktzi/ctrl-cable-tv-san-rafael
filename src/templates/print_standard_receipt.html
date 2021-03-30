@@ -4,15 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ordenes de Pago</title>
+    <title>Recibo</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/print_orders.css') }}"
+      href="{{ url_for('static', filename='css/print_standard_receipt.css') }}"
     />
   </head>
   <body>
-    {% for obj in data %}
-
     <div class="payment-order top-order">
       <div class="order-head">
         <img
@@ -24,10 +22,9 @@
           <div class="title-content">
             Huehuetenango, San Rafael la Independencia, Sector Cooperativa
           </div>
-
           <div class="title-content">40714370</div>
         </div>
-        <h2>Orden de pago</h2>
+        <h2>Recibo</h2>
       </div>
       <div class="info">
         <div class="client-info">
@@ -103,9 +100,7 @@
         </div>
       </div>
       <div class="order-status">
-        {% for message in obj.messages %}
-        <span>{{ message }}.</span>
-        {% endfor %}
+        <span>{{ obj.message }}.</span>
       </div>
       <div class="order-footer">
         <div class="line"></div>
@@ -126,7 +121,7 @@
 
           <div class="title-content">40714370</div>
         </div>
-        <h2>Orden de pago</h2>
+        <h2>Recibo</h2>
       </div>
       <div class="info">
         <div class="client-info">
@@ -202,16 +197,13 @@
         </div>
       </div>
       <div class="order-status">
-        {% for message in obj.messages %}
-        <span>{{ message }}.</span>
-        {% endfor %}
+        <span>{{ obj.message }}.</span>
       </div>
       <div class="order-footer">
         <div class="line"></div>
         <div class="sign">Firma</div>
       </div>
     </div>
-    {% endfor %}
     <script>
       print();
     </script>

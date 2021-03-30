@@ -2,6 +2,15 @@
 endblock %} {% block content %}
 <h2>Ejecutar pagos</h2>
 
+<form id="ctrl-receipt" class="m-2 p-2">
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" id="check-create-receipt" />
+    <label class="form-check-label" for="check-create-receipt"
+      >Generar Recibo</label
+    >
+  </div>
+</form>
+
 <form id="select-client-form" class="m-3 p-3">
   <h3>Selecciona un cliente</h3>
   <div class="row">

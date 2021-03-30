@@ -12,10 +12,32 @@ const parcial_payment_service = document.querySelector('#parcial-payment #servic
 const add_payment_button = document.querySelector('#add-payment');
 
 const meta_admin = document.querySelector('meta#meta-admin');
-
+const create_receipt_flag = document.querySelector('#check-create-receipt');
 
 let current_client = 0;
 let list_payments = [];
+
+if (!localStorage.getItem('create-receipt')){
+  if (create_receipt_flag.checked){
+    localStorage.setItem('create-receipt', 'True');
+  } else {
+    localStorage.setItem('create-receipt', 'False');
+  }
+} else {
+  if (localStorage.getItem('create-receipt') == 'True'){
+    create_receipt_flag.checked = true;
+  } else {
+    create_receipt_flag.checked = false;
+  }
+}
+
+create_receipt_flag.addEventListener('change', () => {
+  if (create_receipt_flag.checked){
+    localStorage.setItem('create-receipt', 'True');
+  } else {
+    localStorage.setItem('create-receipt', 'False');
+  }
+});
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -237,16 +259,19 @@ standard_payment_form.addEventListener('submit', (e) => {
       }
     })
     .then((res_json) => {
+      let service_value = standard_payment_service.value;
       document.querySelector('#standard-payment form').reset();
       console.log(res_json);
-      let params = '?';
+      let count = 0;
+      // eslint-disable-next-line no-unused-vars
       for (let param of res_json){
-        console.log(param);
-        params = params + 'pay=' + param.id + '&';
+        count = count + 1;
       }
-      // const url = `/print/receipt/${current_client}/`;
-      // window.open(url + params);
       fetch_payments(current_client);
+      if (localStorage.getItem('create-receipt') == 'True'){
+        const url = `/print/standard-receipt/${current_client}/${service_value}/${count}`;
+        window.open(url);
+      }
     })
     .catch((err) => {
       console.error(err.message);
@@ -318,8 +343,6 @@ parcial_payment_form.addEventListener('submit', (e) => {
         console.log(param);
         params = params + 'pay=' + param.id + '&';
       }
-      // const url = `/print/receipt/${current_client}/`;
-      // window.open(url + params);
       fetch_payments(current_client);
     })
     .catch((err) => {

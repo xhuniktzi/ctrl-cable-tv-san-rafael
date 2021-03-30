@@ -223,32 +223,47 @@ def orders():
 
 # TODO: print table
 # Prints
-@app.route('/print/receipt/<int:id>/')
-def receipt(id: int):
-    # client = Client.query.get(id)
-    # payment_list = request.args.getlist('pay')
-    # payments = list(map(lambda pay: Payment.query.get(pay), payment_list))
 
-    # receipt = {
-    #     'name': client.name,
-    #     'ubication': Ubication.query.get(client.ubication_id).name,
-    #     'direction': client.direction,
-    #     'payments': list(),
-    #     'total': 0
-    # }
 
-    # for payment in payments:
-    #     receipt['payments'].append({
-    #         'month': Month.query.get(payment.month).name,
-    #         'year': payment.year,
-    #         'service': Service.query.get(payment.service_id).name,
-    #         'status': payment.status,
-    #         'mount': payment.mount
-    #     })
-    #     receipt['total'] = receipt['total'] + payment.mount
+@app.route(
+    '/print/standard-receipt/<int:client_id>/<int:service_id>/<int:count>')
+def standard_receipt(client_id: int, service_id: int, count: int):
+    obj = dict()
+    client = Client.query.get(client_id)
+    ubication = Ubication.query.get(client.ubication_id)
+    service = Service.query.get(service_id)
+    client_service = ClientService.query.filter_by(
+        client_id=client.key_id, service_id=service.key_id).first()
+    obj['name'] = client.name
+    obj['ubication'] = ubication.name
+    obj['direction'] = client.direction
+    obj['description'] = client.description
+    obj['internet_speed'] = client.internet_speed
+    obj['service'] = service.name
+    obj['list_payments'] = dict()
+    obj['message'] = '{} cuotas pagadas'.format(count)
+    obj['total'] = count * client_service.price
 
-    # return render_template('print_receipt.html', receipt=receipt)
-    return render_template('print_receipt.html')
+    year_parcial_payments = Payment.query.filter_by(
+        client_id=client.key_id,
+        service_id=service.key_id,
+        status=False,
+        year=datetime.now().year).all()
+
+    year_standard_payments = Payment.query.filter_by(
+        client_id=client.key_id,
+        service_id=service.key_id,
+        status=True,
+        year=datetime.now().year).all()
+
+    for payment in year_parcial_payments:
+        template = 'Q. {} PEND'.format(client_service.price - payment.mount)
+        obj['list_payments'][payment.month] = template
+
+    for payment in year_standard_payments:
+        obj['list_payments'][payment.month] = 'PAGADO'
+
+    return render_template('print_standard_receipt.html', obj=obj)
 
 
 @app.route('/print/orders')

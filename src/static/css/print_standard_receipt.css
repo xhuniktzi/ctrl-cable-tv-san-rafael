@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media only print {
+  @page {
+    margin: 1.5cm;
+  }
+
+  body {
+    background-color: white;
+    color: black;
+    width: 21cm;
+    height: 28cm;
+  }
+
+  h2 {
+    font-size: large;
+    text-align: center;
+  }
+
+  .order-head {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .head-logo {
+    padding: 6pt;
+    width: 100px;
+    height: 115px;
+  }
+
+  .head-info h1 {
+    font-size: larger;
+    text-align: center;
+    font-style: italic;
+    font-family: "Lobster", cursive;
+  }
+
+  .title-content {
+    text-align: center;
+    font-family: "Lobster", cursive;
+    font-size: small;
+  }
+
+  .payment-order {
+    padding: 10pt;
+    height: 50%;
+  }
+
+  .info {
+    display: grid;
+    grid-template-columns: 70% 30%;
+  }
+
+  .client-info,
+  .general-info {
+    padding: 1pt;
+    border: 0.5px solid black;
+  }
+
+  .client-info {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+
+  .general-info {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: repeat(4, 1fr);
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+
+  .general-info .total-tag {
+    font-size: 16pt;
+  }
+
+  .general-info .total-tag::after {
+    content: ".°°";
+  }
+
+  .tag,
+  .content {
+    font-size: small;
+    padding: 4pt;
+  }
+
+  .tag {
+    font-weight: bold;
+  }
+
+  .tag::after {
+    content: ":";
+  }
+
+  .content {
+    border-bottom: 1px dotted black;
+    text-align: right;
+  }
+
+  .client-info .content {
+    text-align: left;
+  }
+
+  .order-info {
+    margin: 4pt 64pt;
+    padding: 4pt;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+    border: 1px dotted gray;
+  }
+
+  .order-month-list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .order-month-list .month {
+    display: flex;
+    justify-content: space-between;
+    font-size: small;
+    padding: 2pt;
+    border: 1.5px dotted black;
+  }
+
+  .order-month-list .top-left {
+    border-top-left-radius: 15px;
+  }
+  .order-month-list .top-right {
+    border-top-right-radius: 15px;
+  }
+  .order-month-list .bottom-left {
+    border-bottom-left-radius: 15px;
+  }
+  .order-month-list .bottom-right {
+    border-bottom-right-radius: 15px;
+  }
+
+  .order-status {
+    margin: 4pt 64pt;
+    padding: 4pt;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+    border: 1px dotted gray;
+  }
+
+  .order-footer {
+    display: grid;
+    padding: 8pt;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-areas:
+      "ignore ignore line"
+      "ignore ignore sign";
+  }
+  .line {
+    padding: 4pt;
+    grid-area: line;
+    border-bottom: 1px solid black;
+  }
+  .sign {
+    padding: 4pt;
+    text-align: center;
+    grid-area: sign;
+  }
+
+  .top-order {
+    border-bottom: 1px dashed black;
+  }
+
+  .bottom-order {
+    border-top: 1px dashed black;
+  }
+}
