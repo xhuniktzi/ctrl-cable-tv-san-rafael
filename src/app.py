@@ -263,6 +263,36 @@ def standard_receipt(client_id: int, service_id: int, count: int):
     for payment in year_standard_payments:
         obj['list_payments'][payment.month] = 'PAGADO'
 
+    last_payment = Payment.query.filter_by(
+        client_id=client.key_id, service_id=service.key_id).order_by(
+            Payment.year.desc()).order_by(Payment.month.desc()).first()
+
+    if last_payment != None:
+        now_month = datetime.now().month
+        now_year = datetime.now().year
+
+        if service.status:
+            now_month = now_month - 1
+            if now_month < 1:
+                now_month = 12
+                now_year = now_year - 1
+
+        if (now_year > last_payment.year) or (
+            (now_year == last_payment.year) and
+            (now_month > last_payment.month)):
+            tmp_month = last_payment.month
+            tmp_year = last_payment.year
+            count = 0
+            while (tmp_month != now_month) or (tmp_year != now_year):
+                count = count + 1
+                tmp_month = tmp_month + 1
+                if tmp_month > 12:
+                    tmp_month = 1
+                    tmp_year = tmp_year + 1
+
+                if tmp_year == datetime.now().year:
+                    obj['list_payments'][tmp_month] = 'PAGAR'
+
     return render_template('print_standard_receipt.html', obj=obj)
 
 
