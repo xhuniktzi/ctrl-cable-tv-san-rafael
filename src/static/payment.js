@@ -180,6 +180,8 @@ function fetch_payments(client){
 
 select_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  list_payments.splice(0, list_payments.length);
+
   payment_history_container.innerHTML = null;
   payment_history_container.classList.add('d-none');
   search_results_container.innerHTML = null;
@@ -350,6 +352,7 @@ parcial_payment_form.addEventListener('submit', (e) => {
 });
 
 function select_client(){
+  list_payments.splice(0, list_payments.length);
   search_results_container.innerHTML = null;
   search_results_container.classList.add('d-none');
   payment_form_container.classList.remove('d-none');
