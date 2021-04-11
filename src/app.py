@@ -51,7 +51,6 @@ class Client(db.Model):
                              nullable=False)
 
 
-# TODO: data payments expected
 class Payment(db.Model):
     key_id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer, nullable=False)
@@ -131,16 +130,7 @@ def before_request():
             return abort(401)
 
 
-# TODO: Normal User Permission
-# User: Register new client OK
-# User: No edit client  OK
-# User: No villages  OK
-# User: No create service  OK
-# User: Connect Services
-# User: Payments  OK
-# User: order payments  OK
-# User: no table
-# User: no dashboard
+# Authentication
 @app.route('/auth/register/', methods=['GET', 'POST'])
 def register_user():
     register_form = RegisterForm(request.form)
@@ -149,7 +139,9 @@ def register_user():
         password = register_form.password.data
         check_user = User.query.filter_by(username=username).first()
         if check_user != None:
-            return redirect(url_for('welcome'))  # TODO: error handler
+            return redirect(url_for('welcome'))
+        else:
+            return abort(401)
         user = User(username, password)
         user.is_admin = False
         db.session.add(user)
@@ -179,8 +171,7 @@ def logout_user():
     return redirect(url_for('login_user'))
 
 
-# TODO: create dashboard view
-# Rutas
+# Vistas
 @app.route('/')
 def welcome():
     return render_template('welcome.html')
@@ -221,10 +212,7 @@ def orders():
     return render_template('orders.html')
 
 
-# TODO: print table
 # Prints
-
-
 @app.route(
     '/print/standard-receipt/<int:client_id>/<int:service_id>/<int:count>')
 def standard_receipt(client_id: int, service_id: int, count: int):
@@ -724,7 +712,6 @@ def post_payments():
     return jsonify(list_payments)
 
 
-# TODO: only registered services
 @app.route('/api/v2/payments/<int:id>', methods=['PUT'])
 def put_payments(id: int):
     client = Client.query.get(id)
