@@ -14,6 +14,8 @@ const add_payment_button = document.querySelector('#add-payment');
 const meta_admin = document.querySelector('meta#meta-admin');
 const create_receipt_flag = document.querySelector('#check-create-receipt');
 
+const client_info = document.querySelector('#client-info');
+
 let current_client = 0;
 let list_payments = [];
 
@@ -183,6 +185,8 @@ select_client_form.addEventListener('submit', (e) => {
   search_results_container.innerHTML = null;
   search_results_container.classList.remove('d-none');
   payment_form_container.classList.add('d-none');
+  client_info.innerHTML = null;
+  client_info.classList.add('d-none');
   let url = '/api/v2/search/clients?';
   url = url.concat('name=' + select_form_client.value + '&');
   url = url.concat('ubication_id=' + select_form_village.value + '&');
@@ -203,11 +207,6 @@ select_client_form.addEventListener('submit', (e) => {
         const client_element = document.createElement('div');
         client_element.classList.add('row', 'm-2', 'p-2', 'border');
         search_results_container.appendChild(client_element);
-
-        // const client_element_id = document.createElement('div');
-        // client_element_id.classList.add('col-lg-1', 'text-center');
-        // client_element_id.innerHTML = element.id;
-        // client_element.appendChild(client_element_id);
 
         const client_element_name = document.createElement('div');
         client_element_name.classList.add('col-lg-4', 'text-center');
@@ -354,9 +353,46 @@ function select_client(){
   search_results_container.innerHTML = null;
   search_results_container.classList.add('d-none');
   payment_form_container.classList.remove('d-none');
+  client_info.innerHTML = null;
+  client_info.classList.remove('d-none');
   current_client = this.value;
   fetch_payments(current_client);
   render_service_menu(current_client);
+
+  const url = `/api/v2/clients/${current_client}`;
+
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok){
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      const client_name_label = document.createElement('span');
+      client_name_label.classList.add('m-3', 'fs-4', 'fw-bold');
+      client_name_label.innerHTML = 'Nombre: ';
+      client_info.appendChild(client_name_label);
+
+      const client_name = document.createElement('span');
+      client_name.classList.add('m-3', 'fs-4');
+      client_name.innerHTML = res_json.name;
+      client_info.appendChild(client_name);
+
+      const client_village_label = document.createElement('span');
+      client_village_label.classList.add('m-3', 'fs-4', 'fw-bold');
+      client_village_label.innerHTML = 'Aldea: ';
+      client_info.appendChild(client_village_label);
+
+      const client_village = document.createElement('span');
+      client_village.classList.add('m-3', 'fs-4');
+      client_village.innerHTML = res_json.ubication.name;
+      client_info.appendChild(client_village);
+    });
 }
 
 function delete_payment(){
