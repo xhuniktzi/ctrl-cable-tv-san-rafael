@@ -598,11 +598,13 @@ def search_clients():
         search_name = "%{}%".format(get_name)
         clients = Client.query.filter(
             Client.name.like(search_name),
-            Client.ubication_id == get_village).all()
+            Client.ubication_id == get_village).order_by(
+                Client.ubication_id.asc()).all()
 
     elif get_name != None and get_village == None:
         search_name = "%{}%".format(get_name)
-        clients = Client.query.filter(Client.name.like(search_name)).all()
+        clients = Client.query.filter(Client.name.like(search_name)).order_by(
+            Client.ubication_id.asc()).all()
 
     elif get_name == None and get_village != None:
         clients = Client.query.filter(Client.ubication_id == get_village).all()
