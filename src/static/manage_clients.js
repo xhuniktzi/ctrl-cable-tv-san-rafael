@@ -7,6 +7,10 @@ const current_client_form = document.querySelector('#current-client-form');
 
 const current_client_village = document.querySelector('#current-client-form #ubication');
 
+const delete_client_button = document.querySelector('#current-client-form #delete-client');
+
+const messages = document.querySelector('#messages');
+
 let current_client = 0;
 
 async function render_village_menu(){
@@ -189,10 +193,60 @@ current_client_form.addEventListener('submit', (e) => {
     .then((res) => {
       if (res.ok) {
         console.log('OK');
-        current_client_form.reset();
-        current_client = 0;
-        current_client_form.classList.add('d-none');
+        return res.json();
       }
+    })
+    .then((res_json) => {
+      const alert = document.createElement('div');
+      alert.classList.add('alert', 'alert-success');
+      alert.setAttribute('role', 'alert');
+      alert.innerHTML = `Cliente ${res_json.name} actualizado correctamente.`;
+      messages.appendChild(alert);
+      messages.classList.remove('d-none');
+      setTimeout(() => {
+        messages.innerHTML = null;
+        messages.classList.add('d-none');
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+});
+
+delete_client_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const url = `/api/v1/clients/${current_client}`;
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        console.log('OK');
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      current_client_form.reset();
+      current_client_form.classList.add('d-none');
+      current_client = 0;
+
+      const alert = document.createElement('div');
+      alert.classList.add('alert', 'alert-danger');
+      alert.setAttribute('role', 'alert');
+      alert.innerHTML = `Cliente ${res_json.name} eliminado correctamente.`;
+      messages.appendChild(alert);
+      messages.classList.remove('d-none');
+      setTimeout(() => {
+        messages.innerHTML = null;
+        messages.classList.add('d-none');
+      }, 2000);
+    })
+    .catch((err) => {
+      console.error(err.message);
     });
 });
 
