@@ -142,11 +142,11 @@ def register_user():
         if check_user != None:
             return redirect(url_for('welcome'))
         else:
-            return abort(401)
-        user = User(username, password)
-        user.is_admin = False
-        db.session.add(user)
-        db.session.commit()
+            user = User(username, password)
+            user.is_admin = False
+            db.session.add(user)
+            db.session.commit()
+
     return render_template('register_user.html', form=register_form)
 
 

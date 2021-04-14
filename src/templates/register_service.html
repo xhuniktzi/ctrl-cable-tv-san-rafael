@@ -1,9 +1,8 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Servicios {%
 endblock %} {% block content %}
-<div id="messages" class="d-none m-3 p-3"></div>
-<h2>Administrador de Servicios</h2>
-<form id="connect-service-form" class="m-3 p-3">
-  <h3 class="m-3">Conectar un nuevo Servicio</h3>
+<h2 class="text-center">Administrador de Servicios</h2>
+<form id="connect-service-form">
+  <h3>Conectar un nuevo Servicio</h3>
   <div class="row">
     <label for="client" class="col-lg-2 col-form-label-sm fw-bolder fs-5"
       >Cliente</label
@@ -35,7 +34,7 @@ endblock %} {% block content %}
 </form>
 <div id="search-results" class="m-3 p-3 d-none"></div>
 <div id="client-info" class="d-none m-3 p-3"></div>
-<div id="service-list" class="m-3 p-3 d-none"></div>
+<div id="service-list" class="d-none"></div>
 <form id="register-service-form" class="d-none m-3 p-3">
   <div class="row">
     <label
