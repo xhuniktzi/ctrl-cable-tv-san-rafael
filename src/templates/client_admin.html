@@ -17,6 +17,7 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="phone" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Teléfono</label
@@ -30,6 +31,7 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="direction" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Dirección</label
@@ -44,6 +46,7 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="description" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Descripción</label
@@ -72,32 +75,34 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
-    <label class="col-lg-3 col-form-label-sm fw-bolder fs-5"
-      >Fecha de Pago</label
-    >
-    <div class="col-lg-3 form-check form-check-inline">
-      <input
-        type="radio"
-        id="mid-option"
-        name="payment-group"
-        class="form-check-input"
-        value="MID"
-        checked
-      />
-      <label for="mid-option" class="form-check-label">Mediados de mes</label>
-    </div>
-    <div class="col-lg-3 form-check form-check-inline">
-      <input
-        type="radio"
-        id="end-option"
-        name="payment-group"
-        class="form-check-input"
-        value="END"
-      />
-      <label for="end-option" class="form-check-label">Finales de mes</label>
+    <div class="col-lg-3 fw-bolder fs-5">Momento de pago</div>
+    <div class="col-lg-6 p-1">
+      <div class="form-check form-check-inline">
+        <input
+          type="radio"
+          id="mid-option"
+          name="payment-group"
+          class="form-check-input"
+          value="MID"
+          checked
+        />
+        <label for="mid-option" class="form-check-label">Mediados de mes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          type="radio"
+          id="end-option"
+          name="payment-group"
+          class="form-check-input"
+          value="END"
+        />
+        <label for="end-option" class="form-check-label">Finales de mes</label>
+      </div>
     </div>
   </div>
+
   <div class="row">
     <label
       for="internet-speed"
@@ -113,6 +118,7 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="ip-address" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Dirección IP</label
@@ -126,11 +132,12 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="router-number" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Numero de Router</label
     >
-    <div class="col-lg-2">
+    <div class="col-lg-6">
       <input
         type="number"
         name="router-number"
@@ -138,10 +145,13 @@ endblock %} {% block content %}
         class="form-control form-control-sm"
       />
     </div>
-    <label for="line-number" class="col-lg-2 col-form-label-sm fw-bolder fs-6"
+  </div>
+
+  <div class="row">
+    <label for="line-number" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Numero de Linea</label
     >
-    <div class="col-lg-2">
+    <div class="col-lg-6">
       <input
         type="number"
         name="line-number"
@@ -150,6 +160,7 @@ endblock %} {% block content %}
       />
     </div>
   </div>
+
   <div class="row">
     <label for="ubication" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Aldea</label
@@ -165,11 +176,12 @@ endblock %} {% block content %}
       </select>
     </div>
   </div>
+
   <div class="row">
     <label for="service-id" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Servicio</label
     >
-    <div class="col-lg-3">
+    <div class="col-lg-6">
       <select
         name="service-id"
         id="service-id"
@@ -179,10 +191,13 @@ endblock %} {% block content %}
         <option selected></option>
       </select>
     </div>
-    <label for="service-price" class="col-lg-1 col-form-label-sm fw-bolder fs-5"
+  </div>
+
+  <div class="row">
+    <label for="service-price" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
       >Precio</label
     >
-    <div class="col-lg-2">
+    <div class="col-lg-6">
       <input
         type="number"
         name="service-price"

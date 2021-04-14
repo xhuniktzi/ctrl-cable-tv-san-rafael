@@ -104,9 +104,11 @@
     ></script>
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.8.21/locale/es.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/plugin/objectSupport.js"></script>
     <script>
       dayjs().format();
       dayjs().locale("es");
+      dayjs.extend(dayjs_plugin_objectSupport);
     </script>
     {% endblock script %} {% endblock body %}
   </body>
