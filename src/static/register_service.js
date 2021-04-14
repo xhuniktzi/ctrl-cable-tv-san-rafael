@@ -5,8 +5,19 @@ const search_results_container = document.querySelector('#search-results');
 const service_list_container = document.querySelector('#service-list');
 const register_service_form = document.querySelector('#register-service-form');
 const register_service_list = document.querySelector('#register-service-form #service');
+const client_info = document.querySelector('#client-info');
+const messages = document.querySelector('#messages');
 
-let current_client_id = null;
+let current_client_id = 0;
+
+const query_string = window.location.search;
+const url_params = new URLSearchParams(query_string);
+
+if (url_params.has('client_id')){
+  const client_id = url_params.get('client_id');
+  const query_client = select_client.bind({value: client_id});
+  query_client();
+}
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -68,7 +79,7 @@ function render_services_client(id){
   service_list_container.innerHTML = null;
   service_list_container.classList.remove('d-none');
 
-  const url = '/api/v2/clients/' + id;
+  const url = `/api/v2/clients/${id}`;
   
   fetch(url, {
     method: 'GET'
@@ -100,6 +111,18 @@ function render_services_client(id){
         service_price.classList.add('col-lg-3', 'text-center');
         service_price.innerHTML = `Q. ${service.price}`;
         service_element.appendChild(service_price);
+
+        const service_element_delete = document.createElement('div');
+        service_element_delete.classList.add('col-lg-2', 'd-grid', 'gap-2');
+        service_element.appendChild(service_element_delete);
+
+        const delete_button = document.createElement('button');
+        delete_button.type = 'button';
+        delete_button.classList.add('btn', 'btn-sm', 'btn-danger');
+        delete_button.innerHTML = 'Eliminar Servicio';
+        delete_button.value = service.id;
+        delete_button.addEventListener('click', delete_service);
+        service_element_delete.appendChild(delete_button);
       }
       console.log(res_json);
     });
@@ -107,12 +130,14 @@ function render_services_client(id){
 
 connect_service_form.addEventListener('submit', (e) => {
   e.preventDefault();
-  current_client_id = null;
+  current_client_id = 0;
   search_results_container.innerHTML = null;
   search_results_container.classList.remove('d-none');
   service_list_container.innerHTML = null;
   service_list_container.classList.add('d-none');
   register_service_form.classList.add('d-none');
+  client_info.innerHTML = null;
+  client_info.classList.add('d-none');
   let url = '/api/v2/search/clients?';
   url = url.concat('name=' + service_form_client.value + '&');
   url = url.concat('ubication_id=' + service_form_village.value + '&');
@@ -165,9 +190,77 @@ connect_service_form.addEventListener('submit', (e) => {
     });
 });
 
+function delete_service(){
+  const service_id = this.value;
+  const url = `/api/v1/client-services/${current_client_id}/${service_id}`;
+
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        register_service_form.reset();
+        render_services_client(current_client_id);
+
+        const alert = document.createElement('div');
+        alert.classList.add('alert', 'alert-danger');
+        alert.setAttribute('role', 'alert');
+        alert.innerHTML = 'Servicio eliminado con éxito';
+        messages.appendChild(alert);
+        messages.classList.remove('d-none');
+        setTimeout(() => {
+          messages.innerHTML = null;
+          messages.classList.add('d-none');
+        }, 2000);
+      }
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+}
+
 function select_client(){
   render_services_client(this.value);
   current_client_id = this.value;
+  client_info.innerHTML = null;
+  client_info.classList.remove('d-none');
+
+  const url = `/api/v2/clients/${current_client_id}`;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      const client_name_label = document.createElement('span');
+      client_name_label.classList.add('m-3', 'fs-4', 'fw-bold');
+      client_name_label.innerHTML = 'Nombre: ';
+      client_info.appendChild(client_name_label);
+
+      const client_name = document.createElement('span');
+      client_name.classList.add('m-3', 'fs-4');
+      client_name.innerHTML = res_json.name;
+      client_info.appendChild(client_name);
+
+      const client_village_label = document.createElement('span');
+      client_village_label.classList.add('m-3', 'fs-4', 'fw-bold');
+      client_village_label.innerHTML = 'Aldea: ';
+      client_info.appendChild(client_village_label);
+
+      const client_village = document.createElement('span');
+      client_village.classList.add('m-3', 'fs-4');
+      client_village.innerHTML = res_json.ubication.name;
+      client_info.appendChild(client_village);
+    });
 }
 
 register_service_form.addEventListener('submit', (e) => {

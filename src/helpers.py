@@ -20,7 +20,8 @@ def serialize_service(service):
         return {
             'id': service.key_id,
             'name': service.name,
-            'code': service.code
+            'code': service.code,
+            'status': service.status
         }
 
 
@@ -52,7 +53,8 @@ def serialize_client(client):
             'ip_address': client.ip_address,
             'router_number': client.router_number,
             'line_number': client.line_number,
-            'ubication_id': client.ubication_id
+            'ubication_id': client.ubication_id,
+            'status': client.status
         }
 
 

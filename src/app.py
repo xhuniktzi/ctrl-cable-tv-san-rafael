@@ -49,6 +49,7 @@ class Client(db.Model):
     ubication_id = db.Column(db.Integer,
                              db.ForeignKey('ubication.key_id'),
                              nullable=False)
+    status = db.Column(db.Boolean, nullable=False, default=True)
 
 
 class Payment(db.Model):
@@ -576,6 +577,14 @@ def delete_client(id: int):
     return jsonify(serialize_client(client))
 
 
+@app.route('/api/v1/clients/<int:id>', methods=['PATCH'])
+def patch_client(id: int):
+    client = Client.query.get(id)
+    client.status = request.json['status']
+    db.session.commit()
+    return jsonify(serialize_client(client))
+
+
 @app.route('/api/v1/client-services', methods=['POST'])
 def post_client_service():
     new_client_service = ClientService()
@@ -585,6 +594,20 @@ def post_client_service():
     db.session.add(new_client_service)
     db.session.commit()
     return jsonify(serialize_client_service(new_client_service))
+
+
+@app.route('/api/v1/client-services/<int:client_id>/<int:service_id>',
+           methods=['DELETE'])
+def delete_client_service(client_id: int, service_id: int):
+    client = Client.query.get(client_id)
+    service = Service.query.get(service_id)
+    client_service = ClientService.query.filter_by(
+        client_id=client.key_id, service_id=service.key_id).first()
+    Payment.query.filter_by(client_id=client.key_id,
+                            service_id=service.key_id).delete()
+    db.session.delete(client_service)
+    db.session.commit()
+    return jsonify(serialize_client_service(client_service))
 
 
 # Super API

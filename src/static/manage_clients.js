@@ -2,16 +2,16 @@ const select_client_form = document.querySelector('#select-client-form');
 const client_form_village = document.querySelector('#select-client-form #village');
 const client_form_client = document.querySelector('#select-client-form #client');
 const search_results_container = document.querySelector('#search-results');
-
 const current_client_form = document.querySelector('#current-client-form');
-
 const current_client_village = document.querySelector('#current-client-form #ubication');
-
 const delete_client_button = document.querySelector('#current-client-form #delete-client');
-
+const edit_service_button = document.querySelector('#current-client-form #service');
+const payments_button = document.querySelector('#current-client-form #payments-button');
+const button_container = document.querySelector('#current-client-form #button-container');
 const messages = document.querySelector('#messages');
 
 let current_client = 0;
+
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -53,6 +53,8 @@ function select_client(){
   current_client_form.reset();
   current_client_form.classList.remove('d-none');
 
+  button_container.innerHTML = null;
+
   const url = `/api/v1/clients/${current_client}`;
 
   fetch(url, {
@@ -92,19 +94,119 @@ function select_client(){
       }
 
       document.querySelector('#current-client-form #internet-speed').value = res_json.internet_speed;
-
       document.querySelector('#current-client-form #ip-address').value = res_json.ip_address;
-
       document.querySelector('#current-client-form #router-number').value = res_json.router_number;
-
       document.querySelector('#current-client-form #line-number').value = res_json.line_number;
-
       document.querySelector('#current-client-form #ubication').value = res_json.ubication_id;
+      edit_service_button.value = current_client;
+
+      if (res_json.status){
+        const disable_button = document.createElement('button');
+        disable_button.type = 'button';
+        disable_button.id = 'disable-client';
+        disable_button.innerHTML = 'Deshabilitar Cliente';
+        disable_button.classList.add('btn', 'btn-secondary');
+        button_container.appendChild(disable_button);
+
+        disable_button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const url = `/api/v1/clients/${current_client}`;
+          fetch(url, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'status': false
+            })
+          })
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              }
+            })
+            .then((res_json) => {
+              const alert = document.createElement('div');
+              alert.classList.add('alert', 'alert-secondary');
+              alert.setAttribute('role', 'alert');
+              alert.innerHTML = `Cliente ${res_json.name} deshabilitado correctamente.`;
+              messages.appendChild(alert);
+              messages.classList.remove('d-none');
+              setTimeout(() => {
+                messages.innerHTML = null;
+                messages.classList.add('d-none');
+              }, 2000);
+
+              const query_client = select_client.bind({value: res_json.id});
+              query_client();
+              console.log(res_json);
+            })
+            .catch((err) => {
+              console.error(err.message);
+            });
+        });
+
+      } else {
+        const enable_button = document.createElement('button');
+        enable_button.type = 'button';
+        enable_button.id = 'enable-client';
+        enable_button.innerHTML = 'Habilitar Cliente';
+        enable_button.classList.add('btn', 'btn-success');
+        button_container.appendChild(enable_button);
+
+        enable_button.addEventListener('click', (e) => {
+          e.preventDefault();
+          const url = `/api/v1/clients/${current_client}`;
+          fetch(url, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              'status': true
+            })
+          })
+            .then((res) => {
+              if (res.ok) {
+                return res.json();
+              }
+            })
+            .then((res_json) => {
+              const alert = document.createElement('div');
+              alert.classList.add('alert', 'alert-success');
+              alert.setAttribute('role', 'alert');
+              alert.innerHTML = `Cliente ${res_json.name} habilitado correctamente.`;
+              messages.appendChild(alert);
+              messages.classList.remove('d-none');
+              setTimeout(() => {
+                messages.innerHTML = null;
+                messages.classList.add('d-none');
+              }, 2000);
+
+              const query_client = select_client.bind({value: res_json.id});
+              query_client();
+              console.log(res_json);
+            })
+            .catch((err) => {
+              console.error(err.message);
+            });
+        });
+      }
     })
     .catch((err) => {
       console.error(err.message);
     });
 }
+
+edit_service_button.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.open(`/admin/register-service/?client_id=${current_client}`);
+});
+
+payments_button.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.open(`/system/payment/?client_id=${current_client}`);
+});
 
 select_client_form.addEventListener('submit', (e) => {{
   e.preventDefault();
@@ -158,7 +260,6 @@ select_client_form.addEventListener('submit', (e) => {{
       console.error(err.message);
     });
 }});
-
 
 current_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
