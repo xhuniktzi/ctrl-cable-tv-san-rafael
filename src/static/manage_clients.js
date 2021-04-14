@@ -126,6 +126,17 @@ function select_client(){
               }
             })
             .then((res_json) => {
+              const alert = document.createElement('div');
+              alert.classList.add('alert', 'alert-secondary');
+              alert.setAttribute('role', 'alert');
+              alert.innerHTML = `Cliente ${res_json.name} deshabilitado correctamente.`;
+              messages.appendChild(alert);
+              messages.classList.remove('d-none');
+              setTimeout(() => {
+                messages.innerHTML = null;
+                messages.classList.add('d-none');
+              }, 2000);
+
               const query_client = select_client.bind({value: res_json.id});
               query_client();
               console.log(res_json);
@@ -161,6 +172,17 @@ function select_client(){
               }
             })
             .then((res_json) => {
+              const alert = document.createElement('div');
+              alert.classList.add('alert', 'alert-success');
+              alert.setAttribute('role', 'alert');
+              alert.innerHTML = `Cliente ${res_json.name} habilitado correctamente.`;
+              messages.appendChild(alert);
+              messages.classList.remove('d-none');
+              setTimeout(() => {
+                messages.innerHTML = null;
+                messages.classList.add('d-none');
+              }, 2000);
+
               const query_client = select_client.bind({value: res_json.id});
               query_client();
               console.log(res_json);
