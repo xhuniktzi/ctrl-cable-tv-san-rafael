@@ -1,9 +1,7 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
-<div id="messages" class="d-none m-3 p-3"></div>
-
-<h2>Administrador de Clientes</h2>
-<form id="select-client-form" class="m-3 p-3">
+<h2 class="text-center">Administrador de Clientes</h2>
+<form id="select-client-form">
   <h3>Selecciona un cliente</h3>
   <div class="row">
     <label
@@ -39,9 +37,9 @@ endblock %} {% block content %}
   </div>
 </form>
 
-<div id="search-results" class="d-none m-3 p-3"></div>
+<div id="search-results" class="m-3 p-3 d-none"></div>
 
-<form id="current-client-form" class="d-none m-3 p-3">
+<form id="current-client-form" class="d-none">
   <h3>Editar Cliente</h3>
   <div class="row">
     <label for="name" class="col-lg-3 col-form-label-sm fw-bolder fs-5"
