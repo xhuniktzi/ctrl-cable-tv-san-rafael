@@ -49,6 +49,7 @@ class Client(db.Model):
     ubication_id = db.Column(db.Integer,
                              db.ForeignKey('ubication.key_id'),
                              nullable=False)
+    status = db.Column(db.Boolean, nullable=False, default=True)
 
 
 class Payment(db.Model):
@@ -572,6 +573,14 @@ def delete_client(id: int):
     ClientService.query.filter_by(client_id=client.key_id).delete()
     Payment.query.filter_by(client_id=client.key_id).delete()
     db.session.delete(client)
+    db.session.commit()
+    return jsonify(serialize_client(client))
+
+
+@app.route('/api/v1/clients/<int:id>', methods=['PATCH'])
+def patch_client(id: int):
+    client = Client.query.get(id)
+    client.status = request.json['status']
     db.session.commit()
     return jsonify(serialize_client(client))
 

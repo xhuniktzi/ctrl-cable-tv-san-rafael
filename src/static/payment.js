@@ -33,6 +33,15 @@ if (!localStorage.getItem('create-receipt')){
   }
 }
 
+const query_string = window.location.search;
+const url_params = new URLSearchParams(query_string);
+
+if (url_params.has('client_id')){
+  const client_id = url_params.get('client_id');
+  const query_client = select_client.bind({value: client_id});
+  query_client();
+}
+
 create_receipt_flag.addEventListener('change', () => {
   if (create_receipt_flag.checked){
     localStorage.setItem('create-receipt', 'True');

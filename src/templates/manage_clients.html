@@ -238,23 +238,7 @@ endblock %} {% block content %}
     <input type="submit" value="Actualizar Cliente" class="btn btn-primary" />
   </div>
 
-  <!-- <div class="d-grid gap-2 col-4 mx-auto m-3">
-    <input
-      id="disable-client"
-      type="button"
-      value="Deshabilitar"
-      class="btn btn-secondary"
-    />
-  </div>
-
-  <div class="d-grid gap-2 col-4 mx-auto m-3">
-    <input
-      id="enable-client"
-      type="button"
-      value="Habilitar"
-      class="btn btn-success"
-    />
-  </div> -->
+  <div id="button-container" class="d-grid gap-2 col-4 mx-auto m-3"></div>
 
   <div class="d-grid gap-2 col-4 mx-auto m-3">
     <input
@@ -265,14 +249,14 @@ endblock %} {% block content %}
     />
   </div>
 
-  <!-- <div class="d-grid gap-2 col-4 mx-auto m-3">
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
     <input
       id="payments-button"
       type="button"
       value="Ir a pagos"
       class="btn btn-info"
     />
-  </div> -->
+  </div>
 </form>
 
 {% endblock content %} {% block script %} {{super()}}
