@@ -592,7 +592,10 @@ def post_client_service():
 def delete_client_service(client_id: int, service_id: int):
     client = Client.query.get(client_id)
     service = Service.query.get(service_id)
-    client_service = ClientService.query.filter_by(client_id=client.key_id, service_id=service.key_id).first()
+    client_service = ClientService.query.filter_by(
+        client_id=client.key_id, service_id=service.key_id).first()
+    Payment.query.filter_by(client_id=client.key_id,
+                            service_id=service.key_id).delete()
     db.session.delete(client_service)
     db.session.commit()
     return jsonify(serialize_client_service(client_service))

@@ -2,16 +2,14 @@ const select_client_form = document.querySelector('#select-client-form');
 const client_form_village = document.querySelector('#select-client-form #village');
 const client_form_client = document.querySelector('#select-client-form #client');
 const search_results_container = document.querySelector('#search-results');
-
 const current_client_form = document.querySelector('#current-client-form');
-
 const current_client_village = document.querySelector('#current-client-form #ubication');
-
 const delete_client_button = document.querySelector('#current-client-form #delete-client');
-
+const edit_service_button = document.querySelector('#current-client-form #service');
 const messages = document.querySelector('#messages');
 
 let current_client = 0;
+
 
 async function render_village_menu(){
   const url = '/api/v1/villages';
@@ -92,19 +90,21 @@ function select_client(){
       }
 
       document.querySelector('#current-client-form #internet-speed').value = res_json.internet_speed;
-
       document.querySelector('#current-client-form #ip-address').value = res_json.ip_address;
-
       document.querySelector('#current-client-form #router-number').value = res_json.router_number;
-
       document.querySelector('#current-client-form #line-number').value = res_json.line_number;
-
       document.querySelector('#current-client-form #ubication').value = res_json.ubication_id;
+      edit_service_button.value = current_client;
     })
     .catch((err) => {
       console.error(err.message);
     });
 }
+
+edit_service_button.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.open(`/admin/register-service/?client_id=${current_client}`);
+});
 
 select_client_form.addEventListener('submit', (e) => {{
   e.preventDefault();
