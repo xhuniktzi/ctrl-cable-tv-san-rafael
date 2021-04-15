@@ -27,6 +27,7 @@
     <header class="bg-success text-light">
       <div class="row">
         <div class="dropdown col-lg-3">
+          {% if session['username'] %}
           <button
             class="btn btn-success dropdown-toggle m-2 p-2"
             type="button"
@@ -40,18 +41,6 @@
             class="dropdown-menu dropdown-menu-dark"
             aria-labelledby="dropdown-menu-opt"
           >
-            {% if session['username'] %} {% if is_admin(session['username']) %}
-            <li>
-              <a href="{{url_for('register_user')}}" class="dropdown-item"
-                >Registrar Usuario</a
-              >
-            </li>
-            {% endif %}
-            <li>
-              <a href="{{url_for('logout_user')}}" class="dropdown-item"
-                >Salir</a
-              >
-            </li>
             <li>
               <a href="{{url_for('client_admin')}}" class="dropdown-item"
                 >Crear Cliente</a
@@ -73,12 +62,12 @@
                 >Servicios</a
               >
             </li>
-            {% endif %}
             <li>
               <a href="{{url_for('register_service')}}" class="dropdown-item"
                 >Conectar un Servicio</a
               >
             </li>
+            {% endif %}
             <li>
               <a href="{{url_for('payment')}}" class="dropdown-item"
                 >Realizar pago individual</a
@@ -87,6 +76,37 @@
             <li>
               <a href="{{url_for('orders')}}" class="dropdown-item"
                 >Generar ordenes de pagos</a
+              >
+            </li>
+          </ul>
+          {% endif %}
+        </div>
+        <h1 class="col-lg-6 text-center">Control de Facturación</h1>
+        <div class="dropdown col-lg-3">
+          <button
+            class="btn btn-success dropdown-toggle m-2 p-2"
+            type="button"
+            id="dropdown-menu-session"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Sesión
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-dark"
+            aria-labelledby="dropdown-menu-session"
+          >
+            {% if session['username'] %} {% if is_admin(session['username']) %}
+
+            <li>
+              <a href="{{url_for('register_user')}}" class="dropdown-item"
+                >Registrar Usuario</a
+              >
+            </li>
+            {% endif %}
+            <li>
+              <a href="{{url_for('logout_user')}}" class="dropdown-item"
+                >Salir</a
               >
             </li>
             {% else %}
@@ -98,7 +118,6 @@
             {% endif %}
           </ul>
         </div>
-        <h1 class="col-lg-6 text-center">Control de Facturación</h1>
       </div>
     </header>
     {% endblock header %}
