@@ -1,0 +1,83 @@
+{% extends 'base_layout.html' %} {% block title %} Dashboard {% endblock %} {%
+block content %}
+<h2 class="text-center">Dashboard</h2>
+<h3>Información General</h3>
+<div class="row">
+  <div class="col-lg-7 p-1">
+    <span class="fs-5 ps-3 fw-bold">Total esperado: </span>
+    <span class="fs-5 ps-3">Q. {{ total_expected }}</span>
+    <span class="fs-5 ps-3 fw-bold">Total pagado: </span>
+    <span class="fs-5 ps-3">Q. {{ total_payments }}</span>
+  </div>
+  <div class="col-lg-5">
+    <div class="progress" style="height: 1.5rem">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated w-{{ progress_percentage }}"
+        style="width: {{ progress_percentage }}%;"
+        role="progressbar"
+        aria-valuenow="{{ progress_percentage }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        {{ progress_percentage }}%
+      </div>
+    </div>
+  </div>
+</div>
+
+<h3>Servicios</h3>
+{% for service in services_info %}
+<div class="row">
+  <div class="col-lg-7 p-1">
+    <span class="fs-5 ps-3 fw-bold">Servicio: </span>
+    <span class="fs-5 ps-3">{{ service.name }}</span>
+    <span class="fs-5 ps-3 fw-bold">Total esperado: </span>
+    <span class="fs-5 ps-3">Q. {{ service.total_expected }}</span>
+    <span class="fs-5 ps-3 fw-bold">Total pagado: </span>
+    <span class="fs-5 ps-3">Q. {{ service.total_payments }}</span>
+  </div>
+  <div class="col-lg-5">
+    <div class="progress" style="height: 1.5rem">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated w-{{ service.progress_percentage }}"
+        style="width: {{ service.progress_percentage }}%;"
+        role="progressbar"
+        aria-valuenow="{{ service.progress_percentage }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        {{ service.progress_percentage }}%
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<h3>Aldeas</h3>
+{% for village in villages_info %}
+<div class="row">
+  <div class="col-lg-7 p-1">
+    <span class="fs-5 ps-3 fw-bold">Aldea: </span>
+    <span class="fs-5 ps-3">{{ village.name }}</span>
+    <span class="fs-5 ps-3 fw-bold">Total esperado: </span>
+    <span class="fs-5 ps-3">Q. {{ village.total_expected }}</span>
+    <span class="fs-5 ps-3 fw-bold">Total pagado: </span>
+    <span class="fs-5 ps-3">Q. {{ village.total_payments }}</span>
+  </div>
+  <div class="col-lg-5">
+    <div class="progress" style="height: 1.5rem">
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated w-{{ village.progress_percentage }}"
+        style="width: {{ village.progress_percentage }}%;"
+        role="progressbar"
+        aria-valuenow="{{ village.progress_percentage }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        {{ village.progress_percentage }}%
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %} {% endblock content %} {% block script %} {{super()}} {% endblock
+script %}

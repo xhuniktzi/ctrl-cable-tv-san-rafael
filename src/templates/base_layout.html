@@ -23,108 +23,116 @@
     {% endif %} {% endif %} {% endblock head %}
   </head>
   <body>
-    {% block body %} {% block header %}
-    <header class="bg-success text-light">
-      <div class="row">
-        <div class="dropdown col-lg-3">
+    <div class="container-fluid">
+      {% block body %} {% block header %}
+      <header class="bg-success text-light">
+        <div class="row p-2 d-flex justify-content-around">
           {% if session['username'] %}
-          <button
-            class="btn btn-success dropdown-toggle m-2 p-2"
-            type="button"
-            id="dropdown-menu-opt"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Menu
-          </button>
-          <ul
-            class="dropdown-menu dropdown-menu-dark"
-            aria-labelledby="dropdown-menu-opt"
-          >
-            <li>
-              <a href="{{url_for('client_admin')}}" class="dropdown-item"
-                >Crear Cliente</a
-              >
-            </li>
-            {% if is_admin(session['username']) %}
-            <li>
-              <a href="{{url_for('manage_clients')}}" class="dropdown-item"
-                >Administrar Cliente</a
-              >
-            </li>
-            <li>
-              <a href="{{url_for('village_admin')}}" class="dropdown-item"
-                >Aldeas</a
-              >
-            </li>
-            <li>
-              <a href="{{url_for('service_admin')}}" class="dropdown-item"
-                >Servicios</a
-              >
-            </li>
-            <li>
-              <a href="{{url_for('register_service')}}" class="dropdown-item"
-                >Conectar un Servicio</a
-              >
-            </li>
-            {% endif %}
-            <li>
-              <a href="{{url_for('payment')}}" class="dropdown-item"
-                >Realizar pago individual</a
-              >
-            </li>
-            <li>
-              <a href="{{url_for('orders')}}" class="dropdown-item"
-                >Generar ordenes de pagos</a
-              >
-            </li>
-          </ul>
+          <div class="dropdown col-lg-2 text-center">
+            <button
+              class="btn btn-success dropdown-toggle"
+              type="button"
+              id="dropdown-menu-opt"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Menu
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              aria-labelledby="dropdown-menu-opt"
+            >
+              <li>
+                <a href="{{url_for('client_admin')}}" class="dropdown-item"
+                  >Crear Cliente</a
+                >
+              </li>
+              {% if is_admin(session['username']) %}
+              <li>
+                <a href="{{url_for('manage_clients')}}" class="dropdown-item"
+                  >Administrar Cliente</a
+                >
+              </li>
+              <li>
+                <a href="{{url_for('village_admin')}}" class="dropdown-item"
+                  >Aldeas</a
+                >
+              </li>
+              <li>
+                <a href="{{url_for('service_admin')}}" class="dropdown-item"
+                  >Servicios</a
+                >
+              </li>
+              <li>
+                <a href="{{url_for('register_service')}}" class="dropdown-item"
+                  >Conectar un Servicio</a
+                >
+              </li>
+              <li>
+                <a href="{{ url_for('dashboard') }}" class="dropdown-item"
+                  >Información</a
+                >
+              </li>
+              {% endif %}
+              <li>
+                <a href="{{url_for('payment')}}" class="dropdown-item"
+                  >Realizar pago individual</a
+                >
+              </li>
+              <li>
+                <a href="{{url_for('orders')}}" class="dropdown-item"
+                  >Generar ordenes de pagos</a
+                >
+              </li>
+            </ul>
+          </div>
+          {% endif %} {% if session['username'] %}
+          <h1 class="text-center col-lg-6">Control de Facturación</h1>
+          {% else %}
+          <h1 class="text-center col-lg-12">Control de Facturación</h1>
+          {% endif %} {% if session['username'] %}
+          <div class="dropdown col-lg-4 text-center">
+            <button
+              class="btn btn-success dropdown-toggle"
+              type="button"
+              id="dropdown-menu-session"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {% if is_admin(session['username']) %} Sesión actual como
+              administrador: {{ session['username'] }} {% else %} Sesión actual:
+              {{ session['username'] }} {% endif %}
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              aria-labelledby="dropdown-menu-session"
+            >
+              {% if session['username'] %} {% if is_admin(session['username'])
+              %}
+
+              <li>
+                <a href="{{url_for('register_user')}}" class="dropdown-item"
+                  >Registrar Usuario</a
+                >
+              </li>
+              {% endif %}
+              <li>
+                <a href="{{url_for('logout_user')}}" class="dropdown-item"
+                  >Salir</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </div>
           {% endif %}
         </div>
-        <h1 class="col-lg-6 text-center">Control de Facturación</h1>
-        <div class="dropdown col-lg-3">
-          <button
-            class="btn btn-success dropdown-toggle m-2 p-2"
-            type="button"
-            id="dropdown-menu-session"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Sesión
-          </button>
-          <ul
-            class="dropdown-menu dropdown-menu-dark"
-            aria-labelledby="dropdown-menu-session"
-          >
-            {% if session['username'] %} {% if is_admin(session['username']) %}
-
-            <li>
-              <a href="{{url_for('register_user')}}" class="dropdown-item"
-                >Registrar Usuario</a
-              >
-            </li>
-            {% endif %}
-            <li>
-              <a href="{{url_for('logout_user')}}" class="dropdown-item"
-                >Salir</a
-              >
-            </li>
-            {% else %}
-            <li>
-              <a href="{{url_for('login_user')}}" class="dropdown-item"
-                >Ingresar</a
-              >
-            </li>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </header>
-    {% endblock header %}
-    <main class="m-3 p-3">
-      <div id="messages" class="d-none"></div>
-      {% block content %} {% endblock content %}
-    </main>
+      </header>
+      {% endblock header %}
+      <main class="m-3 p-3">
+        <div id="messages" class="d-none"></div>
+        {% block content %} {% endblock content %}
+      </main>
+    </div>
     {% block script %}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
