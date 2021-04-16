@@ -203,6 +203,99 @@ def register_service():
     return render_template('register_service.html')
 
 
+@app.route('/admin/dashboard/')
+def dashboard():
+    total_expected: int = 0
+    total_payments: int = 0
+
+    clients = Client.query.filter_by(status=True).all()
+    for client in clients:
+        client_services = ClientService.query.filter_by(
+            client_id=client.key_id).all()
+        for client_service in client_services:
+            total_expected = total_expected + client_service.price
+
+        payments = Payment.query.filter_by(client_id=client.key_id,
+                                           month=datetime.now().month).all()
+        for payment in payments:
+            total_payments = total_payments + payment.mount
+
+    if total_expected > 0:
+        progress_percentage = int((total_payments / total_expected) * 100)
+    else:
+        progress_percentage = 100
+
+    services_info = []
+
+    services = Service.query.all()
+    for service in services:
+        client_services = ClientService.query.filter_by(
+            service_id=service.key_id).all()
+        total_service_expected: int = 0
+        for client_service in client_services:
+            client = Client.query.get(client_service.client_id)
+            if client.status:
+                total_service_expected = total_service_expected + client_service.price
+
+        total_service_payments: int = 0
+        payments = Payment.query.filter_by(service_id=service.key_id,
+                                           month=datetime.now().month).all()
+        for payment in payments:
+            total_service_payments = total_service_payments + payment.mount
+
+        if total_service_expected > 0:
+            service_progress_percentage = int(
+                (total_service_payments / total_service_expected) * 100)
+        else:
+            service_progress_percentage = 100
+
+        services_info.append({
+            'name': service.name,
+            'total_expected': total_service_expected,
+            'total_payments': total_service_payments,
+            'progress_percentage': service_progress_percentage
+        })
+
+    villages_info = []
+
+    villages = Ubication.query.all()
+    for village in villages:
+        total_village_expected: int = 0
+        total_village_payments: int = 0
+        clients = Client.query.filter_by(ubication_id=village.key_id,
+                                         status=True).all()
+        for client in clients:
+            client_services = ClientService.query.filter_by(
+                client_id=client.key_id).all()
+            for client_service in client_services:
+                total_village_expected = total_village_expected + client_service.price
+
+            payments = Payment.query.filter_by(
+                client_id=client.key_id, month=datetime.now().month).all()
+            for payment in payments:
+                total_village_payments = total_village_payments + payment.mount
+
+        if total_village_expected > 0:
+            village_progress_percentage = int(
+                (total_village_payments / total_village_expected) * 100)
+        else:
+            village_progress_percentage = 100
+
+        villages_info.append({
+            'name': village.name,
+            'total_expected': total_village_expected,
+            'total_payments': total_village_payments,
+            'progress_percentage': village_progress_percentage
+        })
+
+    return render_template('dashboard.html',
+                           total_expected=total_expected,
+                           total_payments=total_payments,
+                           progress_percentage=progress_percentage,
+                           services_info=services_info,
+                           villages_info=villages_info)
+
+
 @app.route('/system/payment/')
 def payment():
     return render_template('payment.html')
@@ -293,19 +386,22 @@ def print_orders():
     clients = []
     if get_payment_status != '' and get_village != None:
         clients = Client.query.filter_by(payment_group=get_payment_status,
-                                         ubication_id=get_village).order_by(
+                                         ubication_id=get_village,
+                                         status=True).order_by(
                                              Client.ubication_id.desc()).all()
 
     elif get_payment_status != '' and get_village == None:
-        clients = Client.query.filter_by(
-            payment_group=get_payment_status).order_by(
-                Client.ubication_id.desc()).all()
+        clients = Client.query.filter_by(payment_group=get_payment_status,
+                                         status=True).order_by(
+                                             Client.ubication_id.desc()).all()
 
     elif get_payment_status == '' and get_village != None:
-        clients = Client.query.filter_by(ubication_id=get_village).all()
+        clients = Client.query.filter_by(ubication_id=get_village,
+                                         status=True).all()
 
     elif get_payment_status == '' and get_village == None:
-        clients = Client.query.order_by(Client.ubication_id.desc()).all()
+        clients = Client.query.filter_by(status=True).order_by(
+            Client.ubication_id.desc()).all()
 
     data = []
 
