@@ -185,4 +185,8 @@ body {
   .bottom-order {
     border-top: 1px dashed black;
   }
+
+  .page-break {
+    page-break-after: always;
+  }
 }
