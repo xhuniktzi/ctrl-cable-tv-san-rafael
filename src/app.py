@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for, jsonify, redirect, abort
+from flask import Flask, Response, render_template, request, session, url_for, jsonify, redirect, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
@@ -376,6 +376,107 @@ def standard_receipt(client_id: int, service_id: int, count: int):
                     obj['list_payments'][tmp_month] = 'PAGAR'
 
     return render_template('print_standard_receipt.html', obj=obj)
+
+
+@app.route('/print/parcial-receipt/<int:client_id>', methods=['GET'])
+def parcial_receipt(client_id: int):
+    payment_codes = request.args.getlist('pay')
+
+    client = Client.query.get(client_id)
+    ubication = Ubication.query.get(client.ubication_id)
+
+    list_payments = []
+
+    for code in payment_codes:
+        list_payments.append(Payment.query.get(code))
+
+    list_services = []
+
+    for payment in list_payments:
+        if not payment.service_id in list_services:
+            list_services.append(payment.service_id)
+
+    list_prints = []
+
+    for service_id in list_services:
+        obj = dict()
+        service = Service.query.get(service_id)
+        client_service = ClientService.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id).first()
+
+        obj['name'] = client.name
+        obj['ubication'] = ubication.name
+        obj['direction'] = client.direction
+        obj['description'] = client.description
+        obj['internet_speed'] = client.internet_speed
+        obj['service'] = service.name
+        obj['list_payments'] = dict()
+
+        year_parcial_payments = Payment.query.filter_by(
+            client_id=client.key_id,
+            service_id=service.key_id,
+            status=False,
+            year=datetime.now().year).all()
+
+        year_standard_payments = Payment.query.filter_by(
+            client_id=client.key_id,
+            service_id=service.key_id,
+            status=True,
+            year=datetime.now().year).all()
+
+        for payment in year_parcial_payments:
+            template = 'Q. {} PEND'.format(client_service.price -
+                                           payment.mount)
+            obj['list_payments'][payment.month] = template
+
+        for payment in year_standard_payments:
+            obj['list_payments'][payment.month] = 'PAGADO'
+
+        last_payment = Payment.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id).order_by(
+                Payment.year.desc()).order_by(Payment.month.desc()).first()
+
+        if last_payment != None:
+            now_month = datetime.now().month
+            now_year = datetime.now().year
+
+        if service.status:
+            now_month = now_month - 1
+            if now_month < 1:
+                now_month = 12
+                now_year = now_year - 1
+
+        if (now_year > last_payment.year) or (
+            (now_year == last_payment.year) and
+            (now_month > last_payment.month)):
+            tmp_month = last_payment.month
+            tmp_year = last_payment.year
+            count = 0
+            while (tmp_month != now_month) or (tmp_year != now_year):
+                count = count + 1
+                tmp_month = tmp_month + 1
+                if tmp_month > 12:
+                    tmp_month = 1
+                    tmp_year = tmp_year + 1
+
+                if tmp_year == datetime.now().year:
+                    obj['list_payments'][tmp_month] = 'PAGAR'
+
+        obj['total'] = 0
+
+        count = 0
+        for payment in list_payments:
+            if payment.service_id == service.key_id:
+                count = count + 1
+                obj['total'] = obj['total'] + payment.mount
+
+        obj['message'] = '{} pagos procesados'.format(count)
+
+        list_prints.append(obj)
+
+    # print(list_prints)
+    return render_template('print_parcial_receipt.html',
+                           list_prints=list_prints)
 
 
 @app.route('/print/orders')

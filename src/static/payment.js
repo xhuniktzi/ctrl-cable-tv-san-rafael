@@ -353,6 +353,10 @@ parcial_payment_form.addEventListener('submit', (e) => {
         console.log(param);
         params = params + 'pay=' + param.id + '&';
       }
+      if (localStorage.getItem('create-receipt') == 'True'){
+        const url = `/print/parcial-receipt/${current_client}${params}`;
+        window.open(url);
+      }
       fetch_payments(current_client);
     })
     .catch((err) => {
