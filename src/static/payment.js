@@ -133,7 +133,7 @@ function fetch_payments(client){
       console.log(res_json);
       for (let element of res_json){
         const payment_element = document.createElement('div');
-        payment_element.classList.add('row', 'm-2', 'p-2', 'border', 'fw-bold');
+        payment_element.classList.add('row', 'p-2', 'border', 'fw-bold');
         payment_history_container.appendChild(payment_element);
 
         const payment_element_date = document.createElement('div');
@@ -216,7 +216,7 @@ select_client_form.addEventListener('submit', (e) => {
     .then((res_json) => {
       for (let element of res_json){
         const client_element = document.createElement('div');
-        client_element.classList.add('row', 'm-2', 'p-2', 'border');
+        client_element.classList.add('row', 'p-2', 'border');
         search_results_container.appendChild(client_element);
 
         const client_element_name = document.createElement('div');
@@ -299,7 +299,7 @@ add_payment_button.addEventListener('click', (e) => {
   list_payments.push(element);
 
   const payment_element = document.createElement('div');
-  payment_element.classList.add('row', 'm-2', 'p-2', 'border');
+  payment_element.classList.add('row', 'p-2', 'border');
   payment_list_container.appendChild(payment_element);
 
   const payment_element_service_name = document.createElement('div');

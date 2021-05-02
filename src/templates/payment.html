@@ -49,7 +49,7 @@ endblock %} {% block content %}
 
 <div id="search-results" class="d-none m-3 p-3"></div>
 <div id="client-info" class="d-none m-3 p-3"></div>
-<div id="payment-list"></div>
+<div id="payment-list" class="m-2"></div>
 <div id="payment-form" class="d-none">
   <div class="d-grid gap-2 col-4 mx-auto">
     <a
@@ -186,6 +186,15 @@ endblock %} {% block content %}
         <input type="submit" value="Pagar" class="btn btn-primary" />
       </div>
     </form>
+  </div>
+</div>
+<div>
+  <div class="row border fw-bold m-3">
+    <div class="col-lg-1 text-center">Fecha</div>
+    <div class="col-lg-3 text-center">Servicio</div>
+    <div class="col-lg-2 text-center">Cuota</div>
+    <div class="col-lg-2 text-center">Monto Cancelado</div>
+    <div class="col-lg-2 text-center">Monto Total</div>
   </div>
 </div>
 <div id="payment-history" class="d-none m-3 p-3"></div>
