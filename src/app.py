@@ -2,7 +2,7 @@ from flask import Flask, Response, render_template, request, session, url_for, j
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
-from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment
+from helpers import serialize_client, serialize_client_service, serialize_village, serialize_service, unserialize_date, serialize_payment, parse_range_month, range_month_from_actual
 from forms import RegisterForm, LoginForm
 from os import getenv
 from datetime import datetime
@@ -201,6 +201,11 @@ def service_admin():
 @app.route('/admin/register-service/')
 def register_service():
     return render_template('register_service.html')
+
+
+@app.route('/admin/list')
+def admin_list():
+    return render_template('admin_list.html')
 
 
 @app.route('/admin/dashboard/')
@@ -620,6 +625,85 @@ def print_orders():
                 data.append(obj_order)
 
     return render_template('print_orders.html', data=data)
+
+
+@app.route('/print/list')
+def print_list():
+    ubication = request.args.get('ubication', type=int)
+    service = request.args.get('service', type=int)
+    print(ubication)
+    print(service)
+
+    act_month = datetime.now().month
+    range_month = range_month_from_actual(act_month)
+    month_context = parse_range_month(range_month)
+
+    if service == None:
+        count = 0
+        list_context: list = []
+        clients = Client.query.all()
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            client_services = ClientService.query.filter_by(
+                client_id=client.key_id).all()
+            for client_service in client_services:
+                count = count + 1
+                service = Service.query.get(client_service.service_id)
+                list_context.append({
+                    'count': count,
+                    'name': client.name,
+                    'ip_address': client.ip_address,
+                    'internet_speed': client.internet_speed,
+                    'price': client_service.price,
+                    'ubication': ubication.name,
+                    'service': service.name,
+                    'payments': {
+                        'prev_3':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['prev_3']).first() != None else
+                        '',
+                        'prev_2':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['prev_2']).first() != None else
+                        '',
+                        'prev_1':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['prev_1']).first() != None else
+                        '',
+                        'act':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['act']).first() != None else '',
+                        'next_1':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['next_1']).first() != None else
+                        '',
+                        'next_2':
+                        'x' if Payment.query.filter_by(
+                            client_id=client.key_id,
+                            service_id=service.key_id,
+                            month=range_month['next_2']).first() != None else
+                        ''
+                    }
+                })
+
+        return render_template('print_list.html',
+                               list_context=list_context,
+                               month_context=month_context)
+    elif Service.query.get(service).name == 'TV':
+        pass
+        # return  render_template('print_tv_list.html')
+
+    # return render_template('print_list.html')
 
 
 # API
