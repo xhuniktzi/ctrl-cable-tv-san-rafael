@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/print_list.css') }}"
+    />
+  </head>
+  <body>
+    <div class="table-header">
+      <div class="cell header">#</div>
+      <div class="cell header">Nombre</div>
+      <div class="cell header">IP</div>
+      <div class="cell header">Mb/s</div>
+      <div class="cell header">Pago</div>
+      <div class="cell header">Dirección</div>
+      <div class="cell header">Servicio</div>
+
+      <div class="cell header">{{ month_context.prev_3 }}</div>
+      <div class="cell header">{{ month_context.prev_2 }}</div>
+      <div class="cell header">{{ month_context.prev_1 }}</div>
+      <div class="cell header">{{ month_context.act }}</div>
+      <div class="cell header">{{ month_context.next_1 }}</div>
+      <div class="cell header">{{ month_context.next_2 }}</div>
+    </div>
+
+    {% for element in list_context %}
+    <div class="table-content">
+      <div class="cell content">{{ element.count }}</div>
+      <div class="cell content">{{ element.name }}</div>
+      <div class="cell content">{{ element.ip_address }}</div>
+      <div class="cell content">{{ element.internet_speed }}</div>
+      <div class="cell content">{{ element.price }}</div>
+      <div class="cell content">{{ element.ubication }}</div>
+      <div class="cell content">{{ element.service }}</div>
+      <div class="cell content">{{ element.payments.prev_3 }}</div>
+      <div class="cell content">{{ element.payments.prev_2 }}</div>
+      <div class="cell content">{{ element.payments.prev_1 }}</div>
+      <div class="cell content">{{ element.payments.act }}</div>
+      <div class="cell content">{{ element.payments.next_1 }}</div>
+      <div class="cell content">{{ element.payments.next_2 }}</div>
+    </div>
+
+    {% if element.count%26 == 0 %}
+    <div class="page-break"></div>
+
+    <div class="table-header">
+      <div class="cell header">#</div>
+      <div class="cell header">Nombre</div>
+      <div class="cell header">IP</div>
+      <div class="cell header">Mb/s</div>
+      <div class="cell header">Pago</div>
+      <div class="cell header">Dirección</div>
+      <div class="cell header">Servicio</div>
+      <div class="cell header">{{ month_context.prev_3 }}</div>
+      <div class="cell header">{{ month_context.prev_2 }}</div>
+      <div class="cell header">{{ month_context.prev_1 }}</div>
+      <div class="cell header">{{ month_context.act }}</div>
+      <div class="cell header">{{ month_context.next_1 }}</div>
+      <div class="cell header">{{ month_context.next_2 }}</div>
+    </div>
+    {% endif %} {% endfor %}
+  </body>
+</html>
