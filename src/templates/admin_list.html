@@ -12,7 +12,10 @@ endblock %} {% block content %}
     >
     <div class="col-lg-7">
       <select name="village" id="village" class="form-select form-select-sm">
-        <option selected></option>
+        <!-- <option selected></option> -->
+        {% for village in villages %}
+        <option value="{{ village.key_id }}">{{ village.name }}</option>
+        {% endfor %}
       </select>
     </div>
   </div>
@@ -26,6 +29,9 @@ endblock %} {% block content %}
     <div class="col-lg-7">
       <select name="service" id="service" class="form-select form-select-sm">
         <option selected></option>
+        <!-- {% for service in services %}
+        <option value="{{ service.key_id }}">{{ service.name }}</option>
+        {% endfor %} -->
       </select>
     </div>
   </div>
@@ -36,5 +42,5 @@ endblock %} {% block content %}
 </form>
 
 {% endblock content %} {% block script %} {{super()}}
-<!-- <script src="{{url_for('static',filename='orders.js')}}"></script> -->
+<script src="{{url_for('static',filename='admin_list.js')}}"></script>
 {% endblock script %}

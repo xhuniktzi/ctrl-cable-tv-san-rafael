@@ -205,7 +205,11 @@ def register_service():
 
 @app.route('/admin/list')
 def admin_list():
-    return render_template('admin_list.html')
+    villages = Ubication.query.all()
+    services = Service.query.all()
+    return render_template('admin_list.html',
+                           villages=villages,
+                           services=services)
 
 
 @app.route('/admin/dashboard/')
@@ -629,10 +633,8 @@ def print_orders():
 
 @app.route('/print/list')
 def print_list():
-    ubication = request.args.get('ubication', type=int)
+    ubication_id = request.args.get('ubication', type=int)
     service = request.args.get('service', type=int)
-    print(ubication)
-    print(service)
 
     act_month = datetime.now().month
     range_month = range_month_from_actual(act_month)
@@ -641,7 +643,7 @@ def print_list():
     if service == None:
         count = 0
         list_context: list = []
-        clients = Client.query.all()
+        clients = Client.query.filter_by(ubication_id=ubication_id)
         for client in clients:
             ubication = Ubication.query.get(client.ubication_id)
             client_services = ClientService.query.filter_by(
