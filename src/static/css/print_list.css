@@ -48,6 +48,10 @@ body {
     text-align: center;
   }
 
+  .unpaid {
+    background-color: yellow;
+  }
+
   .page-break {
     page-break-after: always;
   }
