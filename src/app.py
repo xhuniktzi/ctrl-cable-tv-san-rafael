@@ -633,17 +633,56 @@ def print_orders():
 
 @app.route('/print/list')
 def print_list():
+    def define_month_context(client, service, range_month: dict):
+        return {
+            'prev_3':
+            'x' if Payment.query.filter_by(
+                client_id=client,
+                service_id=service,
+                month=range_month['prev_3']).first() != None else '',
+            'prev_2':
+            'x' if Payment.query.filter_by(
+                client_id=client,
+                service_id=service,
+                month=range_month['prev_2']).first() != None else '',
+            'prev_1':
+            'x' if Payment.query.filter_by(
+                client_id=client,
+                service_id=service,
+                month=range_month['prev_1']).first() != None else '',
+            'act':
+            'x' if Payment.query.filter_by(
+                client_id=client, service_id=service,
+                month=range_month['act']).first() != None else '',
+            'next_1':
+            'x' if Payment.query.filter_by(
+                client_id=client,
+                service_id=service,
+                month=range_month['next_1']).first() != None else '',
+            'next_2':
+            'x' if Payment.query.filter_by(
+                client_id=client,
+                service_id=service,
+                month=range_month['next_2']).first() != None else ''
+        }
+
     ubication_id = request.args.get('ubication', type=int)
-    service = request.args.get('service', type=int)
+    service_id = request.args.get('service', type=int)
 
     act_month = datetime.now().month
     range_month = range_month_from_actual(act_month)
     month_context = parse_range_month(range_month)
 
-    if service == None:
-        count = 0
-        list_context: list = []
+    clients = None
+    list_context = []
+
+    if ubication_id == None:
+        clients = Client.query.all()
+    else:
         clients = Client.query.filter_by(ubication_id=ubication_id)
+
+    if service_id == None:
+        count = 0
         for client in clients:
             ubication = Ubication.query.get(client.ubication_id)
             client_services = ClientService.query.filter_by(
@@ -652,60 +691,121 @@ def print_list():
                 count = count + 1
                 service = Service.query.get(client_service.service_id)
                 list_context.append({
-                    'count': count,
-                    'name': client.name,
-                    'ip_address': client.ip_address,
-                    'internet_speed': client.internet_speed,
-                    'price': client_service.price,
-                    'ubication': ubication.name,
-                    'service': service.name,
-                    'payments': {
-                        'prev_3':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['prev_3']).first() != None else
-                        '',
-                        'prev_2':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['prev_2']).first() != None else
-                        '',
-                        'prev_1':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['prev_1']).first() != None else
-                        '',
-                        'act':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['act']).first() != None else '',
-                        'next_1':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['next_1']).first() != None else
-                        '',
-                        'next_2':
-                        'x' if Payment.query.filter_by(
-                            client_id=client.key_id,
-                            service_id=service.key_id,
-                            month=range_month['next_2']).first() != None else
-                        ''
-                    }
+                    'count':
+                    count,
+                    'name':
+                    client.name,
+                    'ip_address':
+                    client.ip_address,
+                    'internet_speed':
+                    client.internet_speed,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'payments':
+                    define_month_context(client.key_id, service.key_id,
+                                         range_month)
                 })
 
-        return render_template('print_list.html',
+    elif Service.query.get(service_id).name == 'Internet':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'name':
+                    client.name,
+                    'ip_address':
+                    client.ip_address,
+                    'internet_speed':
+                    client.internet_speed,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'payments':
+                    define_month_context(client.key_id, service.key_id,
+                                         range_month)
+                })
+
+    elif Service.query.get(service_id).name == 'Internet + Tv':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'name':
+                    client.name,
+                    'ip_address':
+                    client.ip_address,
+                    'internet_speed':
+                    client.internet_speed,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'payments':
+                    define_month_context(client.key_id, service.key_id,
+                                         range_month)
+                })
+
+    elif Service.query.get(service_id).name == 'TV':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'name':
+                    client.name,
+                    'ip_address':
+                    client.ip_address,
+                    'internet_speed':
+                    client.internet_speed,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'payments':
+                    define_month_context(client.key_id, service.key_id,
+                                         range_month)
+                })
+        return render_template('print_list_2.html',
                                list_context=list_context,
                                month_context=month_context)
-    elif Service.query.get(service).name == 'TV':
-        pass
-        # return  render_template('print_tv_list.html')
 
-    # return render_template('print_list.html')
+    return render_template('print_list.html',
+                           list_context=list_context,
+                           month_context=month_context)
 
 
 # API

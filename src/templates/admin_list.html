@@ -12,7 +12,7 @@ endblock %} {% block content %}
     >
     <div class="col-lg-7">
       <select name="village" id="village" class="form-select form-select-sm">
-        <!-- <option selected></option> -->
+        <option selected></option>
         {% for village in villages %}
         <option value="{{ village.key_id }}">{{ village.name }}</option>
         {% endfor %}
@@ -29,9 +29,9 @@ endblock %} {% block content %}
     <div class="col-lg-7">
       <select name="service" id="service" class="form-select form-select-sm">
         <option selected></option>
-        <!-- {% for service in services %}
+        {% for service in services %}
         <option value="{{ service.key_id }}">{{ service.name }}</option>
-        {% endfor %} -->
+        {% endfor %}
       </select>
     </div>
   </div>
