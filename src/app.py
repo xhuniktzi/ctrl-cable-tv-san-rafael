@@ -330,6 +330,7 @@ def standard_receipt(client_id: int, service_id: int, count: int):
     obj['direction'] = client.direction
     obj['description'] = client.description
     obj['internet_speed'] = client.internet_speed
+    obj['code'] = '{}-{}'.format(ubication.code, client.key_id)
     obj['service'] = service.name
     obj['list_payments'] = dict()
     obj['message'] = '{} cuotas pagadas'.format(count)
@@ -418,6 +419,7 @@ def parcial_receipt(client_id: int):
         obj['direction'] = client.direction
         obj['description'] = client.description
         obj['internet_speed'] = client.internet_speed
+        obj['code'] = '{}-{}'.format(ubication.code, client.key_id)
         obj['service'] = service.name
         obj['list_payments'] = dict()
 
@@ -530,15 +532,28 @@ def print_orders():
                 continue  # Break if not payments
 
             obj_order = {
-                'name': client.name,
-                'ubication': Ubication.query.get(client.ubication_id).name,
-                'direction': client.direction,
-                'description': client.description,
-                'service': service.name,
-                'internet_speed': client.internet_speed,
-                'total': 0,
-                'list_payments': dict(),
-                'messages': list(),
+                'name':
+                client.name,
+                'ubication':
+                Ubication.query.get(client.ubication_id).name,
+                'direction':
+                client.direction,
+                'description':
+                client.description,
+                'service':
+                service.name,
+                'internet_speed':
+                client.internet_speed,
+                'code':
+                '{}-{}'.format(
+                    Ubication.query.get(client.ubication_id).code,
+                    client.key_id),
+                'total':
+                0,
+                'list_payments':
+                dict(),
+                'messages':
+                list(),
             }
 
             year_parcial_payments = Payment.query.filter_by(
@@ -693,6 +708,8 @@ def print_list():
                 list_context.append({
                     'count':
                     count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
                     'ip_address':
@@ -723,6 +740,8 @@ def print_list():
                 list_context.append({
                     'count':
                     count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
                     'ip_address':
@@ -753,6 +772,8 @@ def print_list():
                 list_context.append({
                     'count':
                     count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
                     'ip_address':
@@ -783,6 +804,8 @@ def print_list():
                 list_context.append({
                     'count':
                     count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
                     'ip_address':

@@ -82,6 +82,12 @@ body {
   }
 
   .general-info .total-tag {
+    font-weight: bold;
+    font-size: 16pt;
+  }
+
+  .general-info .code-tag {
+    font-weight: bold;
     font-size: 16pt;
   }
 

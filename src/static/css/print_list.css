@@ -29,12 +29,12 @@ body {
 
   .table-header {
     display: grid;
-    grid-template-columns: 2rem 1fr 8rem 3rem 5rem 8rem 7rem repeat(6, 4rem);
+    grid-template-columns: 5rem 1fr 8rem 3rem 5rem 8rem 7rem repeat(6, 4rem);
   }
 
   .table-content {
     display: grid;
-    grid-template-columns: 2rem 1fr 8rem 3rem 5rem 8rem 7rem repeat(6, 4rem);
+    grid-template-columns: 5rem 1fr 8rem 3rem 5rem 8rem 7rem repeat(6, 4rem);
   }
 
   .cell {
