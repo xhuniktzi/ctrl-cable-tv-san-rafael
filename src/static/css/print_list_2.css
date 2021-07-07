@@ -29,12 +29,12 @@ body {
 
   .table-header {
     display: grid;
-    grid-template-columns: 2rem 1fr 5rem 8rem 7rem repeat(6, 4rem);
+    grid-template-columns: 5rem 1fr 5rem 8rem 7rem repeat(6, 4rem);
   }
 
   .table-content {
     display: grid;
-    grid-template-columns: 2rem 1fr 5rem 8rem 7rem repeat(6, 4rem);
+    grid-template-columns: 5rem 1fr 5rem 8rem 7rem repeat(6, 4rem);
   }
 
   .cell {
@@ -54,5 +54,14 @@ body {
 
   .page-break {
     page-break-after: always;
+  }
+
+  .suspend {
+    grid-column: 6 / span 6;
+    border: 1px solid black;
+    text-align: center;
+    font-weight: bold;
+    background-color: lightgray;
+    padding: 0.25rem;
   }
 }

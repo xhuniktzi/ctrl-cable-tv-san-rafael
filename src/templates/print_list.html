@@ -30,14 +30,15 @@
 
     {% for element in list_context %}
     <div class="table-content">
-      <div class="cell content">{{ element.count }}</div>
+      <div class="cell content">{{ element.code }}</div>
       <div class="cell content">{{ element.name }}</div>
       <div class="cell content">{{ element.ip_address }}</div>
       <div class="cell content">{{ element.internet_speed }}</div>
       <div class="cell content">{{ element.price }}</div>
       <div class="cell content">{{ element.ubication }}</div>
       <div class="cell content">{{ element.service }}</div>
-      {% if element.payments.prev_3 == 'x' %}
+
+      {% if element.status %} {% if element.payments.prev_3 == 'x' %}
       <div class="cell content">{{ element.payments.prev_3 }}</div>
       {% else %}
       <div class="cell content unpaid">{{ element.payments.prev_3 }}</div>
@@ -61,6 +62,8 @@
       <div class="cell content">{{ element.payments.next_2 }}</div>
       {% else %}
       <div class="cell content unpaid">{{ element.payments.next_2 }}</div>
+      {% endif %} {% else %}
+      <div class="suspend">Suspendido</div>
       {% endif %}
     </div>
 
