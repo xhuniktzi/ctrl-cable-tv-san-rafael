@@ -681,6 +681,9 @@ def print_list():
                 month=range_month['next_2']).first() != None else ''
         }
 
+    def status_client(client_id: int):
+        return Client.query.get(client_id).status
+
     ubication_id = request.args.get('ubication', type=int)
     service_id = request.args.get('service', type=int)
 
@@ -722,6 +725,8 @@ def print_list():
                     ubication.name,
                     'service':
                     service.name,
+                    'status':
+                    status_client(client.key_id),
                     'payments':
                     define_month_context(client.key_id, service.key_id,
                                          range_month)
@@ -754,6 +759,8 @@ def print_list():
                     ubication.name,
                     'service':
                     service.name,
+                    'status':
+                    status_client(client.key_id),
                     'payments':
                     define_month_context(client.key_id, service.key_id,
                                          range_month)
@@ -786,6 +793,8 @@ def print_list():
                     ubication.name,
                     'service':
                     service.name,
+                    'status':
+                    status_client(client.key_id),
                     'payments':
                     define_month_context(client.key_id, service.key_id,
                                          range_month)
@@ -818,6 +827,8 @@ def print_list():
                     ubication.name,
                     'service':
                     service.name,
+                    'status':
+                    status_client(client.key_id),
                     'payments':
                     define_month_context(client.key_id, service.key_id,
                                          range_month)
