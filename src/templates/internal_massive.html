@@ -2,6 +2,11 @@
 endblock %} {% block content %}
 <h2 class="text-center">Carga Masiva</h2>
 
+<div class="m-2 p-2">
+  <span class="m-3 fs-4 fw-bold">Servicio: </span>
+  <span class="m-3 fs-4">{{ srv }}</span>
+</div>
+
 <form id="payments-load-form" class="m-2 p-2">
   <div id="payments-load-list">
     {% for client in list_context %}
@@ -29,6 +34,7 @@ endblock %} {% block content %}
           class="form-control form-control-sm"
           type="number"
           value="{{ client.expected_payments }}"
+          min="0"
         />
         {% endif %}
       </div>

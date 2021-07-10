@@ -495,7 +495,9 @@ def internal_massive_load():
                     service.key_id
                 })
 
-    return render_template('internal_massive.html', list_context=list_context)
+    return render_template('internal_massive.html',
+                           list_context=list_context,
+                           srv=Service.query.get(service_id).name)
 
 
 # Prints
@@ -668,7 +670,6 @@ def parcial_receipt(client_id: int):
 
         list_prints.append(obj)
 
-    # print(list_prints)
     return render_template('print_parcial_receipt.html',
                            list_prints=list_prints)
 
@@ -1000,10 +1001,6 @@ def print_list():
                     '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
-                    # 'ip_address':
-                    # client.ip_address,
-                    # 'internet_speed':
-                    # client.internet_speed,
                     'price':
                     client_service.price,
                     'ubication':
