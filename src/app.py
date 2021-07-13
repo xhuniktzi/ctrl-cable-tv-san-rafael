@@ -315,6 +315,191 @@ def orders():
     return render_template('orders.html')
 
 
+@app.route('/system/massive')
+def massive():
+    villages = Ubication.query.all()
+    services = Service.query.all()
+    return render_template('massive.html',
+                           villages=villages,
+                           services=services)
+
+
+# Internal Views
+@app.route('/internal/massive', methods=['GET'])
+def internal_massive_load():
+    def status_client(client_id: int):
+        return Client.query.get(client_id).status
+
+    def get_last_complete_payment(client_id: int, service_id: int):
+        payment = Payment.query.filter_by(
+            client_id=client_id, service_id=service_id, status=True).order_by(
+                Payment.year.desc()).order_by(Payment.month.desc()).first()
+        if payment != None:
+            return '{}/{}'.format(
+                Month.query.get(payment.month).name, payment.year)
+        else:
+            return None
+
+    def get_expected_payments(client_id: int, service_id: int):
+        service = Service.query.get(service_id)
+        client = Client.query.get(client_id)
+
+        last_payment = Payment.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id,
+            status=True).order_by(Payment.year.desc()).order_by(
+                Payment.month.desc()).first()
+
+        if last_payment == None:
+            return None
+
+        now_month = datetime.now().month
+        now_year = datetime.now().year
+
+        if service.status:
+            now_month = now_month - 1
+            if now_month < 1:
+                now_month = 12
+                now_year = now_year - 1
+
+        if (now_year > last_payment.year) or (
+            (now_year == last_payment.year) and
+            (now_month > last_payment.month)):
+            tmp_month = last_payment.month
+            tmp_year = last_payment.year
+            count = 0
+            while (tmp_month != now_month) or (tmp_year != now_year):
+                count = count + 1
+                tmp_month = tmp_month + 1
+                if tmp_month > 12:
+                    tmp_month = 1
+                    tmp_year = tmp_year + 1
+
+            return count
+
+        else:
+            return None
+
+    ubication_id = request.args.get('ubication', type=int)
+    service_id = request.args.get('service', type=int)
+
+    clients = None
+    list_context = []
+
+    if ubication_id == None:
+        clients = Client.query.all()
+    else:
+        clients = Client.query.filter_by(ubication_id=ubication_id)
+
+    if Service.query.get(service_id).name == 'Internet':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
+                    'name':
+                    client.name,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'status':
+                    status_client(client.key_id),
+                    'last_payment':
+                    get_last_complete_payment(client.key_id, service.key_id),
+                    'expected_payments':
+                    get_expected_payments(client.key_id, service.key_id),
+                    'client_id':
+                    client.key_id,
+                    'service_id':
+                    service.key_id
+                })
+
+    elif Service.query.get(service_id).name == 'Internet + Tv':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
+                    'name':
+                    client.name,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'status':
+                    status_client(client.key_id),
+                    'last_payment':
+                    get_last_complete_payment(client.key_id, service.key_id),
+                    'expected_payments':
+                    get_expected_payments(client.key_id, service.key_id),
+                    'client_id':
+                    client.key_id,
+                    'service_id':
+                    service.key_id
+                })
+
+    elif Service.query.get(service_id).name == 'TV':
+        count = 0
+        for client in clients:
+            ubication = Ubication.query.get(client.ubication_id)
+            count = count + 1
+            service = Service.query.get(service_id)
+            client_service = ClientService.query.filter_by(
+                client_id=client.key_id, service_id=service.key_id).first()
+
+            if client_service != None:
+                list_context.append({
+                    'count':
+                    count,
+                    'code':
+                    '{}-{}'.format(ubication.code, client.key_id),
+                    'name':
+                    client.name,
+                    'price':
+                    client_service.price,
+                    'ubication':
+                    ubication.name,
+                    'service':
+                    service.name,
+                    'status':
+                    status_client(client.key_id),
+                    'last_payment':
+                    get_last_complete_payment(client.key_id, service.key_id),
+                    'expected_payments':
+                    get_expected_payments(client.key_id, service.key_id),
+                    'client_id':
+                    client.key_id,
+                    'service_id':
+                    service.key_id
+                })
+
+    return render_template('internal_massive.html',
+                           list_context=list_context,
+                           srv=Service.query.get(service_id).name)
+
+
 # Prints
 @app.route(
     '/print/standard-receipt/<int:client_id>/<int:service_id>/<int:count>')
@@ -485,7 +670,6 @@ def parcial_receipt(client_id: int):
 
         list_prints.append(obj)
 
-    # print(list_prints)
     return render_template('print_parcial_receipt.html',
                            list_prints=list_prints)
 
@@ -817,10 +1001,6 @@ def print_list():
                     '{}-{}'.format(ubication.code, client.key_id),
                     'name':
                     client.name,
-                    'ip_address':
-                    client.ip_address,
-                    'internet_speed':
-                    client.internet_speed,
                     'price':
                     client_service.price,
                     'ubication':
@@ -1215,6 +1395,74 @@ def delete_payments(id: int):
     db.session.delete(payment)
     db.session.commit()
     return jsonify(serialize_payment(payment))
+
+
+# Massive Load API
+@app.route('/api/v3/massive/payments', methods=['POST'])
+def load_massive_payments():
+    payments = request.json
+    list_payments = []
+
+    for pay in payments:
+        client = Client.query.get(int(pay['client_id']))
+        service = Service.query.get(int(pay['service_id']))
+        count = int(pay['count'])
+        client_service = ClientService.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id).first()
+
+        last_payment = Payment.query.filter_by(
+            client_id=client.key_id, service_id=service.key_id,
+            status=True).order_by(Payment.year.desc()).order_by(
+                Payment.month.desc()).first()
+
+        if last_payment == None:
+            continue
+
+        now_month = datetime.now().month
+        now_year = datetime.now().year
+        tmp_month = last_payment.month
+        tmp_year = last_payment.year
+        if service.status:
+            now_month = now_month - 1
+            if now_month < 1:
+                now_month = 12
+                now_year = now_year - 1
+
+        tmp_count = 0
+        while count > tmp_count:
+            tmp_count = tmp_count + 1
+            tmp_month = tmp_month + 1
+            if tmp_month > 12:
+                tmp_month = 1
+                tmp_year = tmp_year + 1
+
+            check_payment = Payment.query.filter_by(client_id=client.key_id,
+                                                    service_id=service.key_id,
+                                                    month=tmp_month,
+                                                    year=tmp_year).first()
+
+            if check_payment != None:
+                check_payment.mount = client_service.price
+                check_payment.status = True
+                check_payment.datetime = datetime.now()
+                db.session.commit()
+                list_payments.append(serialize_payment(check_payment))
+            else:
+                new_payment = Payment()
+                mount = client_service.price
+                status = True
+                new_payment.mount = mount
+                new_payment.status = status
+                new_payment.month = tmp_month
+                new_payment.year = tmp_year
+                new_payment.service_id = service.key_id
+                new_payment.client_id = client.key_id
+                new_payment.datetime = datetime.now()
+                db.session.add(new_payment)
+                db.session.commit()
+                list_payments.append(serialize_payment(new_payment))
+
+    return jsonify(list_payments)
 
 
 if __name__ == '__main__':

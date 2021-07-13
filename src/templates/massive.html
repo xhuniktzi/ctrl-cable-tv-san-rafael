@@ -1,0 +1,46 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
+endblock %} {% block content %}
+<h2 class="text-center">Carga Masiva</h2>
+
+<form id="massive-load-form">
+  <h3>Selecciona</h3>
+  <div class="row">
+    <label
+      for="village"
+      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
+      >Aldea</label
+    >
+    <div class="col-lg-7">
+      <select name="village" id="village" class="form-select form-select-sm">
+        <option selected></option>
+        {% for village in villages %}
+        <option value="{{ village.key_id }}">{{ village.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <label
+      for="service"
+      class="col-lg-3 col-form-label col-form-label-sm fw-bolder fs-5"
+      >Servicio</label
+    >
+    <div class="col-lg-7">
+      <select name="service" id="service" class="form-select form-select-sm">
+        <!-- <option selected></option> -->
+        {% for service in services %}
+        <option value="{{ service.key_id }}">{{ service.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
+    <input type="submit" value="Ir a Carga masiva" class="btn btn-success" />
+  </div>
+</form>
+
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='massive.js')}}"></script>
+{% endblock script %}

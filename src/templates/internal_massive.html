@@ -1,0 +1,86 @@
+{% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
+endblock %} {% block content %}
+<div
+  class="modal fade"
+  id="confirmation-modal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Confirmar Operaciones
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="fs-4">A continuación confirmara todas estas operaciones.</p>
+        <p class="fs-4 fw-bold">¡Esta operación no se puede deshacer!</p>
+        <p class="fs-4">¿Desea continuar?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button id="confirm-send-button" type="button" class="btn btn-success">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 class="text-center">Carga Masiva</h2>
+
+<div class="m-2 p-2">
+  <span class="m-3 fs-4 fw-bold">Servicio: </span>
+  <span class="m-3 fs-4">{{ srv }}</span>
+</div>
+
+<form id="payments-load-form" class="m-2 p-2">
+  <div id="payments-load-list">
+    {% for client in list_context %}
+    <div class="row p-2 border">
+      <input type="hidden" name="client" value="{{ client.client_id }}" />
+      <input type="hidden" name="service" value="{{ client.service_id }}" />
+      <div class="col-lg-1 text-center">{{ client.code }}</div>
+      <div class="col-lg-3 text-center">{{ client.name }}</div>
+      <div class="col-lg-1 text-center">{{ client.price }}</div>
+      <div class="col-lg-2 text-center">{{ client.ubication }}</div>
+      <div class="col-lg-2 text-center">{{ client.last_payment }}</div>
+      <label class="form-label col-lg-2 fw-bold" for="months-to-pay"
+        >Meses a pagar</label
+      >
+      <div class="col-lg-1">
+        {% if client.expected_payments == None %}
+        <input
+          class="form-control form-control-sm"
+          type="number"
+          value="0"
+          readonly
+        />
+        {% else %}
+        <input
+          class="form-control form-control-sm"
+          type="number"
+          value="{{ client.expected_payments }}"
+          min="0"
+        />
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="d-grid gap-2 col-4 mx-auto m-3">
+    <input type="submit" value="Registrar Pagos" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock content %} {% block script %} {{super()}}
+<script src="{{url_for('static',filename='internal_massive.js')}}"></script>
+{% endblock script %}
