@@ -1,7 +1,22 @@
 const payments_load_list = document.querySelector('#payments-load-list');
 const payments_load_form = document.querySelector('#payments-load-form');
+const modal_confirm_element = document.querySelector('#confirmation-modal');
+const confirm_send_button = document.querySelector('#confirm-send-button');
 
 payments_load_form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // eslint-disable-next-line no-undef
+  let modal = new bootstrap.Modal(modal_confirm_element, {
+    backdrop: 'static',
+    keyboard: false
+  });
+  modal.show();
+
+  
+});
+
+confirm_send_button.addEventListener('click', (e) => {
   e.preventDefault();
   let list_payments = [];
   for (let child of payments_load_list.children){

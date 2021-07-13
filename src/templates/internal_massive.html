@@ -1,5 +1,41 @@
 {% extends 'base_layout.html' %} {% block title %} Administrador de Clientes {%
 endblock %} {% block content %}
+<div
+  class="modal fade"
+  id="confirmation-modal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">
+          Confirmar Operaciones
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="fs-4">A continuación confirmara todas estas operaciones.</p>
+        <p class="fs-4 fw-bold">¡Esta operación no se puede deshacer!</p>
+        <p class="fs-4">¿Desea continuar?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button id="confirm-send-button" type="button" class="btn btn-success">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <h2 class="text-center">Carga Masiva</h2>
 
 <div class="m-2 p-2">
