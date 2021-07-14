@@ -16,7 +16,6 @@ let modal_complete = new bootstrap.Modal(modal_complete_element);
 
 
 const modal_fail_element = document.querySelector('#fail-modal');
-
 // eslint-disable-next-line no-undef
 let modal_fail = new bootstrap.Modal(modal_fail_element, {
   backdrop: 'static',
