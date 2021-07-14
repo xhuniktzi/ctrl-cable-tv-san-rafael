@@ -386,9 +386,10 @@ def internal_massive_load():
     list_context = []
 
     if ubication_id == None:
-        clients = Client.query.all()
+        clients = Client.query.filter_by(status=True)
     else:
-        clients = Client.query.filter_by(ubication_id=ubication_id)
+        clients = Client.query.filter_by(ubication_id=ubication_id,
+                                         status=True)
 
     if Service.query.get(service_id).name == 'Internet':
         count = 0
