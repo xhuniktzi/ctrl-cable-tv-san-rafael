@@ -1,6 +1,26 @@
-let create_client_form = document.querySelector('#create-client-form');
-let client_form_ubication = document.querySelector('#create-client-form #ubication');
-let client_form_service = document.querySelector('#create-client-form #service-id');
+const create_client_form = document.querySelector('#create-client-form');
+const client_form_ubication = document.querySelector('#create-client-form #ubication');
+const client_form_service = document.querySelector('#create-client-form #service-id');
+const confirm_create_button = document.querySelector('#confirm-create-button');
+
+const modal_confirm_element = document.querySelector('#confirmation-modal');
+// eslint-disable-next-line no-undef
+let modal_confirm = new bootstrap.Modal(modal_confirm_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+const modal_complete_element = document.querySelector('#complete-modal');
+// eslint-disable-next-line no-undef
+let modal_complete = new bootstrap.Modal(modal_complete_element);
+
+
+const modal_fail_element = document.querySelector('#fail-modal');
+// eslint-disable-next-line no-undef
+let modal_fail = new bootstrap.Modal(modal_fail_element, {
+  backdrop: 'static',
+  keyboard: false
+});
 
 async function render_village_menu(){
   let url = '/api/v1/villages';
@@ -61,6 +81,12 @@ render_village_menu();
 
 create_client_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  modal_confirm.show();
+});
+
+confirm_create_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
   // eslint-disable-next-line no-undef
   let date = dayjs(document.querySelector('#create-client-form #payment-date').value);
   console.log(date);
@@ -114,15 +140,18 @@ create_client_form.addEventListener('submit', (e) => {
             console.log('Service is OK');
             console.log(res);
             create_client_form.reset();
+            modal_confirm.hide();
+            modal_complete.show();
           }
         });
     })
     .catch((err) => {
       console.error('ERROR');
       console.error(err);
+      modal_confirm.hide();
+      modal_fail.show();
     });
 });
-
 
 function parse_payment_radio_input(end_radio, mid_radio){
   if (end_radio.checked == true){

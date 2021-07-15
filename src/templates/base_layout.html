@@ -138,10 +138,7 @@
         </div>
       </header>
       {% endblock header %}
-      <main class="m-3 p-3">
-        <div id="messages" class="d-none"></div>
-        {% block content %} {% endblock content %}
-      </main>
+      <main class="m-3 p-3">{% block content %} {% endblock content %}</main>
     </div>
     {% block script %}
     <script

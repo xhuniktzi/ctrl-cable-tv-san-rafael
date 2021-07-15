@@ -8,9 +8,55 @@ const delete_client_button = document.querySelector('#current-client-form #delet
 const edit_service_button = document.querySelector('#current-client-form #service');
 const payments_button = document.querySelector('#current-client-form #payments-button');
 const button_container = document.querySelector('#current-client-form #button-container');
-const messages = document.querySelector('#messages');
+// const messages = document.querySelector('#messages');
+
+const confirm_edit_button = document.querySelector('#confirm-edit-button');
+const modal_confirm_element = document.querySelector('#confirmation-modal');
+// eslint-disable-next-line no-undef
+let modal_confirm = new bootstrap.Modal(modal_confirm_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+const modal_complete_element = document.querySelector('#complete-modal');
+// eslint-disable-next-line no-undef
+let modal_complete = new bootstrap.Modal(modal_complete_element);
+
+
+const modal_fail_element = document.querySelector('#fail-modal');
+// eslint-disable-next-line no-undef
+let modal_fail = new bootstrap.Modal(modal_fail_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+const confirm_delete_button = document.querySelector('#confirm-delete-button');
+const modal_delete_element = document.querySelector('#delete-modal');
+// eslint-disable-next-line no-undef
+let modal_delete = new bootstrap.Modal(modal_delete_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+
+const confirm_enable_button = document.querySelector('#confirm-enable-button');
+const modal_enable_element = document.querySelector('#enable-modal');
+// eslint-disable-next-line no-undef
+let modal_enable = new bootstrap.Modal(modal_enable_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+const confirm_disable_button = document.querySelector('#confirm-disable-button');
+const modal_disable_element = document.querySelector('#disable-modal');
+// eslint-disable-next-line no-undef
+let modal_disable = new bootstrap.Modal(modal_disable_element, {
+  backdrop: 'static',
+  keyboard: false
+});
 
 let current_client = 0;
+
 
 
 async function render_village_menu(){
@@ -110,40 +156,7 @@ function select_client(){
 
         disable_button.addEventListener('click', (e) => {
           e.preventDefault();
-          const url = `/api/v1/clients/${current_client}`;
-          fetch(url, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              'status': false
-            })
-          })
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              }
-            })
-            .then((res_json) => {
-              const alert = document.createElement('div');
-              alert.classList.add('alert', 'alert-secondary');
-              alert.setAttribute('role', 'alert');
-              alert.innerHTML = `Cliente ${res_json.name} deshabilitado correctamente.`;
-              messages.appendChild(alert);
-              messages.classList.remove('d-none');
-              setTimeout(() => {
-                messages.innerHTML = null;
-                messages.classList.add('d-none');
-              }, 2000);
-
-              const query_client = select_client.bind({value: res_json.id});
-              query_client();
-              console.log(res_json);
-            })
-            .catch((err) => {
-              console.error(err.message);
-            });
+          modal_disable.show();
         });
 
       } else {
@@ -156,40 +169,7 @@ function select_client(){
 
         enable_button.addEventListener('click', (e) => {
           e.preventDefault();
-          const url = `/api/v1/clients/${current_client}`;
-          fetch(url, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              'status': true
-            })
-          })
-            .then((res) => {
-              if (res.ok) {
-                return res.json();
-              }
-            })
-            .then((res_json) => {
-              const alert = document.createElement('div');
-              alert.classList.add('alert', 'alert-success');
-              alert.setAttribute('role', 'alert');
-              alert.innerHTML = `Cliente ${res_json.name} habilitado correctamente.`;
-              messages.appendChild(alert);
-              messages.classList.remove('d-none');
-              setTimeout(() => {
-                messages.innerHTML = null;
-                messages.classList.add('d-none');
-              }, 2000);
-
-              const query_client = select_client.bind({value: res_json.id});
-              query_client();
-              console.log(res_json);
-            })
-            .catch((err) => {
-              console.error(err.message);
-            });
+          modal_enable.show();
         });
       }
     })
@@ -197,6 +177,72 @@ function select_client(){
       console.error(err.message);
     });
 }
+
+confirm_enable_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const url = `/api/v1/clients/${current_client}`;
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      'status': true
+    })
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      const query_client = select_client.bind({value: res_json.id});
+      query_client();
+      console.log(res_json);
+
+      modal_enable.hide();
+      modal_complete.show();
+    })
+    .catch((err) => {
+      console.error(err.message);
+      modal_enable.hide();
+      modal_fail.show();
+    });
+});
+
+confirm_disable_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const url = `/api/v1/clients/${current_client}`;
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      'status': false
+    })
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((res_json) => {
+      modal_disable.hide();
+      modal_complete.show();
+
+      const query_client = select_client.bind({value: res_json.id});
+      query_client();
+      console.log(res_json);
+    })
+    .catch((err) => {
+      console.error(err.message);
+      modal_disable.hide();
+      modal_fail.show();
+    });
+});
 
 edit_service_button.addEventListener('click', (e) => {
   e.preventDefault();
@@ -261,7 +307,14 @@ select_client_form.addEventListener('submit', (e) => {{
     });
 }});
 
+
+
 current_client_form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  modal_confirm.show();
+});
+
+confirm_edit_button.addEventListener('click', (e) => {
   e.preventDefault();
 
   const url = `/api/v1/clients/${current_client}`;
@@ -298,23 +351,27 @@ current_client_form.addEventListener('submit', (e) => {
       }
     })
     .then((res_json) => {
-      const alert = document.createElement('div');
-      alert.classList.add('alert', 'alert-success');
-      alert.setAttribute('role', 'alert');
-      alert.innerHTML = `Cliente ${res_json.name} actualizado correctamente.`;
-      messages.appendChild(alert);
-      messages.classList.remove('d-none');
-      setTimeout(() => {
-        messages.innerHTML = null;
-        messages.classList.add('d-none');
-      }, 2000);
+      console.log(res_json);
+      modal_confirm.hide();
+      modal_complete.show();
     })
     .catch((err) => {
       console.error(err.message);
+      modal_confirm.hide();
+      modal_fail.show();
     });
+  
 });
 
+
+
 delete_client_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  modal_delete.show();
+});
+
+confirm_delete_button.addEventListener('click', (e) => {
   e.preventDefault();
 
   const url = `/api/v1/clients/${current_client}`;
@@ -331,23 +388,18 @@ delete_client_button.addEventListener('click', (e) => {
       }
     })
     .then((res_json) => {
+      console.log(res_json);
       current_client_form.reset();
       current_client_form.classList.add('d-none');
       current_client = 0;
 
-      const alert = document.createElement('div');
-      alert.classList.add('alert', 'alert-danger');
-      alert.setAttribute('role', 'alert');
-      alert.innerHTML = `Cliente ${res_json.name} eliminado correctamente.`;
-      messages.appendChild(alert);
-      messages.classList.remove('d-none');
-      setTimeout(() => {
-        messages.innerHTML = null;
-        messages.classList.add('d-none');
-      }, 2000);
+      modal_delete.hide();
+      modal_complete.show();
     })
     .catch((err) => {
       console.error(err.message);
+      modal_delete.hide();
+      modal_fail.show();
     });
 });
 
