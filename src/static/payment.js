@@ -15,6 +15,27 @@ const meta_admin = document.querySelector('meta#meta-admin');
 const create_receipt_flag = document.querySelector('#check-create-receipt');
 
 const client_info = document.querySelector('#client-info');
+const payment_count_span = document.querySelector('#payment-count-span');
+
+const confirm_standard_button = document.querySelector('#confirm-standard-button');
+const modal_standard_element = document.querySelector('#standard-modal');
+// eslint-disable-next-line no-undef
+let modal_standard = new bootstrap.Modal(modal_standard_element, {
+  backdrop: 'static',
+  keyboard: false
+});
+
+const modal_complete_element = document.querySelector('#complete-modal');
+// eslint-disable-next-line no-undef
+let modal_complete = new bootstrap.Modal(modal_complete_element);
+
+
+const modal_fail_element = document.querySelector('#fail-modal');
+// eslint-disable-next-line no-undef
+let modal_fail = new bootstrap.Modal(modal_fail_element, {
+  backdrop: 'static',
+  keyboard: false
+});
 
 let current_client = 0;
 let list_payments = [];
@@ -250,6 +271,13 @@ select_client_form.addEventListener('submit', (e) => {
 
 standard_payment_form.addEventListener('submit', (e) => {
   e.preventDefault();
+  payment_count_span.innerHTML = document.querySelector('#standard-payment #count').value;
+  modal_standard.show();
+});
+
+confirm_standard_button.addEventListener('click', (e) => {
+  e.preventDefault();
+
   const url = '/api/v2/payments';
   fetch(url, {
     method: 'POST',
@@ -269,9 +297,14 @@ standard_payment_form.addEventListener('submit', (e) => {
       }
     })
     .then((res_json) => {
+      modal_standard.hide();
+      modal_complete.show();
+
       let service_value = standard_payment_service.value;
       document.querySelector('#standard-payment form').reset();
       console.log(res_json);
+      
+      e.preventDefault();
       let count = 0;
       // eslint-disable-next-line no-unused-vars
       for (let param of res_json){
@@ -282,9 +315,13 @@ standard_payment_form.addEventListener('submit', (e) => {
         const url = `/print/standard-receipt/${current_client}/${service_value}/${count}`;
         window.open(url);
       }
+      
+      
     })
     .catch((err) => {
       console.error(err.message);
+      modal_standard.hide();
+      modal_fail.show();
     });
 });
 
